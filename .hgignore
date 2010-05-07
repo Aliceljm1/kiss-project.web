@@ -1,0 +1,4 @@
+glob:*.cache
+glob:*.suo
+glob:bin
+glob:obj
