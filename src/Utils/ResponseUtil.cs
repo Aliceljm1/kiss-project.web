@@ -1,15 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-09-08
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-09-08		zhli Comment Created
-//+-------------------------------------------------------------------+
-#endregion
-
-using System.Text;
-using System.Web;
+﻿using System.Web;
 using Kiss.Utils;
 using Newtonsoft.Json;
 
@@ -83,10 +72,8 @@ namespace Kiss.Web.Utils
             //}
             //else
             //{
-                Response.Write(r);
-           // }
-
-            Response.End();
+            Response.Write(r);
+            // }
         }
     }
 }

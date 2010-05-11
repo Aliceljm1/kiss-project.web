@@ -67,6 +67,8 @@ namespace Kiss.Web
                     else
                         val = jc.QueryString[key];
 
+                    val = StringUtil.GetSafeQuery(val);
+
                     base[key] = val;
                 }
 
