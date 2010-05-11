@@ -99,7 +99,25 @@ namespace Kiss.Web.Mvc
             //ViewData["q"] = q;
         }
 
-        protected bool Can(string permission)
+        protected virtual void list<T>() where T : IQueryObject
+        {
+            QueryCondition q = new WebQuery();
+            q.LoadCondidtion();
+
+            list<T>(q);
+        }
+
+        protected virtual void list<T>(QueryCondition q) where T : IQueryObject
+        {
+            IRepository<T> repo = GetRepository<T>();
+
+            q.TotalCount = repo.Count(q);
+
+            ViewData["q"] = q;
+            ViewData["list"] = repo.Gets(q);
+        }
+
+        public bool can(string permission)
         {
             return jc.User.HasPermission(permission);
         }
