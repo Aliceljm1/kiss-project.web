@@ -22,6 +22,8 @@ namespace Kiss.Web
 
         public NameValueCollection qc { get { return jc.QueryString; } }
 
+        #region ctor
+
         public WebQuery()
         {
         }
@@ -29,8 +31,9 @@ namespace Kiss.Web
         public WebQuery(string connstr_name)
             : base(connstr_name)
         {
-
         }
+
+        #endregion
 
         /// <summary>
         /// 获取查询条件
@@ -43,6 +46,13 @@ namespace Kiss.Web
 
             PageIndex = jc.PageIndex;
             PageSize = jc.GetIntFromQueryString("ps", 20);
+
+            string orderby = jc.QueryString["sort"];
+
+            foreach (string str in StringUtil.Split(orderby, "+", true, true))
+            {
+                OrderbyItems.Add(new Pair<string, bool>(str.TrimStart('-'), !str.StartsWith("-")));
+            }
         }
 
         public override string this[string key]
