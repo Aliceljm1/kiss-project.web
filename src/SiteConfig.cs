@@ -65,13 +65,13 @@ namespace Kiss.Web
         [ConfigProp("searchMetaDescription", ConfigPropAttribute.DataType.String, Desc = "meta description")]
         public string SearchMetaDescription { get; private set; }
 
-        [ConfigProp("userKey", ConfigPropAttribute.DataType.String)]
+        [ConfigProp("userKey", ConfigPropAttribute.DataType.String, DefaultValue = "default")]
         public string UserKey { get; private set; }
 
-        [ConfigProp("roleKey", ConfigPropAttribute.DataType.String)]
+        [ConfigProp("roleKey", ConfigPropAttribute.DataType.String, DefaultValue = "default")]
         public string RoleKey { get; private set; }
 
-        [ConfigProp("siteKey", ConfigPropAttribute.DataType.String)]
+        [ConfigProp("siteKey", ConfigPropAttribute.DataType.String, DefaultValue = "default")]
         public string SiteKey { get; private set; }
 
         public string ErrorPage { get; private set; }

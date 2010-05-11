@@ -1,21 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-08-19
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-08-19		zhli Comment Created
-//+-------------------------------------------------------------------+
-//+ 2009-08-28		zhli 基类从System.Web.UI.WebControls.WebControl修改为System.Web.UI.Control
-//+-------------------------------------------------------------------+
-//+ 2009-09-21		zhli 修改了IsSubmit属性的判断方法；修改GetSkinFileName方法为protected
-//                       增加ThrowExceptionOnSkinFileNotFound属性
-//+-------------------------------------------------------------------+
-//+ 2009-10-12		zhli add UsedInMvc property, remove abstract
-//+-------------------------------------------------------------------+
-#endregion
-
-using System.Web;
+﻿using System.Web;
 using System.Web.UI;
 using Kiss.Utils;
 
@@ -290,5 +273,13 @@ namespace Kiss.Web.Controls
         }
 
         #endregion
+
+        public string Execute()
+        {
+            System.Web.UI.Page p = new Page();
+            p.Controls.Add(this);
+
+            return ServerUtil.ExecutePage(p);
+        }
     }
 }
