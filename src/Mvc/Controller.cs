@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using System.Web;
 using Kiss.Query;
-using Kiss.Utils;
 
 namespace Kiss.Web.Mvc
 {
@@ -42,7 +41,7 @@ namespace Kiss.Web.Mvc
             return QueryObject.GetRepository<T>();
         }
 
-        public IRepository<T> GetRepository<T, t>() where T : Obj<t>
+        public IRepository<T, t> GetRepository<T, t>() where T : Obj<t>
         {
             return QueryObject.GetRepository<T, t>();
         }
@@ -115,7 +114,7 @@ namespace Kiss.Web.Mvc
 
             ViewData["q"] = q;
             ViewData["list"] = repo.Gets(q);
-        }
+        }        
 
         public bool can(string permission)
         {

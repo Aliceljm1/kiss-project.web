@@ -10,6 +10,21 @@ namespace Kiss.Web.Controls
     [ParseChildren(true), PersistChildren(false)]
     public class TemplatedControl : Control, INamingContainer
     {
+        #region ctor
+
+        public TemplatedControl()
+        {
+        }
+
+        public TemplatedControl(string skinname)
+        {
+            SkinName = "config";
+            UsedInMvc = true;
+            Templated = true;
+        }
+
+        #endregion
+
         #region props
 
         private string skinName;
