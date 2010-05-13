@@ -18,7 +18,7 @@ namespace Kiss.Web.Controls
 
         public TemplatedControl(string skinname)
         {
-            SkinName = "config";
+            SkinName = skinname;
             UsedInMvc = true;
             Templated = true;
         }
