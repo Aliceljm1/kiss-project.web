@@ -1,14 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-11-06
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-11-06		zhli Comment Created
-//+-------------------------------------------------------------------+
-#endregion
-
-using System;
+﻿using System;
 using System.Web.UI;
 using Kiss.Utils;
 
@@ -24,24 +14,52 @@ namespace Kiss.Web.Controls
         /// </summary>
         public bool Templated { get; set; }
 
-        protected override void OnPreInit( EventArgs e )
+        protected override void OnPreInit(EventArgs e)
         {
-            string masterFile = Context.Request.QueryString[ "MasterFile" ];
+            string masterFile = Context.Request.QueryString["MasterFile"];
             Container container = new Container();
-            if( StringUtil.HasText( masterFile ) )
+            if (StringUtil.HasText(masterFile))
                 container.ThemeMasterFile = masterFile + ".ascx";
 
-            Controls.Add( container );
+            Controls.Add(container);
 
-            base.OnPreInit( e );
+            base.OnPreInit(e);
         }
 
-        protected override void Render( HtmlTextWriter writer )
+        JContext jc;
+        Mvc.MvcModule module;
+        Action<JContext, Mvc.MvcModule> action = delegate(JContext jc, Mvc.MvcModule module) { module.invoker.InvokeAction(jc); };
+
+        protected override void OnLoad(EventArgs e)
         {
-            if( Templated )
-                writer.Write( Util.Render( delegate( HtmlTextWriter w ) { base.Render( w ); } ) );
+            base.OnLoad(e);
+
+            jc = JContext.Current;
+
+            module = ServiceLocator.Instance.Resolve<Mvc.MvcModule>();
+
+            if (jc.IsAsync)
+                RegisterAsyncTask(new PageAsyncTask(BeginAsyncOperation, EndAsyncOperation, TimeoutAsyncOperation, null));
+        }
+
+        IAsyncResult BeginAsyncOperation(object sender, EventArgs e, AsyncCallback cb, object state)
+        {
+            return action.BeginInvoke(jc, module, cb, state);
+        }
+
+        void EndAsyncOperation(IAsyncResult ar)
+        {
+            action.EndInvoke(ar);
+        }
+
+        void TimeoutAsyncOperation(IAsyncResult ar) { }
+
+        protected override void Render(HtmlTextWriter writer)
+        {
+            if (Templated)
+                writer.Write(Util.Render(delegate(HtmlTextWriter w) { base.Render(w); }));
             else
-                base.Render( writer );
+                base.Render(writer);
         }
     }
 }

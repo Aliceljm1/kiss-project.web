@@ -6,17 +6,17 @@ namespace Kiss.Web.Mvc
 {
     public class HttpUnauthorizedResult : ActionResult
     {
-        public override void ExecuteResult( IControllerContext context )
+        public override void ExecuteResult(JContext jc)
         {
-            if( context == null )
+            if (jc == null)
             {
-                throw new ArgumentNullException( "context" );
+                throw new ArgumentNullException("context");
             }
 
             // 401 is the HTTP status code for unauthorized access - setting this
             // will cause the active authentication module to execute its default
             // unauthorized handler
-            HttpContext.Current.Response.StatusCode = 401;
+            jc.Context.Response.StatusCode = 401;
         }
     }
 }

@@ -8,11 +8,11 @@ namespace Kiss.Web.Mvc
     /// </summary>
     public class RedirectResult : ActionResult
     {
-        public RedirectResult( string url )
+        public RedirectResult(string url)
         {
-            if( String.IsNullOrEmpty( url ) )
+            if (String.IsNullOrEmpty(url))
             {
-                throw new ArgumentException( "url" );
+                throw new ArgumentException("url");
             }
 
             Url = url;
@@ -24,14 +24,14 @@ namespace Kiss.Web.Mvc
             private set;
         }
 
-        public override void ExecuteResult( IControllerContext context )
+        public override void ExecuteResult(JContext jc)
         {
-            if( context == null )
+            if (jc == null)
             {
-                throw new ArgumentNullException( "context" );
+                throw new ArgumentNullException("jc");
             }
 
-            HttpContext.Current.Response.Redirect( Url, true );
+            jc.Context.Response.Redirect(Url, true);
         }
 
     }

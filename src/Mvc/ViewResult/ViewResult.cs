@@ -7,16 +7,16 @@ namespace Kiss.Web.Mvc
         {
         }
 
-        public ViewResult( string view )
+        public ViewResult(string view)
         {
             ViewName = view;
         }
 
         public string ViewName { get; set; }
 
-        public override void ExecuteResult( IControllerContext context )
+        public override void ExecuteResult(JContext jc)
         {
-            JContext.Current.Items[ "__viewResult__" ] = ViewName;
+            jc.Items["__viewResult__"] = ViewName;
         }
     }
 }

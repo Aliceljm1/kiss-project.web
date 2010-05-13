@@ -1,38 +1,36 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-10-10
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-10-10		zhli Comment Created
-//+-------------------------------------------------------------------+
-#endregion
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Kiss.Web.Mvc
 {
     public class MvcModule : IStartable
     {
-        private ActionInvoker invoker;
+        internal ActionInvoker invoker;
 
-        public ControllerContext Context { get; private set; }
+        public ControllerContainer Container { get; private set; }
 
         protected virtual void Invoke(object sender, EventArgs e)
         {
-            invoker.InvokeAction(Context);
+            JContext jc = JContext.Current;
+            
+            jc.Controller = Container.CreateController(jc.Navigation.Id);
+            jc.Controller.jc = jc;
+
+            jc.IsAsync = invoker.IsAsync(jc);
+
+            if (!jc.IsAsync)
+                invoker.InvokeAction(jc);
         }
 
         public virtual void Start()
         {
             invoker = new ActionInvoker();
 
-            Context = new ControllerContext();
-            Context.Init();
+            Container = new ControllerContainer();
+            Container.Init();
 
             ControllersResolvedEventArgs e = new ControllersResolvedEventArgs();
-            e.ControllerTypes = Context.controllerTypes;
+            e.ControllerTypes = Container.controllerTypes;
 
             OnControllersResolved(e);
 

@@ -6,7 +6,7 @@ namespace Kiss.Web.Mvc
     /// </summary>
     public class EmptyResult : ActionResult
     {
-        public override void ExecuteResult(IControllerContext context)
+        public override void ExecuteResult(JContext jc)
         {
         }
     }

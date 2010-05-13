@@ -80,11 +80,11 @@
     <Compile Include="Engine\IHost.cs" />
     <Compile Include="Engine\ISite.cs" />
     <Compile Include="Mvc\ActionResult.cs" />
+    <Compile Include="Mvc\AsyncAttribute.cs" />
     <Compile Include="Mvc\Controller.cs" />
     <Compile Include="Mvc\ControllerAttribute.cs" />
     <Compile Include="Mvc\ActionInvoker.cs" />
     <Compile Include="Mvc\IActionInvoker.cs" />
-    <Compile Include="Mvc\IControllerContext.cs" />
     <Compile Include="Mvc\MvcAttribute.cs" />
     <Compile Include="Mvc\ViewResult\EmptyResult.cs" />
     <Compile Include="Mvc\ViewResult\HttpUnauthorizedResult.cs" />

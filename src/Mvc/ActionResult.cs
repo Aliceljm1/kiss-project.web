@@ -9,7 +9,6 @@ namespace Kiss.Web.Mvc
         /// <summary>
         /// execute mvc action result
         /// </summary>
-        /// <param name="context"></param>
-        public abstract void ExecuteResult( IControllerContext context );
+        public abstract void ExecuteResult( JContext jc );
     }
 }

@@ -1,14 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-09-24
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-09-24		zhli Comment Created
-//+-------------------------------------------------------------------+
-#endregion
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Kiss.Query;
@@ -18,9 +8,9 @@ using Kiss.Web.Ajax;
 namespace Kiss.Web.Mvc
 {
     /// <summary>
-    /// context based on url
+    /// mvc controller container
     /// </summary>
-    public class ControllerContext : IControllerContext
+    public class ControllerContainer
     {
         internal Dictionary<string, Type> controllerTypes = new Dictionary<string, Type>();
         private Dictionary<string, Type> serviceTypes = new Dictionary<string, Type>();
@@ -31,7 +21,7 @@ namespace Kiss.Web.Mvc
 
         public void Init()
         {
-            logger = LogManager.GetLogger<ControllerContext>();
+            logger = LogManager.GetLogger<ControllerContainer>();
 
             foreach (Assembly asm in ServiceLocator.Instance.Resolve<ITypeFinder>().GetAssemblies())
             {
@@ -169,22 +159,26 @@ namespace Kiss.Web.Mvc
             }
         }
 
-        public Type CurrentModelType { get { return GetModelType(ControllerName); } }
+        //public Type CurrentModelType { get { return GetModelType(ControllerName); } }
 
-        public object CurrentController { get { return CreateController(ControllerName); } }
+        //public Controller CurrentController { get { return CreateController(ControllerName); } }
 
-        public QueryCondition CurrentQc { get { return CreateQC(ControllerName); } }
+        //public QueryCondition CurrentQc { get { return CreateQC(ControllerName); } }
 
-        public object CreateController(string key)
+        public Controller CreateController(string key)
         {
             Type t = GetControllerType(key);
             if (t == null)
                 return null;
 
-            return Activator.CreateInstance(t);
+            Controller controller = Activator.CreateInstance(t) as Controller;
+            if (controller == null)
+                throw new MvcException("");
+
+            return controller;
         }
 
-        public object CreateController(Type modelType)
+        public Controller CreateController(Type modelType)
         {
             string key = string.Empty;
             foreach (KeyValuePair<string, Type> pair in modelTypes)
@@ -242,19 +236,19 @@ namespace Kiss.Web.Mvc
             return null;
         }
 
-        public string ActionName
-        {
-            get { return JContext.Current.Navigation.Action; }
-        }
+        //public string ActionName
+        //{
+        //    get { return JContext.Navigation.Action; }
+        //}
 
-        public string ControllerName
-        {
-            get { return JContext.Current.Navigation.Id; }
-        }
+        //public string ControllerName
+        //{
+        //    get { return JContext.Navigation.Id; }
+        //}
 
-        public Type CurrentControllerType { get { return GetControllerType(ControllerName); } }
+        //public Type CurrentControllerType { get { return GetControllerType(ControllerName); } }
 
-        public IRepository CurrentService { get { return CreateService(ControllerName); } }
+        //public IRepository CurrentService { get { return CreateService(ControllerName); } }
 
         public IRepository CreateService(string key)
         {

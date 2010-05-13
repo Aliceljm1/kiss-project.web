@@ -1,14 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-10-10
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-10-10		zhli Comment Created
-//+-------------------------------------------------------------------+
-#endregion
-
-namespace Kiss.Web.Mvc
+﻿namespace Kiss.Web.Mvc
 {
     /// <summary>
     /// use this interface to invoke method of IController
@@ -18,8 +8,9 @@ namespace Kiss.Web.Mvc
         /// <summary>
         /// invoke
         /// </summary>
-        /// <param name="controllerContext"></param>
         /// <returns></returns>
-        bool InvokeAction(IControllerContext controllerContext);
+        bool InvokeAction(JContext jc);
+
+        bool IsAsync(JContext jc);
     }
 }

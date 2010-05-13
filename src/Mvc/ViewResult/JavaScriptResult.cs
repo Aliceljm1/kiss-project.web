@@ -21,14 +21,14 @@ namespace Kiss.Web.Mvc
             set;
         }
 
-        public override void ExecuteResult(IControllerContext context)
+        public override void ExecuteResult(JContext jc)
         {
-            if (context == null)
+            if (jc == null)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException("jc");
             }
 
-            HttpResponse response = HttpContext.Current.Response;
+            HttpResponse response = jc.Context.Response;
             //response.ContentType = "application/x-javascript";
 
             if (Script != null)

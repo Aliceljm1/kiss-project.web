@@ -36,9 +36,9 @@ namespace Kiss.Web.Mvc
             FileData = fileData;
         }
 
-        public override void ExecuteResult(IControllerContext context)
+        public override void ExecuteResult(JContext jc)
         {
-            HttpContext httpContext = HttpContext.Current;
+            HttpContext httpContext = jc.Context;
 
             httpContext.Response.ContentType = ContentType;
 

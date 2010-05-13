@@ -1,22 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-05-22
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-05-22		zhli Comment Created
-//+-------------------------------------------------------------------+
-//+ 2009-06-01		zhli Add contextData getter
-//+-------------------------------------------------------------------+
-//+ 2009-06-18		zhli remove linq context
-//+-------------------------------------------------------------------+
-//+ 2009-08-20		zhli 增加IsDesignMode属性
-//+-------------------------------------------------------------------+
-//+ 2009-10-12		zhli 增加IsSubmit属性
-//+-------------------------------------------------------------------+
-#endregion
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -463,6 +445,7 @@ namespace Kiss.Web
         /// </summary>
         public bool IsAjaxRequest { get; internal set; }
 
+        public bool IsAsync { get; internal set; }
         /// <summary>
         /// 是否是提交表单
         /// </summary>
@@ -529,57 +512,22 @@ namespace Kiss.Web
 
         #endregion
 
-        public IControllerContext ControllerContext
+        public ControllerContainer ControllerContext
         {
             get
             {
-                Mvc.MvcModule module = ServiceLocator.Instance.Resolve("Kiss.mvc") as Mvc.MvcModule;
+                MvcModule module = ServiceLocator.Instance.Resolve("Kiss.mvc") as MvcModule;
                 if (module != null)
-                    return module.Context;
+                    return module.Container;
 
                 return null;
             }
         }
-
-        private object _controller;
 
         /// <summary>
         /// current mvc controller
         /// </summary>
-        public object Controller
-        {
-            get
-            {
-                if (_controller == null)
-                {
-                    IControllerContext context = ControllerContext;
-                    if (context == null)
-                        return null;
-
-                    _controller = context.CurrentController;
-                }
-
-                return _controller;
-            }
-            internal set
-            {
-                _controller = value;
-            }
-        }
-
-        /// <summary>
-        /// get mvc controller by model type
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T GetController<T>() where T : class
-        {
-            IControllerContext context = ControllerContext;
-            if (context == null)
-                return null;
-
-            return context.CreateController(typeof(T)) as T;
-        }
+        public Controller Controller { get; set; }
 
         #endregion
 
