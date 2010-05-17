@@ -64,7 +64,7 @@ namespace Kiss.Web.Ajax
             if (string.Equals(className, "gAjax", StringComparison.InvariantCultureIgnoreCase))
             {
                 JContext jc = JContext.Current;
-                Type t = jc.ControllerContext.GetControllerType(jc.Navigation.Id);
+                Type t = jc.ControllerContainer.GetControllerType(jc.Navigation.Id);
                 if (t != null && AjaxConfiguration.ControllerAjax.ContainsKey(t))
                     return AjaxConfiguration.ControllerAjax[t];
             }

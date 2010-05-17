@@ -12,8 +12,11 @@ namespace Kiss.Web.Mvc
         protected virtual void Invoke(object sender, EventArgs e)
         {
             JContext jc = JContext.Current;
-            
+
             jc.Controller = Container.CreateController(jc.Navigation.Id);
+            if (jc.Controller == null)
+                return;
+
             jc.Controller.jc = jc;
 
             jc.IsAsync = invoker.IsAsync(jc);

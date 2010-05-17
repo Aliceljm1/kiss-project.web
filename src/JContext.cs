@@ -512,7 +512,7 @@ namespace Kiss.Web
 
         #endregion
 
-        public ControllerContainer ControllerContext
+        public ControllerContainer ControllerContainer
         {
             get
             {

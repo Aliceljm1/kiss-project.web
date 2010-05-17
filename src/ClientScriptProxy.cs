@@ -164,6 +164,11 @@ namespace Kiss.Web
 
         public void RegisterClientScript(HtmlTextWriter writer, string url, bool noCombin)
         {
+            if (IsScriptRended(url))
+                return;
+
+            SetScriptRended(url);
+
             if (!noCombin && JContext.Current.Site.CombinJs)
                 Scripts.AddRes(url);
             else
