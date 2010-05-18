@@ -18,6 +18,7 @@ namespace Kiss.Web.Mvc
                 return;
 
             jc.Controller.jc = jc;
+            jc.ViewData["this"] = jc.Controller;
 
             jc.IsAsync = invoker.IsAsync(jc);
 

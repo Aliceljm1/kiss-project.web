@@ -428,12 +428,12 @@ namespace Kiss.Web.UrlMapping
 
         internal static void SetViewData()
         {
-            JContext.Current.ViewData["jc"] = JContext.Current;
+            JContext jc = JContext.Current;
+            jc.ViewData["jc"] = jc;
             foreach (string key in ContextData.Datas.Keys)
             {
-                JContext.Current.ViewData[key] = ContextData.Datas[key];
-            }
-            JContext.Current.ViewData["this"] = JContext.Current.Controller;
+                jc.ViewData[key] = ContextData.Datas[key];
+            }            
         }
 
         private bool Match(HttpRequest request, string urlRequested, out string newPath, out NameValueCollection qs)

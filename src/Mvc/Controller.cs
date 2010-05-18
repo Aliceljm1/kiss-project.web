@@ -22,7 +22,8 @@ namespace Kiss.Web.Mvc
 
         protected Dictionary<string, object> ViewData { get { return jc.ViewData; } }
 
-        public JContext jc { get; set; }
+        private JContext _jc;
+        public JContext jc { get { if (_jc == null)_jc = JContext.Current; return _jc; } set { _jc = value; } }
 
         protected HttpContext httpContext { get { return jc.Context; } }
 
