@@ -10,6 +10,8 @@ namespace Kiss.Web.Controls
     [ParseChildren(true), PersistChildren(false)]
     public class TemplatedControl : Control, INamingContainer
     {
+        const string SkinFolderFormat = "{0}/{1}/skins/";
+
         #region ctor
 
         public TemplatedControl()
@@ -54,8 +56,6 @@ namespace Kiss.Web.Controls
             set { skinName = value; }
         }
 
-
-
         /// <summary>
         /// user action name as skin name
         /// </summary>
@@ -66,17 +66,12 @@ namespace Kiss.Web.Controls
         /// </summary>
         public bool Templated { get; set; }
 
-        /// <summary>
-        /// 是否只到默认目录下查找皮肤
-        /// </summary>
-        public bool Shared { get; set; }
-
         private string skinFilenamePrefix = string.Empty;
         public string SkinFileNamePrefix
         {
             get
             {
-                return UsedInMvc && !Shared ? string.Format("{0}{1}/", skinFilenamePrefix, JContext.Current.Navigation.Id) :
+                return UsedInMvc ? string.Format("{0}{1}/", skinFilenamePrefix, JContext.Current.Navigation.Id) :
                     skinFilenamePrefix;
             }
             set
@@ -121,15 +116,25 @@ namespace Kiss.Web.Controls
 
             bool loaded = false;
 
-            // 加载自定义ThemeName的
-            if (SkinFileExists)
-                loaded = LoadSkin(SkinFile);
+            string skinFilename = GetSkinFileName(SkinName);
 
-            if (!loaded && DefaultSkinFileExists)
-                loaded = LoadDefaultThemedControl();
+            string skinFile = GetSkinFileFullPath(GetSkinFolder(ThemeName), skinFilename);
+
+            // 加载自定义ThemeName,lang的skin
+            if (ServerUtil.FileExists(skinFile))
+                loaded = LoadSkin(skinFile);
+
+            string defaultlang_skinFile = GetSkinFileFullPath(GetSkinFolder(ThemeName, false), skinFilename);
+
+            if (!loaded && ServerUtil.FileExists(defaultlang_skinFile))
+                loaded = LoadSkin(defaultlang_skinFile);
+
+            string default_skinFile = GetSkinFileFullPath(GetSkinFolder("default", false), skinFilename);
+            if (!loaded && ServerUtil.FileExists(default_skinFile))
+                loaded = LoadSkin(default_skinFile);
 
             if (!loaded && ThrowExceptionOnSkinFileNotFound)
-                throw new WebException("Skin file not found in " + SkinFile + " nor in " + DefaultSkinFile);
+                throw new WebException("Skin file not found in " + skinFile + " nor in " + defaultlang_skinFile + " nor in " + default_skinFile);
 
             if (loaded)
                 AttachChildControls();
@@ -152,17 +157,6 @@ namespace Kiss.Web.Controls
         /// </summary>
         public bool UsedInMvc { get; set; }
 
-        /// <summary>
-        /// 创建默认的皮肤控件文件名——类名
-        /// </summary>
-        protected virtual string SkinFileName
-        {
-            get
-            {
-                return GetSkinFileName(SkinName);
-            }
-        }
-
         private string _themeName;
         /// <summary>
         /// 获取当前访问用户的皮肤名
@@ -178,36 +172,6 @@ namespace Kiss.Web.Controls
         }
 
         /// <summary>
-        /// 控件目录
-        /// </summary>
-        protected virtual string SkinFolder
-        {
-            get
-            {
-                if (Shared)
-                    return GetSkinFolder("default");
-
-                return GetSkinFolder(ThemeName);
-            }
-        }
-
-        /// <summary>
-        /// 获取要加载的皮肤控件文件
-        /// </summary>
-        protected string SkinFile { get { return GetSkinFileFullPath(SkinFolder, SkinFileName); } }
-
-        /// <summary>
-        /// 默认皮肤控件文件路径
-        /// </summary>
-        protected virtual string DefaultSkinFile
-        {
-            get
-            {
-                return GetSkinFileFullPath(GetSkinFolder("default"), SkinFileName);
-            }
-        }
-
-        /// <summary>
         /// 重写该方法加载皮肤控件
         /// </summary>
         /// <remarks>
@@ -219,7 +183,7 @@ namespace Kiss.Web.Controls
 
         #region helper
 
-        protected string GetSkinFileName(string name)
+        protected virtual string GetSkinFileName(string name)
         {
             string prefix = SkinFileNamePrefix;
             if (prefix.StartsWith("/") && prefix.EndsWith("/"))
@@ -227,11 +191,18 @@ namespace Kiss.Web.Controls
             return string.Format("{1}{0}{2}.ascx", name, prefix, SkinFileNamePostfix);
         }
 
-        private const string SkinFolderFormat = "{0}/{1}/skins/";
-
         private static string GetSkinFolder(string theme)
         {
-            return string.Format(SkinFolderFormat, JContext.Current.Site.ThemeRoot, theme);
+            return GetSkinFolder(theme, true);
+        }
+
+        private static string GetSkinFolder(string theme, bool lang)
+        {
+            JContext jc = JContext.Current;
+
+            return string.Format(SkinFolderFormat,
+                jc.Site.ThemeRoot,
+                !lang || StringUtil.IsNullOrEmpty(jc.Navigation.LanguageCode) ? theme : string.Format("{0}-{1}", theme, jc.Navigation.LanguageCode));
         }
 
         private static string GetSkinFileFullPath(string folder, string skinFile)
@@ -258,33 +229,6 @@ namespace Kiss.Web.Controls
             }
 
             return false;
-        }
-
-        private bool LoadDefaultThemedControl()
-        {
-            return LoadSkin(this.DefaultSkinFile);
-        }
-
-        /// <summary>
-        /// 皮肤控件文件是否存在
-        /// </summary>
-        private bool SkinFileExists
-        {
-            get
-            {
-                return ServerUtil.FileExists(SkinFile);
-            }
-        }
-
-        /// <summary>
-        /// 默认皮肤文件是否存在
-        /// </summary>
-        private bool DefaultSkinFileExists
-        {
-            get
-            {
-                return ServerUtil.FileExists(DefaultSkinFile);
-            }
         }
 
         #endregion

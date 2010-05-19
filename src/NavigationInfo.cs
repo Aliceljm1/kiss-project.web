@@ -1,18 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-05-25
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-05-25		zhli Comment Created
-//+-------------------------------------------------------------------+
-//+ 2009-09-21		zhli Menu,SubMenu,ParentMenu,Id property
-//+-------------------------------------------------------------------+
-//+ 2009-10-09		zhli add Action property
-//+-------------------------------------------------------------------+
-#endregion
-
-using System;
+﻿using System;
 using System.IO;
 using Kiss.Utils;
 using Kiss.Web.UrlMapping;
@@ -82,7 +68,6 @@ namespace Kiss.Web
                     return null;
 
                 return Provider.MenuItems[Index];
-
             }
         }
 
@@ -147,6 +132,8 @@ namespace Kiss.Web
                 return _id;
             }
         }
+
+        public string LanguageCode { get; set; }
 
         private string _action;
         public string Action

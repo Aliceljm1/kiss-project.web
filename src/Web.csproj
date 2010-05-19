@@ -107,7 +107,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Controls\Util.cs" />
-    <Compile Include="Controls\ViewContainer.cs" />
     <Compile Include="EventBroker.cs" />
     <Compile Include="Handlers\RedirectHandler.cs" />
     <Compile Include="Handlers\ResourceHandler.cs" />

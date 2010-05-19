@@ -402,12 +402,15 @@ namespace Kiss.Web.UrlMapping
 
         private string GetUrlRequested(string url)
         {
-            string appPath = JContext.Current.Site.VirtualPath;
+            string virtualPath = JContext.Current.Site.VirtualPath;
             string urlRequested = string.Empty;
-            if (appPath != "/")
-                urlRequested = url.ToLower().Replace(appPath, "");
+            if (virtualPath != "/")
+                urlRequested = url.ToLower().Replace(virtualPath, string.Empty);
             else
                 urlRequested = url;
+
+            if (urlRequested.EndsWith("/"))
+                urlRequested += "default.aspx";
 
             return urlRequested.Trim('/');
         }
@@ -433,30 +436,48 @@ namespace Kiss.Web.UrlMapping
             foreach (string key in ContextData.Datas.Keys)
             {
                 jc.ViewData[key] = ContextData.Datas[key];
-            }            
+            }
         }
 
         private bool Match(HttpRequest request, string urlRequested, out string newPath, out NameValueCollection qs)
         {
             qs = new NameValueCollection();
+            JContext jc = JContext.Current;
             foreach (UrlMappingItem item in _provider.UrlMappings ?? new UrlMappingItemCollection())
             {
                 Match match = item.UrlTarget.Match(urlRequested);
 
-                if (match.Success)
+                bool s = match.Success;
+
+                if (s)
+                {
+                    // add querystring parameters for dynamic mappings
+                    for (int i = 1; i < match.Groups.Count; i++)
+                        qs.Add(item.UrlTarget.GroupNameFromNumber(i), match.Groups[i].Value);
+                }
+                else if (StringUtil.IsNullOrEmpty(jc.Navigation.LanguageCode))
+                {
+                    Regex regex = new Regex(string.Format(@"^(?<lang>[a-zA-z\-]*)/{0}", item.UrlTarget.ToString().Substring(1)));
+
+                    match = regex.Match(urlRequested);
+                    s = match.Success;
+                    if (s)
+                    {
+                        jc.Navigation.LanguageCode = match.Groups[1].Value;
+
+                        // add querystring parameters for dynamic mappings
+                        for (int i = 2; i < match.Groups.Count; i++)
+                            qs.Add(item.UrlTarget.GroupNameFromNumber(i), match.Groups[i].Value);
+                    }
+                }
+
+                if (s)
                 {
                     JContext.Current.Navigation.Set(item);
 
                     OnUrlMatched();
 
                     newPath = item.Redirection;
-
-                    // do we want to add querystring parameters for dynamic mappings?                    
-                    if (match.Groups.Count > 1)
-                    {
-                        for (int i = 1; i < match.Groups.Count; i++)
-                            qs.Add(item.UrlTarget.GroupNameFromNumber(i), match.Groups[i].Value);
-                    }
 
                     return true;
                 }
