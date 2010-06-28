@@ -10,16 +10,6 @@ namespace Kiss.Web.Mvc
     /// </summary>
     public class Controller
     {
-        public IRepository<T> GetRepository<T>() where T : IQueryObject
-        {
-            return QueryObject.GetRepository<T>();
-        }
-
-        public IRepository<T, t> GetRepository<T, t>() where T : Obj<t>
-        {
-            return QueryObject.GetRepository<T, t>();
-        }
-
         protected Dictionary<string, object> ViewData { get { return jc.ViewData; } }
 
         private JContext _jc;
@@ -65,20 +55,29 @@ namespace Kiss.Web.Mvc
 
         protected virtual void list<T>() where T : IQueryObject
         {
+            list<T>(string.Empty);
+        }
+
+        protected void list<T>(string queryId) where T : IQueryObject
+        {
             QueryCondition q = new WebQuery();
             q.LoadCondidtion();
+
+            q.Id = queryId;
 
             list<T>(q);
         }
 
         protected virtual void list<T>(QueryCondition q) where T : IQueryObject
         {
-            IRepository<T> repo = GetRepository<T>();
+            IRepository<T> repo = QueryObject<T>.Repository;
+            
+            ViewData["list"] = repo.Gets(q);
 
-            q.TotalCount = repo.Count(q);
+            if (q.Paging)
+                q.TotalCount = repo.Count(q);
 
             ViewData["q"] = q;
-            ViewData["list"] = repo.Gets(q);
         }
 
         public bool can(string permission)

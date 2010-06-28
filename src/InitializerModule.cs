@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 
 namespace Kiss.Web
 {
@@ -25,6 +26,16 @@ namespace Kiss.Web
                 if (!context.Context.IsCustomErrorEnabled && !context.Context.IsDebuggingEnabled)
                     sl.AddComponent("Kiss.errorhandler", typeof(IErrorHandler), typeof(ErrorHandler));
             });
+
+            // log system hack
+            EventBroker.Instance.BeginRequest += BeginRequest;
+        }
+
+        void BeginRequest(object sender, EventArgs e)
+        {
+            ISite site = JContext.Current.Site;
+            if (site != null)
+                HttpContext.Current.Application["SITE_KEY"] = site.SiteKey;
         }
 
         /// <summary>

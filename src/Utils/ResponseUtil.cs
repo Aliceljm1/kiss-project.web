@@ -33,20 +33,16 @@ namespace Kiss.Web.Utils
         /// <summary>
         /// output object in json
         /// </summary>
-        /// <param name="Response"></param>
-        /// <param name="result"></param>
-        /// <param name="cahceMinutes"></param>
-        /// <param name="jsonp"></param>
-        public static void OutputJson(HttpResponse Response, object result, int cahceMinutes, string jsonp)
+        public static void OutputJson(HttpResponse response, object result, int cahceMinutes, string jsonp)
         {
             bool isJsonp = StringUtil.HasText(jsonp);
 
-            Response.ContentType = isJsonp ? "text/plain" : "text/html";
+            response.ContentType = isJsonp ? "text/plain" : "text/html";
 
             if (!isJsonp)
-                ServerUtil.AddCache(cahceMinutes);
+                ServerUtil.AddCache(response, cahceMinutes);
             else
-                ServerUtil.AddCache(-1);
+                ServerUtil.AddCache(response, -1);
 
             string r;
 
@@ -72,7 +68,7 @@ namespace Kiss.Web.Utils
             //}
             //else
             //{
-            Response.Write(r);
+            response.Write(r);
             // }
         }
     }

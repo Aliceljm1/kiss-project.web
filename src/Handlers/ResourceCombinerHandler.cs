@@ -1,29 +1,13 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ FileName: 	    ResourceCombineHandler.cs
-//+ File Created:   20090827
-//+-------------------------------------------------------------------+
-//+ Purpose:        用于合并js，css输出
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 20090827        ZHLI Comment Created
-//+-------------------------------------------------------------------+
-//+ 20090918        ZHLI debug 情况下不CssMinify
-//+-------------------------------------------------------------------+
-//+ 20091208        ZHLI awlays CssMinify
-//+-------------------------------------------------------------------+
-#endregion
-
-using System;
+﻿using System;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using Kiss.Web.Utils;
 using System.Web.Caching;
+using Kiss.Web.Utils;
+using Kiss.Utils;
 
 namespace Kiss.Web
 {
@@ -106,8 +90,8 @@ namespace Kiss.Web
 
                             if (string.Equals(contentType, "text/css"))
                             {
-                                if (fileName.Contains("res.axd"))
-                                    str = Regex.Replace(str, @"url\s*\(\s*([^:]+?)\s*\)", string.Format("url({0}$1)", path));
+                                //if (fileName.Contains("res.axd"))
+                                //    str = Regex.Replace(str, @"url\s*\(\s*([^:]+?)\s*\)", string.Format("url({0}$1)", path));
                                 str = CssMinifier.CssMinify(str);
                             }
 
@@ -147,14 +131,16 @@ namespace Kiss.Web
                     if (index != -1)
                         path = path.Substring(index + site.VirtualPath.Length);
 
-                    if (path.StartsWith("/themes"))
+                    if (path.StartsWith("themes", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        path = path.Substring(7);
+                        path = path.Substring(6);
 
-                        path = string.Concat(site.ThemeRoot, path);
+                        path = string.Concat(VirtualPathUtility.ToAbsolute(site.ThemeRoot), path);
                     }
+                    else
+                        path = StringUtil.CombinUrl(site.VirtualPath, path);
 
-                    virtualPath = string.Format(site.VirtualPath == "/" ? "{0}://{1}/{2}" : "{0}://{1}{2}",
+                    virtualPath = string.Format("{0}://{1}{2}",
                         context.Request.Url.Scheme,
                         context.Request.Url.Authority,
                         path);

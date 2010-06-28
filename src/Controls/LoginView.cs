@@ -1,14 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-09-08
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-09-08		zhli Comment Created
-//+-------------------------------------------------------------------+
-#endregion
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Web.UI;
 
 namespace Kiss.Web.Controls

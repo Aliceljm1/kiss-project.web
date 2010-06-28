@@ -32,8 +32,9 @@ namespace Kiss.Web.Ajax
 
         public void ProcessRequest(HttpContext context)
         {
+            JContext jc = JContext.Current;
             // set a ajax request token
-            JContext.Current.IsAjaxRequest = true;
+            jc.IsAjaxRequest = true;
 
             // get querystring
             string qs = context.Request.Params[QUERYSTRING];
@@ -41,14 +42,14 @@ namespace Kiss.Web.Ajax
             {
                 qs = qs.TrimStart('?');
 
-                JContext.Current.QueryString.Add(StringUtil.DelimitedEquation2NVCollection("&", qs));
+                jc.QueryString.Add(StringUtil.DelimitedEquation2NVCollection("&", qs));
             }
 
             if (context.Request.UrlReferrer != null)
             {
                 UrlMappingModule module = UrlMappingModule.Instance;
                 if (module != null)
-                    JContext.Current.QueryString.Add(module.GetMappedQueryString(context.Request.UrlReferrer.AbsolutePath));
+                    jc.QueryString.Add(module.GetMappedQueryString(context.Request.UrlReferrer.AbsolutePath));
             }
 
             // set view data 

@@ -61,7 +61,7 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return JContext.Current.Site.DefaultTheme;
+                return JContext.Current.Theme;
             }
         }
 
@@ -77,7 +77,7 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return string.Format("~{0}/default/masters/{1}", JContext.Current.Site.ThemeRoot, ThemeMasterFile);
+                return string.Format("{0}/default/masters/{1}", JContext.Current.Site.ThemeRoot, ThemeMasterFile);
             }
         }
 

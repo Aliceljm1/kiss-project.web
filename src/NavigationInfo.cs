@@ -18,7 +18,7 @@ namespace Kiss.Web
         {
             get
             {
-                if (StringUtil.HasText(_title) && _title.StartsWith("$"))
+                if (StringUtil.HasText(_title) && _title.Contains("$"))
                 {
                     ITemplateEngine te = ServiceLocator.Instance.Resolve<ITemplateEngine>();
                     using (StringWriter sw = new StringWriter())

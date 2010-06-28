@@ -24,8 +24,8 @@ namespace Kiss.Web
         {
             get
             {
-                ISite site = JContext.Current.Site;
-                return FormatCssUrl(string.Format(site.CssRoot, site.DefaultTheme));
+                JContext jc = JContext.Current;
+                return FormatCssUrl(string.Format(jc.Site.CssRoot, jc.Theme));
             }
         }
 

@@ -636,6 +636,31 @@ namespace Kiss.Web
             return StringUtil.CombinUrl(Site.VirtualPath, baseurl);
         }
 
+        /// <summary>
+        /// CombinUrl的简写方法
+        /// </summary>
+        public string url(string baseUrl)
+        {
+            return CombinUrl(baseUrl);
+        }
+
+        private string _theme;
+        /// <summary>
+        /// current theme
+        /// </summary>
+        public string Theme
+        {
+            get
+            {
+                if (StringUtil.IsNullOrEmpty(_theme))
+                    _theme = QueryString["theme"];
+                if (StringUtil.IsNullOrEmpty(_theme))
+                    _theme = Site.DefaultTheme;
+                return _theme;
+            }
+            set { _theme = value; }
+        }
+
         #region Engine
 
         private ISite _site;
@@ -678,6 +703,11 @@ namespace Kiss.Web
 
         #region utils
 
+        public string UrlEncode(string str)
+        {
+            return HttpUtility.UrlEncode(str);
+        }
+
         public string HtmlEncode(string str)
         {
             return HttpUtility.HtmlEncode(str);
@@ -687,7 +717,7 @@ namespace Kiss.Web
         {
             get
             {
-                return CombinUrl(string.Format("/themes/{0}", Site.DefaultTheme));
+                return CombinUrl(string.Format("/themes/{0}", Theme));
             }
         }
 

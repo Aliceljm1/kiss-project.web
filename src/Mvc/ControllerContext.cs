@@ -40,7 +40,7 @@ namespace Kiss.Web.Mvc
 
                 if (ts == null || ts.Length == 0) continue;
 
-                Type modelBaseType = typeof(Obj);
+                Type modelBaseType = typeof(Kiss.QueryObject);
                 Type qcBaseType = typeof(QueryCondition);
                 Type controllerBaseType = typeof(Controller);
 

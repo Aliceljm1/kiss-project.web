@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
+using Kiss.Utils;
 
 namespace Kiss.Web.Mvc
 {
@@ -28,7 +30,7 @@ namespace Kiss.Web.Mvc
             if (mi == null)
                 return false;
 
-            object ret;
+            object ret = null;
 
             try
             {
@@ -37,12 +39,18 @@ namespace Kiss.Web.Mvc
                 else
                     ret = mi.Invoke(jc.Controller, null);
             }
-            catch (TargetInvocationException ex)
+            catch (ThreadAbortException) { }// ignore this exception
+            catch (Exception ex)
             {
+                if (ex is TargetInvocationException)
+                    ex = ex.InnerException;
+
+                LogManager.GetLogger<ActionInvoker>().Error(ExceptionUtil.WriteException(ex));
+
                 throw new MvcException(string.Format("execute controller: {0}'s method: {1} failed. {2}",
-                    jc.Navigation.Id,
-                    jc.Navigation.Name,
-                    ex.InnerException.Message), ex.InnerException);
+                    jc.Controller.GetType().Name,
+                    mi.Name,
+                    ex.Message), ex);
             }
 
             if (ret != null)

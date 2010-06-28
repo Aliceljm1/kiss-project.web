@@ -277,13 +277,7 @@ namespace Kiss.Web.UrlMapping
             NavigationItem item = new NavigationItem();
 
             item.Name = XmlUtil.GetStringAttribute(node, "id", null);
-
-            string url = XmlUtil.GetStringAttribute(node, "url", string.Empty);
-            if (url.Contains("://"))
-                item.Url = url;
-            else
-                item.Url = StringUtil.CombinUrl(JContext.Current.Site.VirtualPath, url);
-
+            item.Url = XmlUtil.GetStringAttribute(node, "url", string.Empty);
             item.Title = XmlUtil.GetStringAttribute(node, "title", string.Empty);
             item.Icon = XmlUtil.GetStringAttribute(node, "icon", null);
 

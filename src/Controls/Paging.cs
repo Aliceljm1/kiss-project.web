@@ -1,18 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-05-21
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-05-21		zhli render default style
-//+-------------------------------------------------------------------+
-//+ 2009-06-02		zhli add a switcher to control if render default style
-//+-------------------------------------------------------------------+
-//+ 2009-08-27		zhli fix a bug,remove class to head
-//+-------------------------------------------------------------------+
-#endregion
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Text;
 using System.Web;
@@ -25,7 +11,7 @@ namespace Kiss.Web.Controls
     /// <summary>
     /// 分页控件
     /// </summary>
-    [PersistChildren( false ), ParseChildren( true )]
+    [PersistChildren(false), ParseChildren(true)]
     public class Paging : Control
     {
         #region fields / props
@@ -38,7 +24,7 @@ namespace Kiss.Web.Controls
         /// <summary>
         /// 查询条件
         /// </summary>
-        [Browsable( false )]
+        [Browsable(false)]
         public QueryCondition QueryCondition { get; set; }
 
         private string _url;
@@ -105,7 +91,7 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return Convert.ToInt32( Math.Ceiling( ( decimal )QueryCondition.TotalCount / QueryCondition.PageSize ) );
+                return Convert.ToInt32(Math.Ceiling((decimal)QueryCondition.TotalCount / QueryCondition.PageSize));
             }
         }
 
@@ -113,11 +99,11 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                int half = Convert.ToInt32( Math.Ceiling( ( decimal )NumDispay / 2 ) );
+                int half = Convert.ToInt32(Math.Ceiling((decimal)NumDispay / 2));
                 int np = numPages;
                 int upper_limit = np - NumDispay;
-                int start = QueryCondition.PageIndex > half ? Math.Max( Math.Min( QueryCondition.PageIndex - half, upper_limit ), 0 ) : 0;
-                int end = QueryCondition.PageIndex > half ? Math.Min( QueryCondition.PageIndex + half, np ) : Math.Min( NumDispay, np );
+                int start = QueryCondition.PageIndex > half ? Math.Max(Math.Min(QueryCondition.PageIndex - half, upper_limit), 0) : 0;
+                int end = QueryCondition.PageIndex > half ? Math.Min(QueryCondition.PageIndex + half, np) : Math.Min(NumDispay, np);
 
                 return new int[] { start, end };
             }
@@ -137,108 +123,112 @@ namespace Kiss.Web.Controls
         /// 概要模板
         /// </summary>
         [
-        Browsable( false ),
-        DefaultValue( null ),
-        PersistenceMode( PersistenceMode.InnerProperty )
+        Browsable(false),
+        DefaultValue(null),
+        PersistenceMode(PersistenceMode.InnerProperty)
         ]
         public ITemplate SummaryTemplate { get; set; }
 
         #endregion
 
-        protected override void OnLoad( EventArgs e )
-        {
-            base.OnLoad( e );
+        bool _isAjaxRequest = false;
 
-            if( !UseCustomStyle )
-                ClientScriptProxy.Current.RegisterCssBlock( ".pagination { float: right; margin: 10px 10px 10px 0; } .pagination a { border: 1px solid #AAAAEE; color: #1155BB; text-decoration: none; } .pagination a:hover { background-color: transparent; text-decoration: underline; } .pagination a, .pagination span { display: block; float: left; margin-bottom: 5px; margin-right: 5px; padding: 0.3em 0.5em; } .pagination .current { background: #2266BB none repeat scroll 0 0; border: 1px solid #AAAAEE; color: #FFFFFF; } .pagination span.prev, .pagination span.next { background: #FFFFFF none repeat scroll 0 0; border-color: #999999; color: #999999; } ", "pagingcss" );
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            _isAjaxRequest = JContext.Current.IsAjaxRequest;
+
+            if (!UseCustomStyle && !_isAjaxRequest)
+                ClientScriptProxy.Current.RegisterCssBlock(".pagination { float: right; margin: 10px 10px 10px 0; } .pagination a { border: 1px solid #AAAAEE; color: #1155BB; text-decoration: none; } .pagination a:hover { background-color: transparent; text-decoration: underline; } .pagination a, .pagination span { display: block; float: left; margin-bottom: 5px; margin-right: 5px; padding: 0.3em 0.5em; } .pagination .current { background: #2266BB none repeat scroll 0 0; border: 1px solid #AAAAEE; color: #FFFFFF; } .pagination span.prev, .pagination span.next { background: #FFFFFF none repeat scroll 0 0; border-color: #999999; color: #999999; } ", "pagingcss");
         }
 
-        protected override void Render( HtmlTextWriter writer )
+        protected override void Render(HtmlTextWriter writer)
         {
-            base.Render( writer );
+            base.Render(writer);
 
-            if( QueryCondition == null )
-                QueryCondition = JContext.Current.GetViewData( DataKey ?? "q" ) as QueryCondition;
+            if (QueryCondition == null)
+                QueryCondition = JContext.Current.GetViewData(DataKey ?? "q") as QueryCondition;
 
-            if( QueryCondition != null )
+            if (QueryCondition != null)
             {
-                if( QueryCondition.PageSize == 0 )
+                if (QueryCondition.PageSize == 0)
                     return;
 
-                DrawLinks( writer );
+                DrawLinks(writer);
             }
         }
 
-        private void DrawLinks( HtmlTextWriter writer )
+        private void DrawLinks(HtmlTextWriter writer)
         {
             StringBuilder txt = new StringBuilder();
             int[] interval = getInterval;
             var np = numPages;
-            if( np < 2 )
+            if (np < 2)
                 return;
 
-            if( StringUtil.HasText( PrevText ) && ( QueryCondition.PageIndex > 0 || AlwaysShowPrev ) )
-                txt.Append( appendItem( QueryCondition.PageIndex - 1, new string[] { PrevText, "prev" } ) );
+            if (StringUtil.HasText(PrevText) && (QueryCondition.PageIndex > 0 || AlwaysShowPrev))
+                txt.Append(appendItem(QueryCondition.PageIndex - 1, new string[] { PrevText, "prev" }));
 
-            if( interval[ 0 ] > 0 && NumEdge > 0 )
+            if (interval[0] > 0 && NumEdge > 0)
             {
-                var end = Math.Min( NumEdge, interval[ 0 ] );
-                for( int i = 0; i < end; i++ )
+                var end = Math.Min(NumEdge, interval[0]);
+                for (int i = 0; i < end; i++)
                 {
-                    txt.Append( appendItem( i, null ) );
+                    txt.Append(appendItem(i, null));
                 }
-                if( NumEdge < interval[ 0 ] )
-                    txt.Append( "<span>...</span>" );
+                if (NumEdge < interval[0])
+                    txt.Append("<span>...</span>");
             }
 
-            for( int i = interval[ 0 ]; i < interval[ 1 ]; i++ )
+            for (int i = interval[0]; i < interval[1]; i++)
             {
-                txt.Append( appendItem( i, null ) );
+                txt.Append(appendItem(i, null));
             }
 
-            if( interval[ 1 ] < np && NumEdge > 0 )
+            if (interval[1] < np && NumEdge > 0)
             {
-                if( np - NumEdge > interval[ 1 ] )
+                if (np - NumEdge > interval[1])
                 {
-                    txt.Append( "<span>...</span>" );
+                    txt.Append("<span>...</span>");
                 }
 
-                var begin = Math.Max( np - NumEdge, interval[ 1 ] );
-                for( int i = begin; i < np; i++ )
+                var begin = Math.Max(np - NumEdge, interval[1]);
+                for (int i = begin; i < np; i++)
                 {
-                    txt.Append( appendItem( i, null ) );
+                    txt.Append(appendItem(i, null));
                 }
             }
 
-            if( StringUtil.HasText( NextText ) && ( QueryCondition.PageIndex < np - 1 || AlwaysShowNext ) )
-                txt.Append( appendItem( QueryCondition.PageIndex + 1, new string[] { NextText, "next" } ) );
+            if (StringUtil.HasText(NextText) && (QueryCondition.PageIndex < np - 1 || AlwaysShowNext))
+                txt.Append(appendItem(QueryCondition.PageIndex + 1, new string[] { NextText, "next" }));
 
-            if( !UseCustomStyle )
-                writer.Write( "<div class='pagination'>" );
+            if (!UseCustomStyle)
+                writer.Write("<div class='pagination'>");
 
-            if( SummaryTemplate != null )
+            if (SummaryTemplate != null)
             {
                 Template t = new Template();
-                SummaryTemplate.InstantiateIn( t );
-                t.RenderControl( writer );
+                SummaryTemplate.InstantiateIn(t);
+                t.RenderControl(writer);
             }
 
-            writer.Write( txt.ToString() );
+            writer.Write(txt.ToString());
 
-            if( !UseCustomStyle )
-                writer.Write( "</div>" );
+            if (!UseCustomStyle)
+                writer.Write("</div>");
         }
 
-        public string appendItem( int page_id, string[] appendopts )
+        public string appendItem(int page_id, string[] appendopts)
         {
-            page_id = page_id < 0 ? 0 : ( page_id < numPages ? page_id : numPages - 1 );
-            if( appendopts == null )
-                appendopts = new string[] { ( page_id + 1 ).ToString(), "" };
-            if( page_id == QueryCondition.PageIndex )
-                return string.Format( "<span class='current {1}'>{0}</span>", appendopts[ 0 ], appendopts[ 1 ] );
-            return string.Format( "<a href='{2}' {1}>{0}</a>", appendopts[ 0 ],
-                StringUtil.HasText( appendopts[ 1 ] ) ? string.Format( "class='{0}'", appendopts[ 1 ] ) : string.Empty,
-               FormatUrl( page_id ) );
+            page_id = page_id < 0 ? 0 : (page_id < numPages ? page_id : numPages - 1);
+            if (appendopts == null)
+                appendopts = new string[] { (page_id + 1).ToString(), "" };
+            if (page_id == QueryCondition.PageIndex)
+                return string.Format("<span class='current {1}'>{0}</span>", appendopts[0], appendopts[1]);
+            return string.Format("<a href='{2}' {1}>{0}</a>", appendopts[0],
+                StringUtil.HasText(appendopts[1]) ? string.Format("class='{0}'", appendopts[1]) : string.Empty,
+               FormatUrl(page_id));
 
         }
 
@@ -247,34 +237,38 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                if( _virtualPath == null )
+                if (_virtualPath == null)
                     _virtualPath = JContext.Current.Site.VirtualPath;
                 return _virtualPath;
-
             }
         }
 
-        private string FormatUrl( int page_id )
+        private string FormatUrl(int page_id)
         {
-            if( StringUtil.HasText( Url ) )
+            if (_isAjaxRequest && StringUtil.IsNullOrEmpty(Url))
+                return "#";
+
+            if (StringUtil.HasText(Url))
             {
-                return string.Format( Url, page_id + 1 );
+                return string.Format(Url, page_id + 1);
             }
             else
             {
-                if( StringUtil.HasText( Extension ) && !Context.Request.Url.AbsolutePath.EndsWith( Extension ) )
-                    return string.Format( "{0}/{1}{2}", Context.Request.Url.AbsolutePath, page_id + 1, Extension );
+                if (StringUtil.HasText(Extension) && !Context.Request.Url.AbsolutePath.EndsWith(Extension))
+                    return string.Format("{0}/{1}{2}", Context.Request.Url.AbsolutePath, page_id + 1, Extension);
 
-                string url = StringUtil.CombinUrl( VirtualPath, HttpContext.Current.Request.Url.PathAndQuery );
+                //string url = StringUtil.CombinUrl( VirtualPath, HttpContext.Current.Request.Url.PathAndQuery );
 
-                int i =  url.LastIndexOf( "/" );
+                string url = HttpContext.Current.Request.Url.PathAndQuery;
 
-                int j = url.LastIndexOf( "?" );
-                return string.Format( "{0}{1}{2}{3}",
-                    url.Substring( 0, i + 1 ),
+                int i = url.LastIndexOf("/");
+
+                int j = url.LastIndexOf("?");
+                return string.Format("{0}{1}{2}{3}",
+                    url.Substring(0, i + 1),
                     page_id + 1,
                     Extension,
-                    ( j == -1 ) ? string.Empty : url.Substring( j )
+                    (j == -1) ? string.Empty : url.Substring(j)
                   );
             }
         }

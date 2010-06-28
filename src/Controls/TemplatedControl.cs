@@ -166,7 +166,7 @@ namespace Kiss.Web.Controls
             get
             {
                 if (StringUtil.IsNullOrEmpty(_themeName))
-                    _themeName = JContext.Current.Site.DefaultTheme;
+                    _themeName = JContext.Current.Theme;
                 return _themeName;
             }
         }

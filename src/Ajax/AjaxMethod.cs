@@ -75,107 +75,110 @@ namespace Kiss.Web.Ajax
 
         #region methods
 
-        public object Invoke( Type type, string argsJson )
+        public object Invoke(Type type, string argsJson)
         {
-            object[] args = ConstructMethodArgs( _params, argsJson );
-            Type[] argsType = constructMethodTypes( args );
+            object[] args = ConstructMethodArgs(_params, argsJson);
+            Type[] argsType = constructMethodTypes(args);
 
-            if( _methodInfo == null )
-                _methodInfo = type.GetMethod( _methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Instance, null, argsType, null );
+            if (_methodInfo == null)
+                _methodInfo = type.GetMethod(_methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Instance, null, argsType, null);
 
-            if( _methodInfo == null )
+            if (_methodInfo == null)
             {
                 // log
-                logger.Error( "ajax method: {0} not found.", _methodName );
+                logger.Error("ajax method: {0} not found.", _methodName);
                 return null;
             }
 
-            if( _methodInfo.IsStatic )
-                return _methodInfo.Invoke( null, args );
+            if (_methodInfo.IsStatic)
+                return _methodInfo.Invoke(null, args);
             else
-                return _methodInfo.Invoke( Activator.CreateInstance( type ), args );
+                return _methodInfo.Invoke(Activator.CreateInstance(type), args);
         }
 
-        public object Invoke( string type, string argsJson )
+        public object Invoke(string type, string argsJson)
         {
-            Type t = TypeRegistry.ResolveType( type );
+            Type t = TypeRegistry.ResolveType(type);
 
-            return Invoke( t, argsJson );
+            return Invoke(t, argsJson);
         }
 
         #endregion
 
         #region helper
 
-        private static Type[] constructMethodTypes( object[] methodArgs )
+        private static Type[] constructMethodTypes(object[] methodArgs)
         {
             try
             {
-                if( methodArgs == null )
+                if (methodArgs == null)
                     return new Type[] { };
-                Type[] argsType = new Type[ methodArgs.Length ];
+                Type[] argsType = new Type[methodArgs.Length];
                 // check for method casting - dynamic cast if necessary
-                for( int i = 0; i < methodArgs.Length; i++ )
+                for (int i = 0; i < methodArgs.Length; i++)
                 {
-                    argsType[ i ] = methodArgs[ i ].GetType();
+                    argsType[i] = methodArgs[i].GetType();
                 }
                 return argsType;
             }
-            catch( Exception ex )
+            catch (Exception ex)
             {
-                logger.Error( "constructMethodTypes failed.", ex );
+                logger.Error("constructMethodTypes failed.", ex);
                 return null;
             }
         }
 
-        private static object[] ConstructMethodArgs( List<AjaxParam> ps, string methodJsonArgs )
+        private static object[] ConstructMethodArgs(List<AjaxParam> ps, string methodJsonArgs)
         {
             try
             {
-                if( string.IsNullOrEmpty( methodJsonArgs ) )
+                if (string.IsNullOrEmpty(methodJsonArgs))
                     return null;
 
-                ArrayList argsObject = JavaScriptConvert.DeserializeObject<ArrayList>( methodJsonArgs );
-                for( int i = 0; i < ps.Count; i++ )
+                ArrayList argsObject = JavaScriptConvert.DeserializeObject<ArrayList>(methodJsonArgs);
+                for (int i = 0; i < ps.Count; i++)
                 {
-                    AjaxParam p = ps[ i ];
+                    AjaxParam p = ps[i];
                     string pType = p.ParamType.ToLower();
-                    object data = argsObject[ i ];
+                    object data = argsObject[i];
 
-                    switch( pType )
+                    switch (pType)
                     {
                         case "long":
-                            argsObject[ i ] = Convert.ToInt64( data );
+                            argsObject[i] = Convert.ToInt64(data);
                             break;
                         case "int":
-                            argsObject[ i ] = Convert.ToInt32( data );
+                            argsObject[i] = Convert.ToInt32(data);
                             break;
                         case "double":
-                            argsObject[ i ] = Convert.ToDouble( data );
+                            argsObject[i] = Convert.ToDouble(data);
                             break;
                         case "bool":
-                            argsObject[ i ] = Convert.ToBoolean( data );
+                            argsObject[i] = Convert.ToBoolean(data);
+                            break;
+                        case "string":
+                            argsObject[i] = data == null ? string.Empty : data.ToString();
                             break;
                         case "strings":
-                            if( data is IList )
+                            if (data is IList)
                             {
                                 List<string> list = new List<string>();
-                                foreach( object item in ( IList )data )
+                                foreach (object item in (IList)data)
                                 {
-                                    list.Add( item.ToString() );
+                                    list.Add(item.ToString());
                                 }
-                                argsObject[ i ] = list.ToArray();
+                                argsObject[i] = list.ToArray();
                             }
                             break;
                         case "ints":
-                            if( data is IList )
+                            if (data is IList)
                             {
                                 List<int> list = new List<int>();
-                                foreach( object item in ( IList )data )
+                                foreach (object item in (IList)data)
                                 {
-                                    list.Add( Convert.ToInt32( item ) );
+                                    list.Add(Convert.ToInt32(item));
                                 }
-                                argsObject[ i ] = list.ToArray();
+                                argsObject[i] = list.ToArray();
                             }
                             break;
                         default:
@@ -185,9 +188,9 @@ namespace Kiss.Web.Ajax
 
                 return argsObject.ToArray();
             }
-            catch( Exception ex )
+            catch (Exception ex)
             {
-                logger.Error( "ConstructMethodArgs failed", ex );
+                logger.Error("ConstructMethodArgs failed", ex);
                 return null;
             }
         }

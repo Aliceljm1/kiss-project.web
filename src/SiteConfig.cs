@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Xml;
 using Kiss.Config;
 using Kiss.Utils;
@@ -20,16 +20,16 @@ namespace Kiss.Web
         [ConfigProp("defaultTheme", ConfigPropAttribute.DataType.String, DefaultValue = "default", Desc = "默认theme")]
         public string DefaultTheme { get; private set; }
 
-        [ConfigProp("virtualPath", Desc = "虚拟目录", DefaultValue = "/")]
-        public string VirtualPath { get; private set; }
+        [ConfigProp("virtualPath", Desc = "虚拟目录", DefaultValue = "")]
+        public string VP { get; private set; }
 
         [ConfigProp("host", ConfigPropAttribute.DataType.String, Desc = "域名")]
         public string Host { get; private set; }
 
-        [ConfigProp("cssRoot", ConfigPropAttribute.DataType.String, DefaultValue = "/themes/{0}/", Desc = "样式文件夹路径")]
+        [ConfigProp("cssRoot", ConfigPropAttribute.DataType.String, DefaultValue = "themes/{0}/", Desc = "样式文件夹路径")]
         public string CssRoot { get; private set; }
 
-        [ConfigProp("themeRoot", ConfigPropAttribute.DataType.String, DefaultValue = "/themes", Desc = "皮肤根目录")]
+        [ConfigProp("themeRoot", ConfigPropAttribute.DataType.String, DefaultValue = "~/themes", Desc = "皮肤根目录")]
         public string ThemeRoot { get; private set; }
 
         [ConfigProp("combinCss", ConfigPropAttribute.DataType.Boolean, DefaultValue = false, Desc = "合并样式")]
@@ -90,9 +90,6 @@ namespace Kiss.Web
         {
             base.LoadValuesFromConfigurationXml(node);
 
-            if (StringUtil.IsNullOrEmpty(VirtualPath))
-                VirtualPath = ServerUtil.ApplicationPath;
-
             ErrorPage = string.Empty;
             XmlNode error_node = node.SelectSingleNode("errorPage");
             if (error_node != null)
@@ -125,6 +122,28 @@ namespace Kiss.Web
         public DictSchema GetSchema(string type, string name)
         {
             throw new NotSupportedException("single site doesn't support dict schema!");
+        }
+
+        private string _virtualPath;
+
+        /// <summary>
+        /// 虚拟目录
+        /// </summary>
+        /// <remarks>只能在http上下文中调用</remarks>
+        public string VirtualPath
+        {
+            get
+            {
+                if (_virtualPath == null)
+                {
+                    _virtualPath = StringUtil.CombinUrl(HttpContext.Current.Request.ApplicationPath, VP);
+
+                    if (_virtualPath != "/" && !_virtualPath.EndsWith("/"))
+                        _virtualPath += "/";
+                }
+
+                return _virtualPath;
+            }
         }
     }
 }

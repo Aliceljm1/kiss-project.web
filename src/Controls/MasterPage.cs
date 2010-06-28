@@ -17,11 +17,14 @@ namespace Kiss.Web.Controls
         protected override void OnPreInit(EventArgs e)
         {
             string masterFile = Context.Request.QueryString["MasterFile"];
-            Container container = new Container();
+
             if (StringUtil.HasText(masterFile))
+            {
+                Container container = new Container();
                 container.ThemeMasterFile = masterFile + ".ascx";
 
-            Controls.Add(container);
+                Controls.Add(container);
+            }
 
             base.OnPreInit(e);
         }

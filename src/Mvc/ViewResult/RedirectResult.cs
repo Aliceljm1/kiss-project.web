@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using System.Threading;
 
 namespace Kiss.Web.Mvc
 {
@@ -33,6 +34,5 @@ namespace Kiss.Web.Mvc
 
             jc.Context.Response.Redirect(Url, true);
         }
-
     }
 }

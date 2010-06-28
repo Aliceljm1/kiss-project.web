@@ -94,16 +94,9 @@ namespace Kiss.Web.Controls
 
         protected virtual void RenderStyleSheets(HtmlTextWriter writer)
         {
-            if (!site.CombinCss)
-            {
-                RenderStyleSheets(writer, StyleRelativePosition.First);
-                RenderStyleSheets(writer, StyleRelativePosition.Unspecified);
-                RenderStyleSheets(writer, StyleRelativePosition.Last);
-            }
-            else
-            {
-                RenderStyleSheets(writer, StyleRelativePosition.Unspecified);
-            }
+            RenderStyleSheets(writer, StyleRelativePosition.First);
+            RenderStyleSheets(writer, StyleRelativePosition.Unspecified);
+            RenderStyleSheets(writer, StyleRelativePosition.Last);
         }
 
         protected virtual void RenderStyleSheets(HtmlTextWriter writer, StyleRelativePosition position)
@@ -117,7 +110,9 @@ namespace Kiss.Web.Controls
 
             foreach (StyleQueueItem si in queue)
             {
-                if ((!site.CombinCss || !si.ForceCombin) && si.Position == position)
+                if (si.Position != position) continue;
+
+                if (!site.CombinCss || !si.ForceCombin)
                     writer.WriteLine(si.StyleTag);
                 else if (site.CombinCss)
                 {

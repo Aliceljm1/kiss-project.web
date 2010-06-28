@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kiss.Utils;
+using System.Threading;
 
 namespace Kiss.Web.Mvc
 {
     public class MvcModule : IStartable
     {
+        static readonly ILogger logger = LogManager.GetLogger<MvcModule>();
+
         internal ActionInvoker invoker;
 
         public ControllerContainer Container { get; private set; }
@@ -13,17 +17,28 @@ namespace Kiss.Web.Mvc
         {
             JContext jc = JContext.Current;
 
-            jc.Controller = Container.CreateController(jc.Navigation.Id);
-            if (jc.Controller == null)
-                return;
+            try
+            {
+                jc.Controller = Container.CreateController(jc.Navigation.Id);
+                if (jc.Controller == null)
+                    return;
 
-            jc.Controller.jc = jc;
-            jc.ViewData["this"] = jc.Controller;
+                jc.Controller.jc = jc;
+                jc.ViewData["this"] = jc.Controller;
 
-            jc.IsAsync = invoker.IsAsync(jc);
+                jc.IsAsync = invoker.IsAsync(jc);
 
-            if (!jc.IsAsync)
-                invoker.InvokeAction(jc);
+                if (!jc.IsAsync)
+                    invoker.InvokeAction(jc);
+            }
+            catch (ThreadAbortException) { }// ignore this exception
+            catch (Exception ex)
+            {
+                logger.Fatal(ExceptionUtil.WriteException(ex));
+
+                if (jc.Context.IsDebuggingEnabled)
+                    throw ex;
+            }
         }
 
         public virtual void Start()
