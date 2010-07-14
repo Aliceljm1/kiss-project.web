@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Kiss.Query;
+using System.Text;
 using Kiss.Utils;
 using Kiss.Web.Ajax;
 
@@ -13,15 +13,14 @@ namespace Kiss.Web.Mvc
     public class ControllerContainer
     {
         internal Dictionary<string, Type> controllerTypes = new Dictionary<string, Type>();
-        private Dictionary<string, Type> serviceTypes = new Dictionary<string, Type>();
-        private Dictionary<string, Type> qcTypes = new Dictionary<string, Type>();
-        private Dictionary<string, Type> modelTypes = new Dictionary<string, Type>();
 
         static ILogger logger;
 
         public void Init()
         {
             logger = LogManager.GetLogger<ControllerContainer>();
+
+            Type controllerBaseType = typeof(Controller);
 
             foreach (Assembly asm in ServiceLocator.Instance.Resolve<ITypeFinder>().GetAssemblies())
             {
@@ -40,24 +39,14 @@ namespace Kiss.Web.Mvc
 
                 if (ts == null || ts.Length == 0) continue;
 
-                Type modelBaseType = typeof(Kiss.QueryObject);
-                Type qcBaseType = typeof(QueryCondition);
-                Type controllerBaseType = typeof(Controller);
-
-                List<Type> ms = new List<Type>();
-
                 foreach (Type type in ts)
                 {
-                    if (type.IsAbstract || type.IsInterface)
+                    if (type.IsAbstract || type.IsInterface || !type.IsSubclassOf(controllerBaseType))
                         continue;
-
-                    // save all model type
-                    if (type.IsSubclassOf(modelBaseType))
-                        ms.Add(type);
 
                     object[] objs = type.GetCustomAttributes(typeof(ControllerAttribute), true);
 
-                    if (objs.Length == 0 && type.Name.EndsWith("Controller", StringComparison.InvariantCultureIgnoreCase))
+                    if (objs.Length == 0)
                     {
                         controllerTypes[type.Name.Replace("Controller", string.Empty).ToLowerInvariant()] = type;
                     }
@@ -69,48 +58,19 @@ namespace Kiss.Web.Mvc
                                 continue;
 
                             controllerTypes[attr.UrlId.ToLowerInvariant()] = type;
-
-                            if (attr.ModelType != null && attr.ModelType.IsSubclassOf(modelBaseType))
-                                modelTypes[attr.UrlId.ToLowerInvariant()] = attr.ModelType;
-
-                            if (attr.QcType != null && attr.QcType.IsSubclassOf(qcBaseType))
-                                qcTypes[attr.UrlId.ToLowerInvariant()] = attr.QcType;
-
-                            if (attr.ServiceType != null)
-                                serviceTypes[attr.UrlId.ToLowerInvariant()] = attr.ServiceType;
                         }
-                    }
-                }
-
-                // remove key if key is manual configed
-                ms.RemoveAll(delegate(Type t)
-                {
-                    return modelTypes.ContainsKey(t.Name.ToLowerInvariant());
-                });
-
-                foreach (Type modelType in ms)
-                {
-                    string key = modelType.Name.ToLowerInvariant();
-                    modelTypes[key] = modelType;
-
-                    foreach (Type t in ts)
-                    {
-                        if (!t.Name.StartsWith(modelType.Name, StringComparison.InvariantCultureIgnoreCase))
-                            continue;
-
-                        if (t.IsSubclassOf(qcBaseType) && t.Name.Equals(key + "Query", StringComparison.InvariantCultureIgnoreCase))
-                            qcTypes[key] = t;
-                        else if (t.Name.Equals(key + "Controller", StringComparison.InvariantCultureIgnoreCase))
-                            controllerTypes[key] = t;
-                        else if (t.Name.Equals(key + "Manager", StringComparison.InvariantCultureIgnoreCase))
-                            serviceTypes[key] = t;
                     }
                 }
             }
 
-            logger.Debug("find {0} mvc controller.", controllerTypes.Count);
+            logControllers();
 
             // find ajax class
+            findAjaxMethods();
+        }
+
+        private void findAjaxMethods()
+        {
             foreach (Type t in controllerTypes.Values)
             {
                 AjaxClass ac = new AjaxClass();
@@ -159,11 +119,21 @@ namespace Kiss.Web.Mvc
             }
         }
 
-        //public Type CurrentModelType { get { return GetModelType(ControllerName); } }
+        private void logControllers()
+        {
+            StringBuilder mvclog = new StringBuilder();
 
-        //public Controller CurrentController { get { return CreateController(ControllerName); } }
+            mvclog.AppendFormat("find {0} mvc controller.", controllerTypes.Count);
+            mvclog.AppendLine();
 
-        //public QueryCondition CurrentQc { get { return CreateQC(ControllerName); } }
+            foreach (var item in controllerTypes)
+            {
+                mvclog.AppendFormat("key:{0}    type:{1}", item.Key, item.Value.FullName);
+                mvclog.AppendLine();
+            }
+
+            logger.Debug(mvclog.ToString());
+        }
 
         public Controller CreateController(string key)
         {
@@ -173,41 +143,9 @@ namespace Kiss.Web.Mvc
 
             Controller controller = Activator.CreateInstance(t) as Controller;
             if (controller == null)
-                throw new MvcException("");
+                throw new MvcException("create mvc controller failed! key:{0}", key);
 
             return controller;
-        }
-
-        public Controller CreateController(Type modelType)
-        {
-            string key = string.Empty;
-            foreach (KeyValuePair<string, Type> pair in modelTypes)
-            {
-                if (pair.Value == modelType)
-                {
-                    key = pair.Key;
-                    break;
-                }
-            }
-
-            return CreateController(key);
-        }
-
-        public QueryCondition CreateQC(string key)
-        {
-            if (StringUtil.IsNullOrEmpty(key))
-                return null;
-
-            key = key.ToLowerInvariant();
-
-            if (qcTypes.ContainsKey(key))
-            {
-                Type queryType = qcTypes[key];
-
-                return Activator.CreateInstance(queryType) as QueryCondition;
-            }
-
-            return null;
         }
 
         public Type GetControllerType(string key)
@@ -219,70 +157,6 @@ namespace Kiss.Web.Mvc
 
             if (controllerTypes.ContainsKey(key))
                 return controllerTypes[key];
-
-            return null;
-        }
-
-        public Type GetModelType(string key)
-        {
-            if (StringUtil.IsNullOrEmpty(key))
-                return null;
-
-            key = key.ToLowerInvariant();
-
-            if (modelTypes.ContainsKey(key))
-                return modelTypes[key];
-
-            return null;
-        }
-
-        //public string ActionName
-        //{
-        //    get { return JContext.Navigation.Action; }
-        //}
-
-        //public string ControllerName
-        //{
-        //    get { return JContext.Navigation.Id; }
-        //}
-
-        //public Type CurrentControllerType { get { return GetControllerType(ControllerName); } }
-
-        //public IRepository CurrentService { get { return CreateService(ControllerName); } }
-
-        public IRepository CreateService(string key)
-        {
-            Type t = GetServiceType(key);
-            if (t == null)
-                return null;
-
-            return QueryObject.GetRepository(t);
-        }
-
-        public IRepository CreateService(Type modelType)
-        {
-            string key = string.Empty;
-            foreach (KeyValuePair<string, Type> pair in modelTypes)
-            {
-                if (pair.Value == modelType)
-                {
-                    key = pair.Key;
-                    break;
-                }
-            }
-
-            return CreateService(key);
-        }
-
-        private Type GetServiceType(string key)
-        {
-            if (StringUtil.IsNullOrEmpty(key))
-                return null;
-
-            key = key.ToLowerInvariant();
-
-            if (serviceTypes.ContainsKey(key))
-                return serviceTypes[key];
 
             return null;
         }

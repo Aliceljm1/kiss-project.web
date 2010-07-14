@@ -33,5 +33,15 @@ JContext增加UrlEncode方法
 修复了合并css的顺序问题
 
 v2.6.3
+MVC基类Controller增加了一些CRUD的便利方法
+Paging控件增加SupportKeyboard属性
+ResourceCombineHandler压缩合并js，css优化
+记录详细的mvc控制器加载日志
+
+v2.6.4
+移除了ControllerContext里的过时代码
+不在支持.net framework 2.0
+
+v2.6.5
 Todo:
 	多国语言支持优化	

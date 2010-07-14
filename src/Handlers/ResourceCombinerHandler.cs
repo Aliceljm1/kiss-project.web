@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Caching;
 using Kiss.Web.Utils;
 using Kiss.Utils;
+using Kiss.Utils.Web;
 
 namespace Kiss.Web
 {
@@ -88,19 +89,24 @@ namespace Kiss.Web
 
                             string str = Encoding.UTF8.GetString(fileBytes);
 
-                            if (string.Equals(contentType, "text/css"))
-                            {
-                                //if (fileName.Contains("res.axd"))
-                                //    str = Regex.Replace(str, @"url\s*\(\s*([^:]+?)\s*\)", string.Format("url({0}$1)", path));
-                                str = CssMinifier.CssMinify(str);
-                            }
-
                             sb.Append(str);
                         }
 
-                        byte[] buffer = Encoding.UTF8.GetBytes(sb.ToString());
-                        writer.Write(buffer, 0, buffer.Length);
+                        string totalstr = null;
+                        if (string.Equals(contentType, "text/css"))
+                        {
+                            //if (fileName.Contains("res.axd"))
+                            //    str = Regex.Replace(str, @"url\s*\(\s*([^:]+?)\s*\)", string.Format("url({0}$1)", path));
+                            totalstr = CssMinifier.CssMinify(sb.ToString());
+                        }
+                        else if (string.Equals(contentType, "text/javascript"))
+                            totalstr = new JavaScriptMinifier().MinifyString(sb.ToString());
 
+                        if (StringUtil.HasText(totalstr))
+                        {
+                            byte[] buffer = Encoding.UTF8.GetBytes(totalstr);
+                            writer.Write(buffer, 0, buffer.Length);
+                        }
                         writer.Close();
                     }
 

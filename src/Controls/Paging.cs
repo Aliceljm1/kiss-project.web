@@ -129,6 +129,11 @@ namespace Kiss.Web.Controls
         ]
         public ITemplate SummaryTemplate { get; set; }
 
+        /// <summary>
+        /// 支持键盘分页
+        /// </summary>
+        public bool SupportKeyboard { get; set; }
+
         #endregion
 
         bool _isAjaxRequest = false;
@@ -147,6 +152,8 @@ namespace Kiss.Web.Controls
         {
             base.Render(writer);
 
+            ClientScriptProxy.Current.RegisterJsResource(writer, "Kiss.Web.jQuery", "Kiss.Web.jQuery.pagenavi.js");
+
             if (QueryCondition == null)
                 QueryCondition = JContext.Current.GetViewData(DataKey ?? "q") as QueryCondition;
 
@@ -157,6 +164,8 @@ namespace Kiss.Web.Controls
 
                 DrawLinks(writer);
             }
+
+            ClientScriptProxy.Current.RegisterJsBlock(writer, "paging.keyboard", "$(function(){$('.pagination').pageNavi();});", true);
         }
 
         private void DrawLinks(HtmlTextWriter writer)
