@@ -268,6 +268,10 @@ namespace Kiss.Web.UrlMapping
                     item.Children[menuItem.SubIndex] = subItem;
                 }
             }
+            else
+            {
+                menuItem.SubIndex = -1;
+            }
 
             return menuItem;
         }

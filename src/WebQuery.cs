@@ -45,7 +45,6 @@ namespace Kiss.Web
             Keyword = StringUtil.GetSafeQuery(jc.QueryText);
 
             PageIndex = jc.PageIndex;
-            PageSize = jc.GetIntFromQueryString("ps", 20);
 
             string orderby = jc.QueryString["sort"];
 

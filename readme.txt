@@ -43,5 +43,7 @@ v2.6.4
 不在支持.net framework 2.0
 
 v2.6.5
+去除webquery的LoadCondidtion方法里取pagesize的代码
+修复了菜单index的一个bug
 Todo:
 	多国语言支持优化	
