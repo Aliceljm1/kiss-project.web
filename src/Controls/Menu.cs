@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web.UI;
 using Kiss.Utils;
@@ -86,8 +85,8 @@ namespace Kiss.Web.Controls
 
                         key_index = keys.IndexOf(i);
 
-                        item.IsFirst = i == 0 || Items[keys[key_index - 1]].IsSeparator;
-                        item.IsLast = i == Items.Count - 1 || Items[keys[key_index + 1]].IsSeparator;
+                        item.IsFirst = key_index == 0 || Items[keys[key_index - 1]].IsSeparator;
+                        item.IsLast = key_index == Items.Count - 1 || Items[keys[key_index + 1]].IsSeparator;
 
                         list.Add(item);
                     }
@@ -110,8 +109,8 @@ namespace Kiss.Web.Controls
 
                             key_index = keys.IndexOf(i);
 
-                            item.IsFirst = i == 0 || subItems[keys[key_index - 1]].IsSeparator;
-                            item.IsLast = i == subItems.Count - 1 || subItems[keys[key_index + 1]].IsSeparator;
+                            item.IsFirst = key_index == 0 || subItems[keys[key_index - 1]].IsSeparator;
+                            item.IsLast = key_index == subItems.Count - 1 || subItems[keys[key_index + 1]].IsSeparator;
 
                             list.Add(item);
                         }
@@ -131,8 +130,8 @@ namespace Kiss.Web.Controls
                         item.SubItems = new List<NavigationItem>();
 
                         key_index = keys.IndexOf(i);
-                        item.IsFirst = i == 0 || Items[keys[key_index - 1]].IsSeparator;
-                        item.IsLast = i == Items.Count - 1 || Items[keys[key_index + 1]].IsSeparator;
+                        item.IsFirst = key_index == 0 || Items[keys[key_index - 1]].IsSeparator;
+                        item.IsLast = key_index == Items.Count - 1 || Items[keys[key_index + 1]].IsSeparator;
 
                         Dictionary<int, NavigationItem> children = Items[i].Children;
                         List<int> sub_keys = new List<int>(children.Keys);
@@ -145,8 +144,8 @@ namespace Kiss.Web.Controls
 
                             key_index = sub_keys.IndexOf(j);
 
-                            subItem.IsFirst = j == 0 || children[sub_keys[key_index - 1]].IsSeparator;
-                            subItem.IsLast = j == children.Count - 1 || children[sub_keys[key_index + 1]].IsSeparator;
+                            subItem.IsFirst = key_index == 0 || children[sub_keys[key_index - 1]].IsSeparator;
+                            subItem.IsLast = key_index == children.Count - 1 || children[sub_keys[key_index + 1]].IsSeparator;
 
                             item.SubItems.Add(subItem);
                         }

@@ -45,5 +45,8 @@ v2.6.4
 v2.6.5
 去除webquery的LoadCondidtion方法里取pagesize的代码
 修复了菜单index的一个bug
+站点路径下修改文件夹时不重启appdomain
+修复了在ajax环境下jcontext.user为null的bug
+修复了urlMappings.xml里url index的bug
 Todo:
 	多国语言支持优化	

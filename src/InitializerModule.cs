@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using System.Reflection;
 
 namespace Kiss.Web
 {
@@ -29,6 +30,8 @@ namespace Kiss.Web
 
             // log system hack
             EventBroker.Instance.BeginRequest += BeginRequest;
+
+            StopAppDomainRestart();
         }
 
         void BeginRequest(object sender, EventArgs e)
@@ -36,6 +39,26 @@ namespace Kiss.Web
             ISite site = JContext.Current.Site;
             if (site != null)
                 HttpContext.Current.Application["SITE_KEY"] = site.SiteKey;
+        }
+
+        private static void StopAppDomainRestart()
+        {
+            /// Disable AppDomain restarts when folder is deleted.
+            /// https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=240686
+            PropertyInfo p = typeof(HttpRuntime).GetProperty("FileChangesMonitor",
+            BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+
+            object o = p.GetValue(null, null);
+
+            FieldInfo f = o.GetType().GetField("_dirMonSubdirs",
+                BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
+
+            object monitor = f.GetValue(o);
+
+            MethodInfo m = monitor.GetType().GetMethod("StopMonitoring",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+            m.Invoke(monitor, new object[] { });
         }
 
         /// <summary>
