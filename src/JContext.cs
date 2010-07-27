@@ -13,7 +13,7 @@ using Kiss.Web.UrlMapping;
 namespace Kiss.Web
 {
     /// <summary>
-    /// 存储了当前请求的一些信息
+    /// 当前HTTP请求的上下文
     /// </summary>
     public sealed class JContext
     {
@@ -424,7 +424,7 @@ namespace Kiss.Web
         }
 
         /// <summary>
-        /// 用户是否通过认证
+        /// 当前用户是否通过认证
         /// </summary>
         public bool IsAuth
         {
@@ -435,7 +435,7 @@ namespace Kiss.Web
         }
 
         /// <summary>
-        /// 当前用户名
+        /// 当前用户的用户名
         /// </summary>
         public string UserName
         {
