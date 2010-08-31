@@ -640,6 +640,11 @@ namespace Kiss.Web
         /// <returns></returns>
         public string CombinUrl(string baseurl)
         {
+            if (StringUtil.IsNullOrEmpty(baseurl)) return Site.VirtualPath;
+
+            if (baseurl.StartsWith("~"))
+                return ServerUtil.ResolveUrl(baseurl);
+
             return StringUtil.CombinUrl(Site.VirtualPath, baseurl);
         }
 
