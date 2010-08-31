@@ -98,6 +98,11 @@ namespace Kiss.Web.UrlMapping
             }
         }
 
+        public Dictionary<int, NavigationItem> GetMenuItemsBySite(ISite site)
+        {
+            return MenuItems;
+        }
+
         private Dictionary<string, string> _urls = new Dictionary<string, string>();
         public Dictionary<string, string> Urls
         {

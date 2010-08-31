@@ -54,5 +54,6 @@ v2.6.5
 v2.6.6
 增加对routes.config中菜单的设置规则，<menu url="~filemanager/index.aspx"/>
 增加了4个实体类，site，menu，menuitem，url（从sitegroup迁移过来）
+IUrlMappingProvider接口增加GetMenuItemsBySite方法，根据站点返回站点的菜单
 	Todo:
 	多国语言支持优化

@@ -19,6 +19,13 @@ namespace Kiss.Web.UrlMapping
         Dictionary<int, NavigationItem> MenuItems { get; }
 
         /// <summary>
+        /// get menu items by site
+        /// </summary>
+        /// <param name="site"></param>
+        /// <returns></returns>
+        Dictionary<int, NavigationItem> GetMenuItemsBySite(ISite site);
+
+        /// <summary>
         /// url mapping name, template dictionary
         /// </summary>
         Dictionary<string, string> Urls { get; }

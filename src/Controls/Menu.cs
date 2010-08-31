@@ -58,13 +58,18 @@ namespace Kiss.Web.Controls
 
         public static List<NavigationItem> GetDataSource(MenuType type, string key)
         {
+            return GetDataSource(JContext.Current.Site, type, key);
+        }
+
+        public static List<NavigationItem> GetDataSource(ISite site, MenuType type, string key)
+        {
             JContext jc = JContext.Current;
 
             List<NavigationItem> list = new List<NavigationItem>();
             int index = JContext.Current.Navigation.Index;
             int subIndex = JContext.Current.Navigation.SubIndex;
 
-            Dictionary<int, NavigationItem> Items = UrlMappingModule.Instance.Provider.MenuItems;
+            Dictionary<int, NavigationItem> Items = UrlMappingModule.Instance.Provider.GetMenuItemsBySite(site);
 
             List<int> keys;
             int key_index;
@@ -154,7 +159,6 @@ namespace Kiss.Web.Controls
                     }
                     break;
                 case MenuType.Self:
-                    ISite site = JContext.Current.Site;
                     List<UrlMappingItem> items = UrlMappingModule.Instance.Provider.UrlMappings.FindAll(delegate(UrlMappingItem item)
                     {
                         if (StringUtil.HasText(key))
