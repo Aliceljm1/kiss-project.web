@@ -22,7 +22,7 @@ namespace Kiss.Web
             sl.Init(delegate
             {
                 sl.AddComponent("Kiss.webcontext", typeof(IWebContext), typeof(WebRequestContext));
-                sl.AddComponent("Kiss.typeFinder", typeof(ITypeFinder), typeof(WebAppTypeFinder));
+                sl.AddComponent("Kiss.typeFinder", typeof(ITypeFinder), typeof(WebAppTypeFinder));                
 
                 if (!context.Context.IsCustomErrorEnabled && !context.Context.IsDebuggingEnabled)
                     sl.AddComponent("Kiss.errorhandler", typeof(IErrorHandler), typeof(ErrorHandler));

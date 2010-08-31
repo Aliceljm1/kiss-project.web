@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Configuration.Provider;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.Compilation;
 using System.Web.UI;
 using Kiss.Plugin;
 using Kiss.Utils;
-using Kiss.Web.Mvc;
 
 namespace Kiss.Web.UrlMapping
 {
@@ -253,8 +249,6 @@ namespace Kiss.Web.UrlMapping
         {
             UrlMappingConfig config = UrlMappingConfig.Instance;
 
-            
-
             _provider = ServiceLocator.Instance.Resolve<IUrlMappingProvider>();
 
             _noMatchAction = config.NoMatchAction;
@@ -308,39 +302,7 @@ namespace Kiss.Web.UrlMapping
             if (_automaticallyUpdateFormAction)
             {
                 broker.PostMapRequestHandler += context_PostMapRequestHandler;
-            }
-
-            MvcModule.ControllersResolved += MvcModule_ControllersResolved;
-        }
-
-        void MvcModule_ControllersResolved(object sender, MvcModule.ControllersResolvedEventArgs e)
-        {
-            foreach (var controller in e.ControllerTypes)
-            {
-                foreach (MethodInfo m in controller.Value.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Instance))
-                {
-                    object[] objs = m.GetCustomAttributes(typeof(UrlRouteAttribute), true);
-                    if (objs.Length == 0)
-                        continue;
-
-                    UrlRouteAttribute attr = objs[0] as UrlRouteAttribute;
-
-                    UrlMappingItem item = Utility.CreateTemplatedMappingItem(string.Empty,
-                        attr.Template,
-                        Utility.GetHref(attr.Href),
-                        UrlMappingConfig.Instance.IncomingQueryStringBehavior);
-                    item.UrlTemplate = attr.Template;
-
-                    item.Index = -1;
-                    item.SubIndex = -1;
-                    item.Title = attr.Title;
-
-                    item.Id = controller.Key;
-                    item.Action = m.Name;
-
-                    Provider.AddMapping(item);
-                }
-            }
+            }            
         }
 
         public void Stop()

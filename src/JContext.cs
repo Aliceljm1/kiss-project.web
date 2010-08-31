@@ -519,18 +519,6 @@ namespace Kiss.Web
 
         #endregion
 
-        public ControllerContainer ControllerContainer
-        {
-            get
-            {
-                MvcModule module = ServiceLocator.Instance.Resolve("Kiss.mvc") as MvcModule;
-                if (module != null)
-                    return module.Container;
-
-                return null;
-            }
-        }
-
         /// <summary>
         /// current mvc controller
         /// </summary>

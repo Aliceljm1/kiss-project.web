@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using Kiss.Utils;
 using System.Threading;
+using Kiss.Utils;
 
 namespace Kiss.Web.Mvc
 {
@@ -11,15 +10,12 @@ namespace Kiss.Web.Mvc
 
         internal ActionInvoker invoker;
 
-        public ControllerContainer Container { get; private set; }
-
         protected virtual void Invoke(object sender, EventArgs e)
         {
             JContext jc = JContext.Current;
-
             try
             {
-                jc.Controller = Container.CreateController(jc.Navigation.Id);
+                jc.Controller = ControllerResolver.Instance.CreateController(jc.Navigation.Id);
                 if (jc.Controller == null)
                     return;
 
@@ -43,39 +39,9 @@ namespace Kiss.Web.Mvc
 
         public virtual void Start()
         {
-            invoker = new ActionInvoker();
-
-            Container = new ControllerContainer();
-            Container.Init();
-
-            ControllersResolvedEventArgs e = new ControllersResolvedEventArgs();
-            e.ControllerTypes = Container.controllerTypes;
-
-            OnControllersResolved(e);
+            invoker = new ActionInvoker();            
 
             EventBroker.Instance.PostMapRequestHandler += Invoke;
         }
-
-        #region event
-
-        public class ControllersResolvedEventArgs : EventArgs
-        {
-            public static readonly new ControllersResolvedEventArgs Empty = new ControllersResolvedEventArgs();
-            public Dictionary<string, Type> ControllerTypes { get; set; }
-        }
-
-        public static event EventHandler<ControllersResolvedEventArgs> ControllersResolved;
-
-        protected virtual void OnControllersResolved(ControllersResolvedEventArgs e)
-        {
-            EventHandler<ControllersResolvedEventArgs> handler = ControllersResolved;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        #endregion
     }
 }

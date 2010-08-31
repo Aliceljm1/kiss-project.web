@@ -1,11 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Caching;
 using System.Xml;
 using Kiss.Config;
 using Kiss.Utils;
+using Kiss.Web.Mvc;
 
 namespace Kiss.Web.Ajax
 {
@@ -64,7 +64,7 @@ namespace Kiss.Web.Ajax
             if (string.Equals(className, "gAjax", StringComparison.InvariantCultureIgnoreCase))
             {
                 JContext jc = JContext.Current;
-                Type t = jc.ControllerContainer.GetControllerType(jc.Navigation.Id);
+                Type t = ControllerResolver.Instance.GetControllerType(jc.Navigation.Id);
                 if (t != null && AjaxConfiguration.ControllerAjax.ContainsKey(t))
                     return AjaxConfiguration.ControllerAjax[t];
             }

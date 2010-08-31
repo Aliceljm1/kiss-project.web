@@ -238,6 +238,11 @@ namespace Kiss.Web.UrlMapping
 
         public void AddMapping(UrlMappingItem item)
         {
+            AddMapping(SiteConfig.Instance.SiteKey, item);
+        }
+
+        public void AddMapping(string siteKey, UrlMappingItem item)
+        {
             _manualAdded.Add(item);
             _coll.Merge(item);
         }

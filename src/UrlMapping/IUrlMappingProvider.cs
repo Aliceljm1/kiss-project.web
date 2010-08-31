@@ -46,6 +46,17 @@ namespace Kiss.Web.UrlMapping
         /// <param name="config"></param>
         void Initialize(UrlMappingConfig config);
 
+        /// <summary>
+        /// add global routes
+        /// </summary>
+        /// <param name="item"></param>
         void AddMapping(UrlMappingItem item);
+
+        /// <summary>
+        /// add site only routes
+        /// </summary>
+        /// <param name="siteKey"></param>
+        /// <param name="item"></param>
+        void AddMapping(string siteKey, UrlMappingItem item);
     }
 }

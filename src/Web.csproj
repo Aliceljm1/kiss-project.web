@@ -97,7 +97,7 @@
     <Compile Include="Mvc\ViewResult\HttpUnauthorizedResult.cs" />
     <Compile Include="Mvc\ViewResult\JavaScriptResult.cs" />
     <Compile Include="Mvc\MvcException.cs" />
-    <Compile Include="Mvc\ControllerContext.cs" />
+    <Compile Include="Mvc\ControllerResolver.cs" />
     <Compile Include="Controls\Menu.cs" />
     <Compile Include="Controls\Paging.cs" />
     <Compile Include="Controls\RepeaterPlusNone.cs" />
