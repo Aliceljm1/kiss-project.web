@@ -48,5 +48,10 @@ v2.6.5
 站点路径下修改文件夹时不重启appdomain
 修复了在ajax环境下jcontext.user为null的bug
 修复了urlMappings.xml里url index的bug
-Todo:
-	多国语言支持优化	
+	
+
+
+v2.6.6
+增加对routes.config中菜单的设置规则，<menu url="~filemanager/index.aspx"/>
+	Todo:
+	多国语言支持优化

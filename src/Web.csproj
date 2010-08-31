@@ -69,7 +69,6 @@
     <Compile Include="Ajax\AjaxServerException.cs" />
     <Compile Include="Cache\WebCacheProvider.cs" />
     <Compile Include="ControlPanelInitializer.cs" />
-    <Compile Include="Engine\HostInitializer.cs" />
     <Compile Include="IControlPanelItemRenderer.cs" />
     <Compile Include="ClientScriptProxy.cs" />
     <Compile Include="Controls\Container.cs" />
@@ -81,8 +80,8 @@
     <Compile Include="Controls\MasterPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Engine\IHost.cs" />
-    <Compile Include="Engine\ISite.cs" />
+    <Compile Include="IHost.cs" />
+    <Compile Include="ISite.cs" />
     <Compile Include="Mvc\ActionResult.cs" />
     <Compile Include="Mvc\AsyncAttribute.cs" />
     <Compile Include="Mvc\Controller.cs" />

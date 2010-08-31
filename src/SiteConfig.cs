@@ -12,6 +12,11 @@ namespace Kiss.Web
     {
         public static SiteConfig Instance { get { return GetConfig<SiteConfig>(); } }
 
+        public static SiteConfig GetConfig(XmlNode node)
+        {
+            return GetConfig<SiteConfig>(node, false);
+        }
+
         #region props
 
         [ConfigProp("title", ConfigPropAttribute.DataType.String, Desc = "页面标题")]
@@ -53,7 +58,7 @@ namespace Kiss.Web
         [ConfigProp("favIcon", ConfigPropAttribute.DataType.String, Desc = "fav icon")]
         public string FavIcon { get; private set; }
 
-        [ConfigProp("generator", ConfigPropAttribute.DataType.String, DefaultValue = "旮旯科技", Desc = "generator")]
+        [ConfigProp("generator", ConfigPropAttribute.DataType.String, DefaultValue = "TXTEK.com", Desc = "generator")]
         public string Generator { get; private set; }
 
         [ConfigProp("rawAdditionalHeader", ConfigPropAttribute.DataType.String, Desc = "任意的http头")]

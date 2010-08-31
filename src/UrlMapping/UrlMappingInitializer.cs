@@ -9,6 +9,9 @@ namespace Kiss.Web.UrlMapping
         {
             if (!setting.Enable) return;
 
+            sl.AddComponent("kiss.XmlUrlMappingProvider", typeof(IUrlMappingProvider), typeof(XmlUrlMappingProvider));
+            sl.AddComponent("kiss.defaultHost", typeof(IHost), typeof(Host));
+
             UrlMappingModule module = new UrlMappingModule();
             module.Start();
             sl.AddComponentInstance(module);

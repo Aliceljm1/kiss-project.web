@@ -1,17 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ FileName: 	    UrlMappingConfiguration.cs
-//+ File Created:   20090731
-//+-------------------------------------------------------------------+
-//+ Purpose:        url重定向配置基类
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 20090731        ZHLI Comment Created
-//+-------------------------------------------------------------------+
-#endregion
-
-using System.Xml;
+﻿using System.Xml;
 using Kiss.Config;
 using Kiss.Utils;
 
@@ -68,7 +55,7 @@ namespace Kiss.Web.UrlMapping
         /// <summary>
         /// 配置文件路径
         /// </summary>
-        [ConfigProp( "urlMappingFile", DefaultValue = "~/App_Data/urlMappings.xml", Desc = "配置文件路径" )]
+        [ConfigProp( "urlMappingFile", DefaultValue = "~/App_Data/routes.config", Desc = "配置文件路径" )]
         public string UrlMappingFile { get; protected set; }
 
         /// <summary>

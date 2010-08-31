@@ -189,7 +189,12 @@ namespace Kiss.Web.Controls
             if (StringUtil.IsNullOrEmpty(url))
                 return "#";
 
-            return url.Contains("://") ? url : jc.CombinUrl(url);
+            if (url.Contains("://"))
+                return url;
+            else if (url.StartsWith("~"))
+                return ServerUtil.ResolveUrl(url);
+
+            return jc.CombinUrl(url);
         }
 
         public enum MenuType

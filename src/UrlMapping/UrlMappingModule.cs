@@ -253,31 +253,9 @@ namespace Kiss.Web.UrlMapping
         {
             UrlMappingConfig config = UrlMappingConfig.Instance;
 
-            if (StringUtil.HasText(config.ProviderType))
-            {
-                Type t = Type.GetType(config.ProviderType);
+            
 
-                if (t == null)
-                {
-                    t = BuildManager.GetType(config.ProviderType, false, true);
-                }
-
-                if (t == null)
-                {
-                    throw new ProviderException("Cannot locate the type '" + config.ProviderType + "' for the UrlMapping.  Check your web.config settings.");
-                }
-
-                _provider = (IUrlMappingProvider)Activator.CreateInstance(t);
-            }
-            else
-            {
-                _provider = null;
-            }
-
-            if (_provider == null)
-            {
-                throw new ProviderException("Invalid provider for UrlMappingModule.  This must be a type that implements IUrlMappingProvider.  Check your kiss.config settings, section 'urlMappingModule', attribute 'providerType'");
-            }
+            _provider = ServiceLocator.Instance.Resolve<IUrlMappingProvider>();
 
             _noMatchAction = config.NoMatchAction;
             _noMatchRedirectPage = config.NoMatchRedirectUrl;

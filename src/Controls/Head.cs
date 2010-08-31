@@ -165,8 +165,6 @@ namespace Kiss.Web.Controls
             //if( StringUtil.HasText( desc ) )
             //    metaTags[ "description" ] = desc;
 
-            //metaTags["GENERATOR"] = site.Generator ?? "KISS Project";
-
             foreach (string key in metaTags.Keys)
             {
                 writer.WriteLine(metaFormat, key, metaTags[key]);

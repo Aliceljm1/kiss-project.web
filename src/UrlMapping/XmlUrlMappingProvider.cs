@@ -118,81 +118,7 @@ namespace Kiss.Web.UrlMapping
 
             string file = HttpContext.Current.Server.MapPath(config.UrlMappingFile);
 
-            if (File.Exists(file))
-            {
-                // parse the given xml file to retrieve the listing of URL items;
-                // the xml file should include tags in the form:
-                // <url name="" template="" href="" />
-                XmlDocument xml = new XmlDocument();
-                try
-                {
-                    xml.Load(file);
-                }
-                catch (Exception ex)
-                {
-                    throw new UrlMappingException("There is an XmlUrlMappingModule error.  The error occurred while loading the urlMappingFile.  A virtual path is required and the file must be well-formed.", ex);
-                }
-
-                MenuItems.Clear();
-                Urls.Clear();
-
-                UrlMappingItem lastItem = null;
-
-                // parse the file for <urlMapping> tags
-                foreach (XmlNode node in xml.SelectNodes("//url"))
-                {
-                    // retrieve name, urlTemplate, and redirection attributes;
-                    // ensure urlTemplate and redirection are present
-                    string name = XmlUtil.GetStringAttribute(node, "name", string.Empty);
-                    string urlTemplate = XmlUtil.GetStringAttribute(node, "template", string.Empty);
-                    string redirection = Utility.GetHref(XmlUtil.GetStringAttribute(node, "href", string.Empty));
-
-                    if (string.IsNullOrEmpty(urlTemplate))
-                        throw new UrlMappingException("There is an XmlUrlMappingModule error.  All <url> tags in the mapping file require a 'template' attribute.");
-
-                    // still here, we can create the item and add to the collection
-                    UrlMappingItem item
-                          = Utility.CreateTemplatedMappingItem(
-                            name, urlTemplate, redirection, config.IncomingQueryStringBehavior
-                           );
-                    item.UrlTemplate = urlTemplate;
-
-                    foreach (XmlAttribute attr in node.Attributes)
-                    {
-                        item[attr.Name] = attr.Value;
-                    }
-
-                    NavigationInfo menuItem = GetMenuInfo(node);
-
-                    // get info from menu
-                    item.Index = menuItem.Index;
-                    item.SubIndex = menuItem.SubIndex;
-                    item.Title = XmlUtil.GetStringAttribute(node, "title", menuItem.Title);
-                    item.Desc = XmlUtil.GetStringAttribute(node, "desc", menuItem.Desc);
-
-                    item.Id = XmlUtil.GetStringAttribute(node, "id", null);
-                    item.Action = XmlUtil.GetStringAttribute(node, "action", null);
-
-                    _coll.Add(item);
-
-                    if (StringUtil.HasText(item.Name))
-                        Urls.Add(item.Name, item.UrlTemplate);
-
-                    // set self index
-                    if (lastItem == null)
-                    {
-                        item.SelfIndex = 0;
-                    }
-                    else
-                    {
-                        if (lastItem.Index == item.Index && lastItem.SubIndex == item.SubIndex)
-                            item.SelfIndex = lastItem.SelfIndex + 1;
-                        else
-                            item.SelfIndex = 0;
-                    }
-                    lastItem = item;
-                }
-            }
+            ParseXml(file, _coll, MenuItems, Urls, config.IncomingQueryStringBehavior);
 
             _coll.Merge(_manualAdded);
 
@@ -217,9 +143,9 @@ namespace Kiss.Web.UrlMapping
             _latestRefresh = DateTime.Now;
         }
 
-        private NavigationInfo GetMenuInfo(XmlNode node)
+        private static NavigationInfo GetMenuInfo(XmlNode node, Dictionary<int, NavigationItem> menuItems)
         {
-            NavigationInfo menuItem = new NavigationInfo();
+            NavigationInfo menuItem = new NavigationInfo() { Index = -1, SubIndex = -1 };
 
             XmlNode subMenuNode, menuNode;
 
@@ -246,12 +172,12 @@ namespace Kiss.Web.UrlMapping
             if (menuItem.Index == -1)
                 return menuItem;
 
-            if (!MenuItems.ContainsKey(menuItem.Index))
+            if (!menuItems.ContainsKey(menuItem.Index))
             {
                 NavigationItem item = GetMenuItem(menuNode);
                 item.Children = new Dictionary<int, NavigationItem>();
 
-                MenuItems[menuItem.Index] = item;
+                menuItems[menuItem.Index] = item;
             }
 
             if (subMenuNode != null)
@@ -260,7 +186,7 @@ namespace Kiss.Web.UrlMapping
                 if (menuItem.SubIndex == -1)
                     return menuItem;
 
-                NavigationItem item = MenuItems[menuItem.Index];
+                NavigationItem item = menuItems[menuItem.Index];
                 if (!item.Children.ContainsKey(menuItem.SubIndex))
                 {
                     NavigationItem subItem = GetMenuItem(subMenuNode);
@@ -309,6 +235,85 @@ namespace Kiss.Web.UrlMapping
         {
             _manualAdded.Add(item);
             _coll.Merge(item);
+        }
+
+        public static void ParseXml(string file, UrlMappingItemCollection routes, Dictionary<int, NavigationItem> menuItems, Dictionary<string, string> urls, IncomingQueryStringBehavior incomingQueryStringBehavior)
+        {
+            if (File.Exists(file))
+            {
+                // parse the given xml file to retrieve the listing of URL items;
+                // the xml file should include tags in the form:
+                // <url name="" template="" href="" />
+                XmlDocument xml = new XmlDocument();
+                try
+                {
+                    xml.Load(file);
+                }
+                catch (Exception ex)
+                {
+                    throw new UrlMappingException("The error occurred while loading the route files.  A virtual path is required and the file must be well-formed.", ex);
+                }
+
+                menuItems.Clear();
+                urls.Clear();
+
+                UrlMappingItem lastItem = null;
+
+                // parse the file for <urlMapping> tags
+                foreach (XmlNode node in xml.SelectNodes("//url"))
+                {
+                    // retrieve name, urlTemplate, and redirection attributes;
+                    // ensure urlTemplate and redirection are present
+                    string name = XmlUtil.GetStringAttribute(node, "name", string.Empty);
+                    string urlTemplate = XmlUtil.GetStringAttribute(node, "template", string.Empty);
+                    string redirection = Utility.GetHref(XmlUtil.GetStringAttribute(node, "href", string.Empty));
+
+                    if (string.IsNullOrEmpty(urlTemplate))
+                        throw new UrlMappingException("There is an XmlUrlMappingModule error.  All <url> tags in the mapping file require a 'template' attribute.");
+
+                    // still here, we can create the item and add to the collection
+                    UrlMappingItem item
+                          = Utility.CreateTemplatedMappingItem(
+                            name, urlTemplate, redirection, incomingQueryStringBehavior
+                           );
+                    item.UrlTemplate = urlTemplate;
+
+                    foreach (XmlAttribute attr in node.Attributes)
+                    {
+                        item[attr.Name] = attr.Value;
+                    }
+
+                    NavigationInfo menuItem = GetMenuInfo(node, menuItems);
+
+                    // get info from menu
+                    item.Index = menuItem.Index;
+                    item.SubIndex = menuItem.SubIndex;
+                    item.Title = XmlUtil.GetStringAttribute(node, "title", menuItem.Title);
+                    item.Desc = XmlUtil.GetStringAttribute(node, "desc", menuItem.Desc);
+
+                    item.Id = XmlUtil.GetStringAttribute(node, "id", null);
+                    item.Action = XmlUtil.GetStringAttribute(node, "action", null);
+
+                    routes.Add(item);
+
+                    if (StringUtil.HasText(item.Name))
+                        urls.Add(item.Name, item.UrlTemplate);
+
+                    // set self index
+                    if (lastItem == null)
+                    {
+                        item.SelfIndex = 0;
+                    }
+                    else
+                    {
+                        if (lastItem.Index == item.Index && lastItem.SubIndex == item.SubIndex)
+                            item.SelfIndex = lastItem.SelfIndex + 1;
+                        else
+                            item.SelfIndex = 0;
+                    }
+                    lastItem = item;
+                }
+            }
         }
     }
 }

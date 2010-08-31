@@ -36,9 +36,12 @@ namespace Kiss.Web
 
         void BeginRequest(object sender, EventArgs e)
         {
-            ISite site = JContext.Current.Site;
-            if (site != null)
-                HttpContext.Current.Application["SITE_KEY"] = site.SiteKey;
+            JContext jc = JContext.Current;
+
+            if (jc != null && jc.Site != null)
+                HttpContext.Current.Application["SITE_KEY"] = jc.Site.SiteKey;
+
+            jc.Context.Response.AddHeader("X-Powered-By", "TXTEK.com");
         }
 
         private static void StopAppDomainRestart()

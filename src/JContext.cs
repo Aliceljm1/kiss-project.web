@@ -680,31 +680,14 @@ namespace Kiss.Web
             {
                 if (_site == null)
                 {
-                    PluginSetting setting = PluginSettings.Get<HostInitializer>();
-
-                    if (setting.Enable && StringUtil.HasText(setting["type"]))
-                    {
-                        IHost host = null;
-                        try
-                        {
-                            host = ServiceLocator.Instance.Resolve<IHost>();
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new WebException("site farm component is not supported!", ex);
-                        }
-
-                        _site = host.CurrentSite;
-                    }
-                    else
-                    {
-                        _site = SiteConfig.Instance;
-                    }
+                    _site = Host.CurrentSite;
                 }
 
                 return _site;
             }
         }
+
+        public IHost Host { get { return ServiceLocator.Instance.Resolve<IHost>(); } }
 
         #endregion
 
