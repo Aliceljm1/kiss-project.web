@@ -82,6 +82,10 @@
     </Compile>
     <Compile Include="IHost.cs" />
     <Compile Include="ISite.cs" />
+    <Compile Include="Models\Menu.cs" />
+    <Compile Include="Models\MenuItem.cs" />
+    <Compile Include="Models\Site.cs" />
+    <Compile Include="Models\UrlItem.cs" />
     <Compile Include="Mvc\ActionResult.cs" />
     <Compile Include="Mvc\AsyncAttribute.cs" />
     <Compile Include="Mvc\Controller.cs" />
