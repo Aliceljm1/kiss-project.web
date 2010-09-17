@@ -3,12 +3,10 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Caching;
-using Kiss.Web.Utils;
 using Kiss.Utils;
-using Kiss.Utils.Web;
+using Kiss.Web.Utils;
 
 namespace Kiss.Web
 {

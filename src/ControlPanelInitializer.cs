@@ -20,10 +20,10 @@ namespace Kiss.Web
             if (userservice == null)
                 return;
 
-            if (setting.Enable )// add site.control_panel permission
-                userservice.AddPermissionModule("site", "站点管理", "control_panel|显示控制面板");
-            else
-                userservice.RemovePermissionModule("site", "control_panel");
+            //if (setting.Enable )// add site.control_panel permission
+            //    userservice.AddPermissionModule("site", "站点管理", "control_panel|显示控制面板");
+            //else
+            //    userservice.RemovePermissionModule("site", "control_panel");
         }
     }
 }

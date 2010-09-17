@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Caching;
 using System.Web.UI;
 using Kiss.Utils;
-using Kiss.Utils.Web;
+using Kiss.Web.Utils;
 
 namespace Kiss.Web.Controls
 {

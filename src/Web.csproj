@@ -69,6 +69,7 @@
     <Compile Include="Ajax\AjaxServerException.cs" />
     <Compile Include="Cache\WebCacheProvider.cs" />
     <Compile Include="ControlPanelInitializer.cs" />
+    <Compile Include="KissHttpApplication.cs" />
     <Compile Include="IControlPanelItemRenderer.cs" />
     <Compile Include="ClientScriptProxy.cs" />
     <Compile Include="Controls\Container.cs" />

@@ -6,7 +6,6 @@ using System.Text;
 using System.Web;
 using System.Web.Caching;
 using Kiss.Utils;
-using Kiss.Utils.Web;
 using Kiss.Web.Utils;
 
 namespace Kiss.Web

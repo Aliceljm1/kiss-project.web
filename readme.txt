@@ -48,8 +48,6 @@ v2.6.5
 站点路径下修改文件夹时不重启appdomain
 修复了在ajax环境下jcontext.user为null的bug
 修复了urlMappings.xml里url index的bug
-	
-
 
 v2.6.6
 增加对routes.config中菜单的设置规则，<menu url="~filemanager/index.aspx"/>
@@ -57,5 +55,9 @@ v2.6.6
 IUrlMappingProvider接口增加GetMenuItemsBySite方法，根据站点返回站点的菜单
 支持子站点不同的控制器
 增加系统异常时的错误链接
+增加了KissHttpApplication类，用于应用程序启动时的一些初始化
+修复了JavaScriptMinifier类命名空间的错误
+
+
 	Todo:
 	多国语言支持优化

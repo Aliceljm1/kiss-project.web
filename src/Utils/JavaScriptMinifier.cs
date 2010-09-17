@@ -12,7 +12,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Kiss.Utils.Web
+namespace Kiss.Web.Utils
 {
     /// <summary>
     /// use this to minifier javascript
