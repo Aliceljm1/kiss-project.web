@@ -58,6 +58,9 @@ IUrlMappingProvider接口增加GetMenuItemsBySite方法，根据站点返回站点的菜单
 增加了KissHttpApplication类，用于应用程序启动时的一些初始化
 修复了JavaScriptMinifier类命名空间的错误
 
+v2.6.7
+IUrlMappingProvider添加了GetUrlsBySite方法
+JContext添加了一些便利方法
 
 	Todo:
 	多国语言支持优化

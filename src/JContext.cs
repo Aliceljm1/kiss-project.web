@@ -572,6 +572,46 @@ namespace Kiss.Web
             }
         }
 
+        public string GetUrlBySite(string siteKey, string name)
+        {
+            ISite site = null;
+
+            foreach (var item in Host.AllSites)
+            {
+                if (!item.SiteKey.Equals(siteKey, StringComparison.InvariantCultureIgnoreCase))
+                    continue;
+
+                site = item;
+            }
+
+            if (site == null)
+                return string.Empty;
+
+            Dictionary<string, string> urls = UrlMapping.GetUrlsBySite(site);
+
+            if (urls.Count == 0)
+                return string.Empty;
+
+            if (urls.ContainsKey(name))
+                return StringUtil.CombinUrl(site.VirtualPath, urls[name]);
+
+            return string.Empty;
+        }
+
+        public string GetUrlBySite(string siteKey, string name, string replace)
+        {
+            NameValueCollection nv = StringUtil.CommaDelimitedEquation2NVCollection(replace);
+
+            string url = GetUrlBySite(siteKey, name);
+
+            foreach (string key in nv.Keys)
+            {
+                url = url.Replace("[" + key + "]", nv[key]);
+            }
+
+            return url;
+        }
+
         /// <summary>
         /// get url by UrlMapping name
         /// </summary>
@@ -579,13 +619,7 @@ namespace Kiss.Web
         /// <returns></returns>
         public string GetUrl(string name)
         {
-            if (UrlMapping.Urls.Count == 0)
-                return string.Empty;
-
-            if (UrlMapping.Urls.ContainsKey(name))
-                return StringUtil.CombinUrl(JContext.Current.Site.VirtualPath, UrlMapping.Urls[name]);
-
-            return string.Empty;
+            return GetUrlBySite(Host.CurrentSite.SiteKey, name);
         }
 
         /// <summary>
@@ -596,16 +630,7 @@ namespace Kiss.Web
         /// <returns></returns>
         public string GetUrl(string name, string replace)
         {
-            NameValueCollection nv = StringUtil.CommaDelimitedEquation2NVCollection(replace);
-
-            string url = GetUrl(name);
-
-            foreach (string key in nv.Keys)
-            {
-                url = url.Replace("[" + key + "]", nv[key]);
-            }
-
-            return url;
+            return GetUrlBySite(Host.CurrentSite.SiteKey, name, replace);
         }
 
         /// <summary>
