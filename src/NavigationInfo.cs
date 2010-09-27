@@ -8,7 +8,7 @@ namespace Kiss.Web
     /// <summary>
     /// navigation info
     /// </summary>
-    public class NavigationInfo
+    public class NavigationInfo : ExtendedAttributes
     {
         public int Index { get; set; }
         public int SubIndex { get; set; }
@@ -42,16 +42,6 @@ namespace Kiss.Web
             get
             {
                 return UrlMappingModule.Instance.Provider;
-            }
-        }
-
-        public string this[string key]
-        {
-            get
-            {
-                if (Url != null)
-                    return Url[key];
-                return string.Empty;
             }
         }
 
@@ -226,6 +216,11 @@ namespace Kiss.Web
             Title = item.Title;
             Desc = item.Desc;
             Name = item.Name;
+
+            foreach (string key in Url.Keys)
+            {
+                SetExtendedAttribute(key, Url[key]);
+            }
         }
     }
 }

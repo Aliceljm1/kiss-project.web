@@ -156,18 +156,15 @@ namespace Kiss.Web.Controls
             if (metaTags == null)
                 metaTags = new NameValueCollection();
 
-            // todo : move to page
-            //string keyword = metaTags[ "keywords" ] ?? site.SearchMetaKeywords;
-            //if( StringUtil.HasText( keyword ) )
-            //    metaTags[ "keywords" ] = site.SearchMetaKeywords;
+            JContext jc = JContext.Current;
 
-            //string desc = ( metaTags[ "description" ] ?? JContext.Current.Navigation.Desc ) ?? site.SearchMetaDescription;
-            //if( StringUtil.HasText( desc ) )
-            //    metaTags[ "description" ] = desc;
+            metaTags["keywords"] = jc.Navigation["keywords"];
+            metaTags["description"] = jc.Navigation["description"];
 
             foreach (string key in metaTags.Keys)
             {
-                writer.WriteLine(metaFormat, key, metaTags[key]);
+                if (StringUtil.HasText(metaTags[key]))
+                    writer.WriteLine(metaFormat, key, metaTags[key]);
             }
         }
 
