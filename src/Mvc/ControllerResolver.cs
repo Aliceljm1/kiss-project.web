@@ -50,6 +50,9 @@ namespace Kiss.Web.Mvc
 
             foreach (Assembly asm in ServiceLocator.Instance.Resolve<ITypeFinder>().GetAssemblies())
             {
+                if (asm.GetCustomAttributes(typeof(MvcAttribute), false).Length == 0)
+                    continue;
+
                 // only load assembly in bin dir
                 if (!Directory.GetParent(new Uri(asm.CodeBase).LocalPath).FullName.Equals(binPath))
                     continue;

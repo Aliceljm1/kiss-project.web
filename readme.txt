@@ -1,6 +1,6 @@
 KISS Web
 
-一个轻量级的MVC框架。构建在ASP.NET之上，但抛弃了WebForms和控件。
+一个轻量级的MVC框架。构建在ASP.NET之上，但抛弃了WebForms。
 
 特性：
 * 分离界面和逻辑
@@ -62,6 +62,7 @@ v2.6.7
 IUrlMappingProvider添加了GetUrlsBySite方法
 JContext添加了一些便利方法
 Head里输出meta（keywords，description）
+修复了一个ControllerResolver里对动态程序集解析的一个bug
 
 	Todo:
 	多国语言支持优化
