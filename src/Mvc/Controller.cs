@@ -120,6 +120,9 @@ namespace Kiss.Web.Mvc
         /// </summary>
         public bool can(string permission)
         {
+            if (jc.User == null)
+                return true;
+
             return jc.User.HasPermission(permission);
         }
     }

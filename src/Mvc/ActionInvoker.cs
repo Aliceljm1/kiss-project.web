@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using Kiss.Utils;
+using Kiss.Security;
 
 namespace Kiss.Web.Mvc
 {
@@ -34,6 +35,27 @@ namespace Kiss.Web.Mvc
 
             try
             {
+                if (jc.User != null)
+                {
+                    object[] attrs = mi.GetCustomAttributes(typeof(PermissionAttribute), true);
+                    if (attrs.Length > 0)
+                    {
+                        PermissionAttribute attr = attrs[0] as PermissionAttribute;
+                        if (!string.IsNullOrEmpty(attr.Permission))
+                        {
+                            if (jc.User.HasPermission(attr.Permission))
+                                goto execute;
+                            else
+                                jc.User.OnPermissionDenied(new PermissionDeniedEventArgs(attr.Permission));
+                        }
+                    }
+                }
+                else
+                {
+                    goto execute;
+                }
+
+            execute:
                 if (mi.IsStatic)
                     ret = mi.Invoke(null, null);
                 else

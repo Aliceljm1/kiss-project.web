@@ -409,8 +409,6 @@ namespace Kiss.Web
         {
             get
             {
-
-
                 if (_user == null)
                 {
                     if (IsAjaxRequest)
