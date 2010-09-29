@@ -12,7 +12,7 @@ namespace Kiss.Web.Controls
     /// <summary>
     /// 该控件将输出合并的js
     /// </summary>
-    [PersistChildren( true ), ParseChildren( false )]
+    [PersistChildren(true), ParseChildren(false)]
     public class Scripts : Control
     {
         const string ScriptKey = "__scripts__";
@@ -21,60 +21,60 @@ namespace Kiss.Web.Controls
         /// 重载Control的Render方法
         /// </summary>
         /// <param name="writer"></param>
-        protected override void Render( HtmlTextWriter writer )
+        protected override void Render(HtmlTextWriter writer)
         {
-            RenderScripts( writer );
+            RenderScripts(writer);
 
-            base.Render( writer );
+            base.Render(writer);
         }
 
         /// <summary>
         /// 输出脚本
         /// </summary>
         /// <param name="writer"></param>
-        protected virtual void RenderScripts( HtmlTextWriter writer )
+        protected virtual void RenderScripts(HtmlTextWriter writer)
         {
             string jsversion = JContext.Current.Site.JsVersion;
 
             List<string> urls = new List<string>();
             List<string> blocks = new List<string>();
 
-            Queue queue = Context.Items[ ScriptKey ] as Queue;
+            Queue queue = Context.Items[ScriptKey] as Queue;
 
-            if( queue != null && queue.Count > 0 )
+            if (queue != null && queue.Count > 0)
             {
                 IEnumerator ie = queue.GetEnumerator();
-                while( ie.MoveNext() )
+                while (ie.MoveNext())
                 {
-                    ScriptQueueItem si = ( ScriptQueueItem )ie.Current;
+                    ScriptQueueItem si = (ScriptQueueItem)ie.Current;
 
-                    if( si.IsScriptBlock )
-                        blocks.Add( si.Script );
+                    if (si.IsScriptBlock)
+                        blocks.Add(si.Script);
                     else
-                        urls.Add( si.Script );
+                        urls.Add(si.Script);
                 }
             }
 
-            if( urls.Count > 0 )
+            if (urls.Count > 0)
             {
                 writer.Write(
-                    string.Format( "<script src='{0}' type='text/javascript'></script>",
-                        Utility.FormatJsUrl( string.Format( "rescombiner.axd?f={0}&t=text/javascript&v={1}",
-                                                            ServerUtil.UrlEncode( StringUtil.CollectionToCommaDelimitedString( urls ) ),
-                                                            jsversion ) ) ) );
+                    string.Format("<script src='{0}' type='text/javascript'></script>",
+                        Utility.FormatJsUrl(string.Format("rescombiner.axd?f={0}&t=text/javascript&v={1}",
+                                                            ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(urls)),
+                                                            jsversion))));
             }
 
-            if( blocks.Count > 0 )
+            if (blocks.Count > 0)
             {
-                string blockCacheKey = GetBlockScriptCacheKey( jsversion );
+                string blockCacheKey = GetBlockScriptCacheKey(jsversion);
 
-                string block =  Context.Cache.Get( blockCacheKey ) as string;
-                if( StringUtil.IsNullOrEmpty( block ) )
+                string block = Context.Cache.Get(blockCacheKey) as string;
+                if (StringUtil.IsNullOrEmpty(block))
                 {
-                    block = string.Format( "<script type='text/javascript'>{0}</script>", new JavaScriptMinifier().MinifyString( StringUtil.CollectionToDelimitedString( blocks, "", string.Empty ) ) );
-                    Context.Cache.Insert( blockCacheKey, block, null, Cache.NoAbsoluteExpiration, TimeSpan.FromDays( 60 ) );
+                    block = string.Format("<script type='text/javascript'>{0}</script>", new JsMin().MinifyString(StringUtil.CollectionToDelimitedString(blocks, "", string.Empty)));
+                    Context.Cache.Insert(blockCacheKey, block, null, Cache.NoAbsoluteExpiration, TimeSpan.FromDays(60));
                 }
-                writer.Write( block );
+                writer.Write(block);
             }
         }
 
@@ -82,18 +82,18 @@ namespace Kiss.Web.Controls
         /// 添加脚本链接
         /// </summary>
         /// <param name="url"></param>
-        public static void AddRes( string url )
+        public static void AddRes(string url)
         {
-            AddScript( url, false, HttpContext.Current );
+            AddScript(url, false, HttpContext.Current);
         }
 
         /// <summary>
         /// 添加脚本块
         /// </summary>
         /// <param name="script"></param>
-        public static void AddBlock( string script )
+        public static void AddBlock(string script)
         {
-            AddScript( script, true, HttpContext.Current );
+            AddScript(script, true, HttpContext.Current);
         }
 
         /// <summary>
@@ -101,26 +101,26 @@ namespace Kiss.Web.Controls
         /// </summary>
         public static void ClearCache()
         {
-            HttpContext.Current.Cache.Remove( GetBlockScriptCacheKey( JContext.Current.Site.JsVersion ) );
+            HttpContext.Current.Cache.Remove(GetBlockScriptCacheKey(JContext.Current.Site.JsVersion));
         }
 
-        private static void AddScript( string script, bool isblock, HttpContext context )
+        private static void AddScript(string script, bool isblock, HttpContext context)
         {
-            Queue scriptQueue = context.Items[ ScriptKey ] as Queue;
-            if( scriptQueue == null )
+            Queue scriptQueue = context.Items[ScriptKey] as Queue;
+            if (scriptQueue == null)
             {
                 scriptQueue = new Queue();
-                context.Items[ ScriptKey ] = scriptQueue;
+                context.Items[ScriptKey] = scriptQueue;
             }
 
-            scriptQueue.Enqueue( new ScriptQueueItem( script, isblock ) );
+            scriptQueue.Enqueue(new ScriptQueueItem(script, isblock));
         }
 
-        private static string GetBlockScriptCacheKey( string jsversion )
+        private static string GetBlockScriptCacheKey(string jsversion)
         {
-            return string.Format( "Kiss.web.controls.scripts.block.{0}.{1}",
+            return string.Format("Kiss.web.controls.scripts.block.{0}.{1}",
                 HttpContext.Current.Request.RawUrl,
-                jsversion );
+                jsversion);
         }
 
         internal class ScriptQueueItem
@@ -128,7 +128,7 @@ namespace Kiss.Web.Controls
             public bool IsScriptBlock { get; set; }
             public string Script { get; set; }
 
-            public ScriptQueueItem( string script, bool isblock )
+            public ScriptQueueItem(string script, bool isblock)
             {
                 Script = script;
                 IsScriptBlock = isblock;

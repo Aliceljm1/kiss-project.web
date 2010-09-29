@@ -98,8 +98,17 @@ namespace Kiss.Web
                             totalstr = CssMinifier.CssMinify(sb.ToString());
                         }
                         else if (string.Equals(contentType, "text/javascript"))
-                            totalstr = new JavaScriptMinifier().MinifyString(sb.ToString());
-
+                        {
+                            try
+                            {
+                                totalstr = new JsMin().MinifyString(sb.ToString());
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.Warn(ExceptionUtil.WriteException(ex));
+                                totalstr = sb.ToString();
+                            }
+                        }
                         if (StringUtil.HasText(totalstr))
                         {
                             byte[] buffer = Encoding.UTF8.GetBytes(totalstr);

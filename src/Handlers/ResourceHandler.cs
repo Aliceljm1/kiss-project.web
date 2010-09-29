@@ -298,7 +298,7 @@ namespace Kiss.Web
                 switch (extension)
                 {
                     case ".js":
-                        return new JavaScriptMinifier().MinifyString(content);
+                        return new JsMin().MinifyString(content);
                     case ".css":
                         return CssMinifier.CssMinify(content);
                     default:

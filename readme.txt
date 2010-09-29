@@ -65,6 +65,7 @@ Head里输出meta（keywords，description）
 修复了一个ControllerResolver里对动态程序集解析的一个bug
 支持通过标签定义控制器方法的执行所需要的权限
 增加了权限模块未设置时的处理逻辑
+替换了jsmin的实现，忽略jsmin的异常
 
 	Todo:
 	多国语言支持优化

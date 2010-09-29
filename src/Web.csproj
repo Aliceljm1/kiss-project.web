@@ -147,7 +147,7 @@
     <Compile Include="Utils\CssMinifier.cs" />
     <Compile Include="Utils\HttpContextUtil.cs" />
     <Compile Include="HttpValueCollection.cs" />
-    <Compile Include="Utils\JavaScriptMinifier.cs" />
+    <Compile Include="Utils\JsMin.cs" />
     <Compile Include="Utils\RequestUtil.cs" />
     <Compile Include="Utils\ResponseUtil.cs" />
     <Compile Include="WebContext.cs" />
