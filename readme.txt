@@ -66,6 +66,12 @@ Head里输出meta（keywords，description）
 支持通过标签定义控制器方法的执行所需要的权限
 增加了权限模块未设置时的处理逻辑
 替换了jsmin的实现，忽略jsmin的异常
+防止回收应用程序池
+移除了InitializerModule，处理逻辑放在KissHttpApplication里，站点需要添加Global.asax文件，文件内容<%@ Application Inherits="Kiss.Web.KissHttpApplication" %>
+
+
+已知问题：
+在虚拟主机的环境下，Application_Start，和Init执行权限的问题（因无法进行IO操作，导致无法记录日志）
 
 	Todo:
 	多国语言支持优化

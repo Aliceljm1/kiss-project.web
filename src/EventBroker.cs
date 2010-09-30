@@ -30,6 +30,8 @@ namespace Kiss.Web
         {
             Interlocked.Increment(ref observedApplications);
 
+            LogManager.GetLogger<EventBroker>().Info("Attach to HttpApplication {0}.", observedApplications);
+
             app.BeginRequest += Application_BeginRequest;
             app.AuthenticateRequest += application_AuthenticateRequest;
             app.AuthorizeRequest += Application_AuthorizeRequest;
@@ -49,6 +51,8 @@ namespace Kiss.Web
         void Application_Disposed(object sender, EventArgs e)
         {
             Interlocked.Decrement(ref observedApplications);
+
+            LogManager.GetLogger<EventBroker>().Info("Detach to HttpApplication {0}.", observedApplications);
 
             HttpApplication app = sender as HttpApplication;
 

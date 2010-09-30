@@ -23,36 +23,49 @@ namespace Kiss.Web
                 if (!Context.IsCustomErrorEnabled && !Context.IsDebuggingEnabled)
                     sl.AddComponent("Kiss.errorhandler", typeof(IErrorHandler), typeof(ErrorHandler));
             });
+
+            LogManager.GetLogger<KissHttpApplication>().Debug("ALL components initialized.");
         }
 
-        protected void Session_Start(object sender, EventArgs e)
+        public override void Init()
         {
+            base.Init();
 
+            EventBroker.Instance.Attach(this);
+
+            EventBroker.Instance.BeginRequest += onBeginRequest;
         }
 
-        protected void Application_BeginRequest(object sender, EventArgs e)
+        private void onBeginRequest(object sender, EventArgs e)
         {
+            JContext jc = JContext.Current;
 
-        }
+            HttpContext context = HttpContext.Current;
 
-        protected void Application_AuthenticateRequest(object sender, EventArgs e)
-        {
+            if (jc != null && jc.Site != null)
+                context.Items["SITE_KEY"] = jc.Site.SiteKey;
 
-        }
+            // record site url
+            if (context.Application["SITE_URL"] == null)
+                context.Application["SITE_URL"] = string.Format("{0}://{1}{2}", context.Request.Url.Scheme, context.Request.Url.Authority, context.Request.ApplicationPath);
 
-        protected void Application_Error(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Session_End(object sender, EventArgs e)
-        {
-
+            jc.Context.Response.AddHeader("X-Powered-By", "TXTEK.COM");
         }
 
         protected void Application_End(object sender, EventArgs e)
         {
+            string msg = "Application is ending...";
 
+            string url = Application["SITE_URL"] as string;
+
+            if (url != null)
+            {
+                msg += string.Format("Request url:{0} to restart.", url);
+
+                Kiss.Utils.Net.HttpRequest.GetPageText(url);
+            }
+
+            LogManager.GetLogger<KissHttpApplication>().Info(msg);
         }
 
         private static void StopAppDomainRestart()

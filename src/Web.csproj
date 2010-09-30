@@ -123,7 +123,6 @@
     <Compile Include="IErrorHandler.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="InitializerModule.cs" />
     <Compile Include="IWebContext.cs" />
     <Compile Include="HttpContextItem.cs" />
     <Compile Include="Mvc\MvcInitializer.cs" />
