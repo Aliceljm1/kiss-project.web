@@ -44,9 +44,13 @@ namespace Kiss.Web.Controls
             get
             {
                 if (themeFolder == null)
-                    return string.Format("{0}/{1}/masters/", JContext.Current.Site.ThemeRoot, ThemeName);
-                else
-                    return themeFolder;
+                {
+                    JContext jc = JContext.Current;
+
+                    return string.Format("{0}/{1}/masters/", jc.CombinUrl(jc.Site.ThemeRoot), ThemeName);
+                }
+
+                return themeFolder;
             }
             set
             {
@@ -77,7 +81,8 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return string.Format("{0}/default/masters/{1}", JContext.Current.Site.ThemeRoot, ThemeMasterFile);
+                JContext jc = JContext.Current;
+                return string.Format("{0}/default/masters/{1}", jc.CombinUrl(jc.Site.ThemeRoot), ThemeMasterFile);
             }
         }
 

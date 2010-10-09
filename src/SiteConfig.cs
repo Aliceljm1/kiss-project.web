@@ -25,8 +25,9 @@ namespace Kiss.Web
         [ConfigProp("defaultTheme", ConfigPropAttribute.DataType.String, DefaultValue = "default", Desc = "默认theme")]
         public string DefaultTheme { get; private set; }
 
+        private string _vp;
         [ConfigProp("virtualPath", Desc = "虚拟目录", DefaultValue = "")]
-        public string VP { get; private set; }
+        public string VP { get { return _vp; } set { _vp = value; _virtualPath = null; } }
 
         [ConfigProp("host", ConfigPropAttribute.DataType.String, Desc = "域名")]
         public string Host { get; private set; }
@@ -34,7 +35,7 @@ namespace Kiss.Web
         [ConfigProp("cssRoot", ConfigPropAttribute.DataType.String, DefaultValue = "themes/{0}/", Desc = "样式文件夹路径")]
         public string CssRoot { get; private set; }
 
-        [ConfigProp("themeRoot", ConfigPropAttribute.DataType.String, DefaultValue = "~/themes", Desc = "皮肤根目录")]
+        [ConfigProp("themeRoot", ConfigPropAttribute.DataType.String, DefaultValue = "themes", Desc = "皮肤根目录")]
         public string ThemeRoot { get; private set; }
 
         [ConfigProp("combinCss", ConfigPropAttribute.DataType.Boolean, DefaultValue = false, Desc = "合并样式")]
@@ -77,7 +78,7 @@ namespace Kiss.Web
         public string RoleKey { get; private set; }
 
         [ConfigProp("siteKey", ConfigPropAttribute.DataType.String, DefaultValue = "default")]
-        public string SiteKey { get; private set; }
+        public string SiteKey { get; set; }
 
         public string ErrorPage { get; private set; }
 

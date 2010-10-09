@@ -201,7 +201,7 @@ namespace Kiss.Web.Controls
             JContext jc = JContext.Current;
 
             return string.Format(SkinFolderFormat,
-                jc.Site.ThemeRoot,
+                jc.CombinUrl(jc.Site.ThemeRoot),
                 !lang || StringUtil.IsNullOrEmpty(jc.Navigation.LanguageCode) ? theme : string.Format("{0}-{1}", theme, jc.Navigation.LanguageCode));
         }
 

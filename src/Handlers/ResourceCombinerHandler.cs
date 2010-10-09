@@ -136,7 +136,8 @@ namespace Kiss.Web
         {
             try
             {
-                ISite site = JContext.Current.Site;
+                JContext jc = JContext.Current;
+                ISite site = jc.Site;
                 if (virtualPath.StartsWith("/"))
                 {
                     string path = virtualPath;
@@ -148,7 +149,7 @@ namespace Kiss.Web
                     {
                         path = path.Substring(6);
 
-                        path = string.Concat(VirtualPathUtility.ToAbsolute(site.ThemeRoot), path);
+                        path = string.Concat(VirtualPathUtility.ToAbsolute(jc.CombinUrl(site.ThemeRoot)), path);
                     }
                     else
                         path = StringUtil.CombinUrl(site.VirtualPath, path);

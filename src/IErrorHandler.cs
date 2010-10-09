@@ -60,6 +60,8 @@ namespace Kiss.Web
             JContext.Current.ViewData["_ex"] = ex;
             JContext.Current.ViewData["_msg"] = ExceptionUtil.WriteException(ex, true);
 
+            HttpContext.Current.Response.StatusCode = 500;
+
             while (ex != null)
             {
                 if (!(ex is KissException) && JContext.Current.GetViewData("_title") == null)

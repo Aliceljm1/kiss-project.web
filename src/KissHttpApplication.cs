@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using System.Web;
+using System.IO;
+using Kiss.Utils;
+using System.Configuration;
 
 namespace Kiss.Web
 {
@@ -9,6 +12,8 @@ namespace Kiss.Web
     /// </summary>
     public class KissHttpApplication : System.Web.HttpApplication
     {
+        private static bool needSetup = false;
+
         protected void Application_Start(object sender, EventArgs e)
         {
             StopAppDomainRestart();
@@ -25,6 +30,16 @@ namespace Kiss.Web
             });
 
             LogManager.GetLogger<KissHttpApplication>().Debug("ALL components initialized.");
+
+            // check if system config is valid
+            if (Context != null)
+            {
+                if (ConfigurationManager.GetSection("kiss") == null && Directory.Exists(ServerUtil.MapPath("~/setup")))
+                {
+                    needSetup = true;
+                    Context.Response.Redirect("~/setup/", true);
+                }
+            }
         }
 
         public override void Init()
@@ -39,17 +54,27 @@ namespace Kiss.Web
         private void onBeginRequest(object sender, EventArgs e)
         {
             JContext jc = JContext.Current;
+            if (jc == null) return;
 
-            HttpContext context = HttpContext.Current;
+            HttpContext context = jc.Context;
 
-            if (jc != null && jc.Site != null)
-                context.Items["SITE_KEY"] = jc.Site.SiteKey;
+            if (needSetup)
+            {
+                if (!context.Response.IsRequestBeingRedirected && jc.Site.SiteKey != "setup")
+                    context.Response.Redirect("~/setup/", true);
+            }
+            else
+            {
+                if (jc.Site != null)
+                    context.Items["SITE_KEY"] = jc.Site.SiteKey;
 
-            // record site url
-            if (context.Application["SITE_URL"] == null)
-                context.Application["SITE_URL"] = string.Format("{0}://{1}{2}", context.Request.Url.Scheme, context.Request.Url.Authority, context.Request.ApplicationPath);
+                // record site url
+                if (Application["SITE_URL"] == null)
+                    Application["SITE_URL"] = string.Format("{0}://{1}{2}", context.Request.Url.Scheme, context.Request.Url.Authority, context.Request.ApplicationPath);
 
-            jc.Context.Response.AddHeader("X-Powered-By", "TXTEK.COM");
+                if (!context.Response.IsRequestBeingRedirected)
+                    context.Response.AddHeader("X-Powered-By", "TXTEK.COM");
+            }
         }
 
         protected void Application_End(object sender, EventArgs e)
