@@ -63,7 +63,7 @@ namespace Kiss.Web
         /// <returns></returns>
         public object Get(string key)
         {
-            return _cache[key];
+            return _cache.Get(key);
         }
     }
 }

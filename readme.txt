@@ -73,6 +73,8 @@ v2.6.8
 设置默认错误页面http StatusCode为500
 站点设置里，优化themeRoot和cssRoot的配置；virtualPath和siteKey可修改；
 安装setup模块后，系统未配置时自动跳转到setup
+修复了KissHttpApplication的bug（EventBroker.Instance.BeginRequest += onBeginRequest;被多次调用）
+修复Cache Provider的bug，IndexOutOfRange异常
 
 已知问题：
 在虚拟主机的环境下，Application_Start，和Init执行权限的问题（因无法进行IO操作，导致无法记录日志）

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
 using System.Reflection;
 using System.Web;
-using System.IO;
 using Kiss.Utils;
-using System.Configuration;
 
 namespace Kiss.Web
 {
@@ -40,15 +40,31 @@ namespace Kiss.Web
                     Context.Response.Redirect("~/setup/", true);
                 }
             }
+
+            EventBroker.Instance.BeginRequest += onBeginRequest;
         }
 
         public override void Init()
         {
             base.Init();
 
-            EventBroker.Instance.Attach(this);
+            EventBroker.Instance.Attach(this);            
+        }
 
-            EventBroker.Instance.BeginRequest += onBeginRequest;
+        protected void Application_End(object sender, EventArgs e)
+        {
+            string msg = "Application is ending...";
+
+            string url = Application["SITE_URL"] as string;
+
+            if (url != null)
+            {
+                msg += string.Format("Request url:{0} to restart.", url);
+
+                Kiss.Utils.Net.HttpRequest.GetPageText(url);
+            }
+
+            LogManager.GetLogger<KissHttpApplication>().Info(msg);
         }
 
         private void onBeginRequest(object sender, EventArgs e)
@@ -75,22 +91,6 @@ namespace Kiss.Web
                 if (!context.Response.IsRequestBeingRedirected)
                     context.Response.AddHeader("X-Powered-By", "TXTEK.COM");
             }
-        }
-
-        protected void Application_End(object sender, EventArgs e)
-        {
-            string msg = "Application is ending...";
-
-            string url = Application["SITE_URL"] as string;
-
-            if (url != null)
-            {
-                msg += string.Format("Request url:{0} to restart.", url);
-
-                Kiss.Utils.Net.HttpRequest.GetPageText(url);
-            }
-
-            LogManager.GetLogger<KissHttpApplication>().Info(msg);
         }
 
         private static void StopAppDomainRestart()
