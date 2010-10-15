@@ -76,6 +76,13 @@ v2.6.8
 修复了KissHttpApplication的bug（EventBroker.Instance.BeginRequest += onBeginRequest;被多次调用）
 修复Cache Provider的bug，IndexOutOfRange异常
 
+v2.6.9
+重要更新，ISite接口移除了Id属性，JContext增加SiteId属性，用于站点群；Site对象不在实现ISite接口，只负责保存站点群下的配置信息
+TemplatedControl支持从主题skins跟目录取皮肤
+Container控件优化
+JContext添加IsDesignMode属性
+一些小的优化
+
 已知问题：
 在虚拟主机的环境下，Application_Start，和Init执行权限的问题（因无法进行IO操作，导致无法记录日志）
 

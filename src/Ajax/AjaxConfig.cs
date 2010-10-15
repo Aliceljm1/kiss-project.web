@@ -6,6 +6,7 @@ using System.Xml;
 using Kiss.Config;
 using Kiss.Utils;
 using Kiss.Web.Mvc;
+using System.IO;
 
 namespace Kiss.Web.Ajax
 {
@@ -103,6 +104,9 @@ namespace Kiss.Web.Ajax
         private List<AjaxClass> ReadConfig(string file)
         {
             List<AjaxClass> list = new List<AjaxClass>();
+
+            if (!File.Exists(file))
+                return list;
 
             XmlDocument xml = new XmlDocument();
             xml.Load(file);

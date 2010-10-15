@@ -27,6 +27,8 @@ namespace Kiss.Web.Controls
 
         #endregion
 
+        JContext jc = JContext.Current;
+
         #region props
 
         private string skinName;
@@ -41,12 +43,14 @@ namespace Kiss.Web.Controls
                 {
                     if (UsedInMvc && ActionAsSkinName)// insure unique in a page
                     {
-                        string viewResultSkin = JContext.Current.Items["__viewResult__"] as string;
+                        string viewResultSkin = jc.Items["__viewResult__"] as string;
                         if (StringUtil.HasText(viewResultSkin))
                             skinName = viewResultSkin;
                         else
-                            skinName = JContext.Current.Navigation.Action;
+                            skinName = jc.Navigation.Action;
                     }
+                    else if (ActionAsSkinName)
+                        skinName = jc.Navigation.Action;
                     else
                         skinName = GetType().Name;
                 }
@@ -71,7 +75,7 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return UsedInMvc ? string.Format("{0}{1}/", skinFilenamePrefix, JContext.Current.Navigation.Id) :
+                return UsedInMvc ? string.Format("{0}{1}/", skinFilenamePrefix, jc.Navigation.Id) :
                     skinFilenamePrefix;
             }
             set
@@ -166,7 +170,7 @@ namespace Kiss.Web.Controls
             get
             {
                 if (StringUtil.IsNullOrEmpty(_themeName))
-                    _themeName = JContext.Current.Theme;
+                    _themeName = jc.Theme;
                 return _themeName;
             }
         }
@@ -191,15 +195,13 @@ namespace Kiss.Web.Controls
             return string.Format("{1}{0}{2}.ascx", name, prefix, SkinFileNamePostfix);
         }
 
-        private static string GetSkinFolder(string theme)
+        private string GetSkinFolder(string theme)
         {
             return GetSkinFolder(theme, true);
         }
 
-        private static string GetSkinFolder(string theme, bool lang)
-        {
-            JContext jc = JContext.Current;
-
+        private string GetSkinFolder(string theme, bool lang)
+        {            
             return string.Format(SkinFolderFormat,
                 jc.CombinUrl(jc.Site.ThemeRoot),
                 !lang || StringUtil.IsNullOrEmpty(jc.Navigation.LanguageCode) ? theme : string.Format("{0}-{1}", theme, jc.Navigation.LanguageCode));

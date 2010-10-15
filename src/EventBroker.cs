@@ -23,7 +23,7 @@ namespace Kiss.Web
             protected set { Singleton<EventBroker>.Instance = value; }
         }
 
-        private int observedApplications;
+        private int observedApplications = 0;
 
         /// <summary>Attaches to events from the application instance.</summary>
         public virtual void Attach(HttpApplication app)

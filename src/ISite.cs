@@ -7,7 +7,6 @@ namespace Kiss.Web
     /// </summary>
     public interface ISite
     {
-        int Id { get; }
         string VirtualPath { get; }
         bool CombinJs { get; }
         bool CombinCss { get; }

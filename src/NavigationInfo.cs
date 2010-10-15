@@ -100,8 +100,9 @@ namespace Kiss.Web
                 if (_id == null)
                 {
                     if (!OK)
-                        _id = string.Empty;
-                    else if (StringUtil.IsNullOrEmpty(Url.Id))
+                        return string.Empty;
+
+                    if (StringUtil.IsNullOrEmpty(Url.Id))
                     {
                         if (ParentMenu != null)
                             _id = ParentMenu.Name;

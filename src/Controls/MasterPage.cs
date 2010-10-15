@@ -16,7 +16,7 @@ namespace Kiss.Web.Controls
 
         protected override void OnPreInit(EventArgs e)
         {
-            string masterFile = Context.Request.QueryString["MasterFile"];
+            string masterFile = Context.Request.QueryString["kissMasterFile"];
 
             if (StringUtil.HasText(masterFile))
             {

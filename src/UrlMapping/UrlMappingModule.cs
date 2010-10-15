@@ -12,7 +12,6 @@ namespace Kiss.Web.UrlMapping
     /// <summary>
     /// 重定向
     /// </summary>
-    [Plugin]
     public class UrlMappingModule : IStartable, IStoppable
     {
         #region props
@@ -138,13 +137,7 @@ namespace Kiss.Web.UrlMapping
             string urlRequested = GetUrlRequested(app.Request);
 
             if (!CheckExtension(urlRequested))
-            {
-                // set view data in ajax call
-                //if (StringUtil.InvariantCultureIgnoreCaseEquals(urlRequested, "_ajax.axd"))
-                //    SetViewData();
-
                 return;
-            }
 
             // inspect the request and perform redirection as necessary
             // start by getting the mapping items from the provider
@@ -190,7 +183,10 @@ namespace Kiss.Web.UrlMapping
             {
                 Url url = new Url(newPath);
                 if (StringUtil.HasText(url.Query))
+                {
                     urlQueryString = StringUtil.CommaDelimitedEquation2NVCollection(url.Query);
+                    urlQueryString.Remove("kissMasterFile");
+                }
             }
 
             // apply the querystring to the path
@@ -204,8 +200,10 @@ namespace Kiss.Web.UrlMapping
             // if configured, apply the incoming query string variables too
             if (_qsBehavior == IncomingQueryStringBehavior.PassThrough)
             {
-                newPath = ApplyQueryString(newPath, incomingQS);
-                JContext.Current.QueryString.Add(incomingQS);
+                NameValueCollection _qs = new NameValueCollection(incomingQS);
+                _qs.Remove("kissMasterFile");
+                newPath = ApplyQueryString(newPath, _qs);
+                JContext.Current.QueryString.Add(_qs);
             }
 
             // perform the redirection
@@ -302,7 +300,7 @@ namespace Kiss.Web.UrlMapping
             if (_automaticallyUpdateFormAction)
             {
                 broker.PostMapRequestHandler += context_PostMapRequestHandler;
-            }            
+            }
         }
 
         public void Stop()
@@ -413,7 +411,7 @@ namespace Kiss.Web.UrlMapping
 
                 if (s)
                 {
-                    JContext.Current.Navigation.Set(item);
+                    jc.Navigation.Set(item);
 
                     OnUrlMatched();
 

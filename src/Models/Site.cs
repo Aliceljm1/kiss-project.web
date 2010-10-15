@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kiss.Web;
 
 namespace Kiss.Web
 {
     [Serializable]
     [OriginalName("gSite")]
-    public class Site : QueryObject<Site, int>, ISite
+    public class Site : QueryObject<Site, int>
     {
         [PK]
         override public int Id { get { return base.Id; } set { base.Id = value; } }
@@ -15,49 +14,9 @@ namespace Kiss.Web
         public string SiteKey { get; set; }
 
         /// <summary>
-        /// The domain name plus and any port information, e.g. jiliKiss.com:80
+        /// The domain name plus and any port information, e.g. yourdomain.com:80
         /// </summary>
         public string Authority { get; set; }
-
-        public string Title { get; set; }
-
-        public bool CombinCss { get; set; }
-
-        public bool CombinJs { get; set; }
-
-        public string CssHost { get; set; }
-
-        public string ThemeRoot { get; set; }
-
-        public string CssRoot { get; set; }
-
-        public string CssVersion { get; set; }
-
-        public string DefaultTheme { get; set; }
-
-        public string FavIcon { get; set; }
-
-        public string Host { get; set; }
-
-        public string JsHost { get; set; }
-
-        public string JsVersion { get; set; }
-
-        public string RawAdditionalHeader { get; set; }
-
-        public string VirtualPath { get; set; }
-
-        public int MenuId { get; set; }
-
-        public string Category { get; set; }
-
-        public string Footer { get; set; }
-
-        public string ErrorPage { get; set; }
-
-        public string UserKey { get; set; }
-        public string DeptKey { get; set; }
-        public string RoleKey { get; set; }
 
         public string PropertyName { get; set; }
         public string PropertyValue { get; set; }
@@ -98,21 +57,6 @@ namespace Kiss.Web
 
             PropertyName = sd.Keys;
             PropertyValue = sd.Values;
-        }
-
-        public override string ToString()
-        {
-            return Title;
-        }
-
-        public List<DictSchema> GetSchema(string type)
-        {
-            return DictSchema.GetsByType(Id, type);
-        }
-
-        public DictSchema GetSchema(string type, string name)
-        {
-            return DictSchema.GetByName(Id, type, name);
         }
 
         #region method

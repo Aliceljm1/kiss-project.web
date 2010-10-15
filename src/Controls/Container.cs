@@ -189,8 +189,9 @@ namespace Kiss.Web.Controls
                     if (ctrl is MasterFileAwaredControl)
                     {
                         (ctrl as MasterFileAwaredControl).MasterPageFileName = ThemeMasterFile;
-                        //JContext.Current.DesignableSections.Add( ctrl.ID );
                     }
+                    // force load child controls
+                    int i = ctrl.Controls.Count;
                 }
             }
 
@@ -211,7 +212,6 @@ namespace Kiss.Web.Controls
                 if (ctrl is MasterFileAwaredControl)
                 {
                     (ctrl as MasterFileAwaredControl).MasterPageFileName = LastThemeMasterFile;
-                    JContext.Current.DesignableSections.Add(ctrl.ID);
                 }
                 else if (ctrl.Controls.Count > 0)
                     FindRecur(ctrl.Controls);

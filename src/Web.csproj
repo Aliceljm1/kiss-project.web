@@ -68,9 +68,8 @@
     <Compile Include="Ajax\AjaxParam.cs" />
     <Compile Include="Ajax\AjaxServerException.cs" />
     <Compile Include="Cache\WebCacheProvider.cs" />
-    <Compile Include="ControlPanelInitializer.cs" />
     <Compile Include="KissHttpApplication.cs" />
-    <Compile Include="IControlPanelItemRenderer.cs" />
+    <Compile Include="ControlPanelItemRenderer.cs" />
     <Compile Include="ClientScriptProxy.cs" />
     <Compile Include="Controls\Container.cs" />
     <Compile Include="Controls\Content.cs" />
@@ -83,10 +82,7 @@
     </Compile>
     <Compile Include="IHost.cs" />
     <Compile Include="ISite.cs" />
-    <Compile Include="Models\Menu.cs" />
-    <Compile Include="Models\MenuItem.cs" />
     <Compile Include="Models\Site.cs" />
-    <Compile Include="Models\UrlItem.cs" />
     <Compile Include="Mvc\ActionResult.cs" />
     <Compile Include="Mvc\AsyncAttribute.cs" />
     <Compile Include="Mvc\Controller.cs" />

@@ -82,9 +82,6 @@ namespace Kiss.Web
 
         public string ErrorPage { get; private set; }
 
-        [ConfigProp("id", ConfigPropAttribute.DataType.Int, DefaultValue = 0)]
-        public int Id { get; private set; }
-
         internal static readonly Dictionary<int, NavigationItem> menu = new Dictionary<int, NavigationItem>();
         public Dictionary<int, NavigationItem> MenuItems { get { return menu; } }
 

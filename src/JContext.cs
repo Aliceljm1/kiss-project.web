@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Web;
-using Kiss.Plugin;
 using Kiss.Security;
 using Kiss.Utils;
 using Kiss.Web.Mvc;
@@ -451,6 +450,7 @@ namespace Kiss.Web
         public bool IsAjaxRequest { get; internal set; }
 
         public bool IsAsync { get; internal set; }
+
         /// <summary>
         /// 是否是提交表单
         /// </summary>
@@ -462,15 +462,31 @@ namespace Kiss.Web
             }
         }
 
+        /// <summary>
+        /// 站点Id，用于站点群
+        /// </summary>
+        public int SiteId { get; set; }
+
+        /// <summary>
+        /// 站点群配置
+        /// </summary>
+        public Site SiteConfig { get; set; }
+
         #region Design
 
-        ///// <summary>
-        ///// 是否处于设计模式
-        ///// </summary>
-        //public bool IsDesignMode { get; set; }
-
-        private List<string> designableSections = new List<string>();
-        public List<string> DesignableSections { get { return designableSections; } }
+        private bool? _isdesignMode = null;
+        /// <summary>
+        /// 是否处于设计模式
+        /// </summary>
+        public bool IsDesignMode
+        {
+            get
+            {
+                if (_isdesignMode == null || !_isdesignMode.HasValue)
+                    _isdesignMode = QueryString["edit"] != null && User.HasPermission("site.widget");
+                return _isdesignMode.Value;
+            }
+        }
 
         #endregion
 

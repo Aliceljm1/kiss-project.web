@@ -2,7 +2,7 @@
 
 namespace Kiss.Web.UrlMapping
 {
-    [AutoInit(Title = "url routing", Priority = 4)]
+    [AutoInit(Title = "Url Route", Priority = 4)]
     public class UrlMappingInitializer : IPluginInitializer
     {
         public void Init(ServiceLocator sl, PluginSetting setting)
