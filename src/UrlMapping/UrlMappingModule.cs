@@ -343,7 +343,11 @@ namespace Kiss.Web.UrlMapping
             string virtualPath = JContext.Current.Site.VirtualPath;
             string urlRequested = string.Empty;
             if (virtualPath != "/")
-                urlRequested = url.ToLower().Replace(virtualPath, string.Empty);
+            {
+                urlRequested = url.ToLower().Replace(virtualPath.ToLower(), string.Empty);
+                if (string.IsNullOrEmpty(urlRequested))
+                    urlRequested = "default.aspx";
+            }
             else
                 urlRequested = url;
 

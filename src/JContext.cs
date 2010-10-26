@@ -692,8 +692,6 @@ namespace Kiss.Web
             get
             {
                 if (StringUtil.IsNullOrEmpty(_theme))
-                    _theme = QueryString["theme"];
-                if (StringUtil.IsNullOrEmpty(_theme))
                     _theme = Site.DefaultTheme;
                 return _theme;
             }

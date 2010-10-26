@@ -41,7 +41,7 @@ namespace Kiss.Web.Controls
             {
                 if (StringUtil.IsNullOrEmpty(skinName))
                 {
-                    if (UsedInMvc && ActionAsSkinName)// insure unique in a page
+                    if (OverrideSkinName || (UsedInMvc && ActionAsSkinName))// insure unique in a page
                     {
                         string viewResultSkin = jc.Items["__viewResult__"] as string;
                         if (StringUtil.HasText(viewResultSkin))
@@ -52,6 +52,9 @@ namespace Kiss.Web.Controls
                     else if (ActionAsSkinName)
                         skinName = jc.Navigation.Action;
                     else
+                        skinName = GetType().Name;
+
+                    if (string.IsNullOrEmpty(skinName))
                         skinName = GetType().Name;
                 }
 
@@ -201,7 +204,7 @@ namespace Kiss.Web.Controls
         }
 
         private string GetSkinFolder(string theme, bool lang)
-        {            
+        {
             return string.Format(SkinFolderFormat,
                 jc.CombinUrl(jc.Site.ThemeRoot),
                 !lang || StringUtil.IsNullOrEmpty(jc.Navigation.LanguageCode) ? theme : string.Format("{0}-{1}", theme, jc.Navigation.LanguageCode));
@@ -242,5 +245,7 @@ namespace Kiss.Web.Controls
 
             return ServerUtil.ExecutePage(p);
         }
+
+        public bool OverrideSkinName { get; set; }
     }
 }

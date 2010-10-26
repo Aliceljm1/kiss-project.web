@@ -50,7 +50,7 @@ namespace Kiss.Web
 
             foreach (string str in StringUtil.Split(orderby, "+", true, true))
             {
-                OrderbyItems.Add(new Pair<string, bool>(str.TrimStart('-'), !str.StartsWith("-")));
+                AppendOrderby(str.TrimStart('-'), !str.StartsWith("-"));
             }
         }
 

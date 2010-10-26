@@ -82,6 +82,9 @@ TemplatedControl支持从主题skins跟目录取皮肤
 Container控件优化
 JContext添加IsDesignMode属性
 一些小的优化
+修复了UrlMappingModule类GetUrlRequested方法在虚拟目录路径含大小字母时的一个bug
+修复了paging控件的bug，不再缓存js block
+不在从querystring里取theme
 
 已知问题：
 在虚拟主机的环境下，Application_Start，和Init执行权限的问题（因无法进行IO操作，导致无法记录日志）

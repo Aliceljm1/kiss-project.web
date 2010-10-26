@@ -165,7 +165,7 @@ namespace Kiss.Web.Controls
                 DrawLinks(writer);
             }
 
-            ClientScriptProxy.Current.RegisterJsBlock(writer, "paging.keyboard", "$(function(){$('.pagination').pageNavi();});", true);
+            ClientScriptProxy.Current.RegisterJsBlock(writer, "paging.keyboard", "$(function(){$('.pagination').pageNavi();});", true, true);
         }
 
         private void DrawLinks(HtmlTextWriter writer)
