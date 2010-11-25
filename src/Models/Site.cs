@@ -63,14 +63,14 @@ namespace Kiss.Web
 
         public static Site GetByAuthority(string authority)
         {
-            return (from s in Query
+            return (from s in CreateContext(true)
                     where s.Authority == authority
                     select s).FirstOrDefault();
         }
 
         public static List<Site> GetsByAuthority(string authority)
         {
-            return (from s in Query
+            return (from s in CreateContext(true)
                     where s.Authority == authority || s.Authority == "*"
                     orderby s.Authority
                     select s).ToList();
@@ -78,7 +78,7 @@ namespace Kiss.Web
 
         public static List<Site> FindAll(string siteKey)
         {
-            return (from q in Query
+            return (from q in CreateContext(true)
                     where q.SiteKey == siteKey
                     select q).ToList();
         }

@@ -68,7 +68,7 @@ namespace Kiss.Web.Mvc
         {
             IRepository<T> repo = QueryObject<T>.Repository;
 
-            ViewData["list"] = repo.Gets(q);
+            ViewData["list"] = repo.GetDataTable(q).Rows;
 
             if (q.Paging)
                 q.TotalCount = repo.Count(q);
@@ -124,6 +124,19 @@ namespace Kiss.Web.Mvc
                 return true;
 
             return jc.User.HasPermission(permission);
+        }
+
+        /// <summary>
+        /// check if current user has permission to specified menu
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <returns></returns>
+        public bool hasMenu(string menu)
+        {
+            if (jc.User == null)
+                return true;
+
+            return jc.User.HasPermission(string.Concat("menu:", jc.Site.SiteKey, "_", menu));
         }
     }
 }

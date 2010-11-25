@@ -259,7 +259,9 @@ namespace Kiss.Web.Controls
 
             if (StringUtil.HasText(Url))
             {
-                return string.Format(Url, page_id + 1);
+                if (Url.Contains("?"))
+                    return string.Format(Url, page_id + 1);
+                return string.Format(Url + Context.Request.Url.Query, page_id + 1);
             }
             else
             {

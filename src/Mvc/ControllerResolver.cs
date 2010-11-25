@@ -109,14 +109,15 @@ namespace Kiss.Web.Mvc
             }
             catch (ReflectionTypeLoadException ex)
             {
-                throw new MvcException(string.Format("get types of assembly: {0} failed.", asm.FullName), ex);
+                //throw new MvcException(string.Format("get types of assembly: {0} failed.", asm.FullName), ex);
+                ts = ex.Types;
             }
 
             if (ts == null || ts.Length == 0) return di;
 
             foreach (Type type in ts)
             {
-                if (type.IsAbstract || type.IsInterface || !type.IsSubclassOf(controllerBaseType))
+                if (type == null || type.IsAbstract || type.IsInterface || type.IsGenericType || !type.IsSubclassOf(controllerBaseType))
                     continue;
 
                 object[] objs = type.GetCustomAttributes(typeof(ControllerAttribute), true);
@@ -148,8 +149,8 @@ namespace Kiss.Web.Mvc
         public Controller CreateController(string key)
         {
             Type t = GetControllerType(key);
-            if (t == null)
-                return null;
+
+            if (t == null) return null;
 
             Controller controller = Activator.CreateInstance(t) as Controller;
             if (controller == null)
@@ -189,7 +190,9 @@ namespace Kiss.Web.Mvc
                 }
             }
 
-            return null;
+            ControllerNotFoundEventArgs e = new ControllerNotFoundEventArgs() { ControllerId = key };
+            OnControllerNotFound(e);
+            return e.ControllerType;
         }
 
         #region event
@@ -199,6 +202,18 @@ namespace Kiss.Web.Mvc
         protected virtual void OnControllersResolved(ControllersResolvedEventArgs e)
         {
             EventHandler<ControllersResolvedEventArgs> handler = ControllersResolved;
+
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public event EventHandler<ControllerNotFoundEventArgs> ControllerNotFound;
+
+        protected virtual void OnControllerNotFound(ControllerNotFoundEventArgs e)
+        {
+            EventHandler<ControllerNotFoundEventArgs> handler = ControllerNotFound;
 
             if (handler != null)
             {
@@ -217,7 +232,7 @@ namespace Kiss.Web.Mvc
             findRoutes(e.SiteKey, e.ControllerTypes);
         }
 
-        void findAjaxMethods(IEnumerable<Type> types)
+        public void findAjaxMethods(IEnumerable<Type> types)
         {
             foreach (Type t in types)
             {
@@ -324,5 +339,11 @@ namespace Kiss.Web.Mvc
 
         public Dictionary<string, Type> ControllerTypes { get; set; }
         public string SiteKey { get; set; }
+    }
+
+    public class ControllerNotFoundEventArgs : EventArgs
+    {
+        public string ControllerId { get; set; }
+        public Type ControllerType { get; set; }
     }
 }

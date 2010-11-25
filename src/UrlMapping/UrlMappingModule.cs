@@ -202,6 +202,7 @@ namespace Kiss.Web.UrlMapping
             {
                 NameValueCollection _qs = new NameValueCollection(incomingQS);
                 _qs.Remove("kissMasterFile");
+                _qs.Remove("__VIEWSTATE");
                 newPath = ApplyQueryString(newPath, _qs);
                 JContext.Current.QueryString.Add(_qs);
             }

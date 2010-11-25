@@ -48,7 +48,7 @@ namespace Kiss.Web
         {
             base.Init();
 
-            EventBroker.Instance.Attach(this);            
+            EventBroker.Instance.Attach(this);
         }
 
         protected void Application_End(object sender, EventArgs e)
@@ -101,15 +101,19 @@ namespace Kiss.Web
                 BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 
             object o = p.GetValue(null, null);
+            if (o == null) return;
 
             FieldInfo f = o.GetType().GetField("_dirMonSubdirs",
                 BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
 
+            if (f == null) return;
             object monitor = f.GetValue(o);
 
+            if (monitor == null) return;
             MethodInfo m = monitor.GetType().GetMethod("StopMonitoring",
                 BindingFlags.Instance | BindingFlags.NonPublic);
 
+            if (m == null) return;
             m.Invoke(monitor, new object[] { });
         }
     }

@@ -231,7 +231,8 @@ namespace Kiss.Web
                 contentType = "1";
 
             url += ("&z=" + contentType);
-            if (StringUtil.HasText(version))
+
+            if (StringUtil.HasText(version) && site != null && !site.CombinCss)
                 url += ("&v=" + version);
 
             if (shorturl)

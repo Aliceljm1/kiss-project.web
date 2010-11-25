@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Web;
-using System.Web.Caching;
 using System.Web.UI;
 using Kiss.Utils;
-using Kiss.Web.Utils;
 
 namespace Kiss.Web.Controls
 {
@@ -66,15 +63,7 @@ namespace Kiss.Web.Controls
 
             if (blocks.Count > 0)
             {
-                string blockCacheKey = GetBlockScriptCacheKey(jsversion);
-
-                string block = Context.Cache.Get(blockCacheKey) as string;
-                if (StringUtil.IsNullOrEmpty(block))
-                {
-                    block = string.Format("<script type='text/javascript'>{0}</script>", new JsMin().MinifyString(StringUtil.CollectionToDelimitedString(blocks, "", string.Empty)));
-                    Context.Cache.Insert(blockCacheKey, block, null, Cache.NoAbsoluteExpiration, TimeSpan.FromDays(60));
-                }
-                writer.Write(block);
+                writer.Write("<script type='text/javascript'>{0}</script>", StringUtil.CollectionToDelimitedString(blocks, " ", string.Empty));
             }
         }
 
@@ -96,14 +85,6 @@ namespace Kiss.Web.Controls
             AddScript(script, true, HttpContext.Current);
         }
 
-        /// <summary>
-        /// 去除当前页面的脚本块缓存
-        /// </summary>
-        public static void ClearCache()
-        {
-            HttpContext.Current.Cache.Remove(GetBlockScriptCacheKey(JContext.Current.Site.JsVersion));
-        }
-
         private static void AddScript(string script, bool isblock, HttpContext context)
         {
             Queue scriptQueue = context.Items[ScriptKey] as Queue;
@@ -114,13 +95,6 @@ namespace Kiss.Web.Controls
             }
 
             scriptQueue.Enqueue(new ScriptQueueItem(script, isblock));
-        }
-
-        private static string GetBlockScriptCacheKey(string jsversion)
-        {
-            return string.Format("Kiss.web.controls.scripts.block.{0}.{1}",
-                HttpContext.Current.Request.RawUrl,
-                jsversion);
         }
 
         internal class ScriptQueueItem

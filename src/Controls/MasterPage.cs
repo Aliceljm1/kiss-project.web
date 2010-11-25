@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Web.UI;
 using Kiss.Utils;
+using System.Reflection;
+using System.Collections.Specialized;
 
 namespace Kiss.Web.Controls
 {
@@ -16,10 +18,19 @@ namespace Kiss.Web.Controls
 
         protected override void OnPreInit(EventArgs e)
         {
-            string masterFile = Context.Request.QueryString["kissMasterFile"];
+            string masterFile = Request.QueryString["kissMasterFile"];
 
             if (StringUtil.HasText(masterFile))
             {
+                // reflect to readonly
+                PropertyInfo isreadonly = typeof(NameValueCollection).GetProperty("IsReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+                // make collection editable
+                isreadonly.SetValue(Request.QueryString, false, null);
+                // remove
+                Request.QueryString.Remove("kissMasterFile");
+                // make collection readonly again
+                isreadonly.SetValue(Request.QueryString, true, null);
+
                 Container container = new Container();
                 container.ThemeMasterFile = masterFile + ".ascx";
 
@@ -31,7 +42,7 @@ namespace Kiss.Web.Controls
 
         JContext jc;
         Mvc.MvcModule module;
-        Action<JContext, Mvc.MvcModule> action = delegate(JContext jc, Mvc.MvcModule module) { module.invoker.InvokeAction(jc); };
+        Action<JContext, Mvc.MvcModule> action = delegate(JContext jc, Mvc.MvcModule module) { module.invoker.InvokeAction(jc); };        
 
         protected override void OnLoad(EventArgs e)
         {

@@ -34,7 +34,7 @@ namespace Kiss.Web.Controls
 
                 using (StringWriter sw = new StringWriter())
                 {
-                    te.Process(JContext.Current.ViewData, "title", sw, content);
+                    te.Process(JContext.Current.ViewData, string.Empty, sw, content);
 
                     return sw.GetStringBuilder().ToString();
                 }

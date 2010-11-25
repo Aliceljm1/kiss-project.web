@@ -411,7 +411,12 @@ namespace Kiss.Web
                 if (_user == null)
                 {
                     if (IsAjaxRequest)
-                        _user = new Principal(Context.User.Identity);
+                    {
+                        if (IsAuth)
+                            _user = new Principal(Context.User.Identity);
+                        else
+                            _user = null;
+                    }
                     else
                         _user = Context.User as Principal;
                 }

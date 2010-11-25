@@ -109,6 +109,16 @@ namespace Kiss.Web
 
             SetScriptRended(url);
 
+            ISite site = JContext.Current.Site;
+
+            if (!site.CombinCss)
+            {
+                if (url.Contains("?"))
+                    url += ("&v=" + site.CssVersion);
+                else
+                    url += ("?v=" + site.CssVersion);
+            }
+
             Head.AddStyle(url);
         }
 

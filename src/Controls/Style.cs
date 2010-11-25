@@ -101,12 +101,22 @@ namespace Kiss.Web.Controls
         {
             base.OnLoad(e);
 
+            JContext jc = JContext.Current;
+
             string href = Href;
             if (!string.IsNullOrEmpty(href))
             {
+                if (!jc.Site.CombinCss)
+                {
+                    if (href.Contains("?"))
+                        href += ("&v=" + jc.Site.CssVersion);
+                    else
+                        href += ("?v=" + jc.Site.CssVersion);
+                }
+
                 Head.AddStyle(href,
                     this.Media,
-                    JContext.Current.Context,
+                    jc.Context,
                     this.RelativePosition,
                     _enqueue);
             }

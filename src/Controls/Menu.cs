@@ -66,8 +66,8 @@ namespace Kiss.Web.Controls
             JContext jc = JContext.Current;
 
             List<NavigationItem> list = new List<NavigationItem>();
-            int index = JContext.Current.Navigation.Index;
-            int subIndex = JContext.Current.Navigation.SubIndex;
+            int index = jc.Navigation.Index;
+            int subIndex = jc.Navigation.SubIndex;
 
             Dictionary<int, NavigationItem> Items = UrlMappingModule.Instance.Provider.GetMenuItemsBySite(site);
 

@@ -2,6 +2,7 @@
 using System.Web.UI;
 using Kiss.Plugin;
 using Kiss.Security;
+using Kiss.Utils;
 
 namespace Kiss.Web
 {
@@ -10,7 +11,10 @@ namespace Kiss.Web
     {
         public override bool IsAuthorized(Principal user)
         {
-            return user.HasPermission(Permission);
+            if (StringUtil.HasText(Permission))
+                return user.HasPermission(Permission);
+
+            return true;
         }
 
         public string Permission { get; set; }

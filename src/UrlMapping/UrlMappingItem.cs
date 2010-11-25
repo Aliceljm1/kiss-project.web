@@ -1,21 +1,4 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ FileName:		UrlMappingItem.cs
-//+ File Created:   2008/03/05
-//+-------------------------------------------------------------------+
-//+ Purpose:        UrlMappingItem定义了一个映射的属性
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2008/03/05		zhli Comment Created
-//+-------------------------------------------------------------------+
-//+ 2009/05/21		zhli add Index, SubIndex property
-//+-------------------------------------------------------------------+
-//+ 2009/05/22		zhli add PageTitle, MenuTitle property
-//+-------------------------------------------------------------------+
-#endregion
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -134,6 +117,7 @@ namespace Kiss.Web.UrlMapping
         {
             return Find(delegate(UrlMappingItem item)
             {
+                if (item == null) return false;
                 return item.Id == controller && item.Action == action;
             });
         }

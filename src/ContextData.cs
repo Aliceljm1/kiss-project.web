@@ -1,70 +1,11 @@
-﻿#region File Comment
-//+-------------------------------------------------------------------+
-//+ File Created:   2009-05-26
-//+-------------------------------------------------------------------+
-//+ History:
-//+-------------------------------------------------------------------+
-//+ 2009-05-26		zhli Comment Created
-//+-------------------------------------------------------------------+
-//+ 2009-07-09		zhli remove ContextDataAttribute
-//+-------------------------------------------------------------------+
-//+ 2009-07-28		zhli 增加了配置标签
-//+-------------------------------------------------------------------+
-#endregion
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Xml;
-using Kiss.Config;
+using System.Web;
+using Kiss.Plugin;
 using Kiss.Utils;
 
 namespace Kiss.Web
 {
-    /// <summary>
-    /// 上下文数据的配置
-    /// </summary>
-    [ConfigNode("contextData", Desc = "上下文数据")]
-    public class ContextDataConfig : ConfigBase
-    {
-        /// <summary>
-        /// 配置实例
-        /// </summary>
-        public static ContextDataConfig Instance
-        {
-            get
-            {
-                return GetConfig<ContextDataConfig>();
-            }
-        }
-
-        /// <summary>
-        /// 配置的名称、类型
-        /// </summary>
-        [ConfigProp("datas", ConfigPropAttribute.DataType.Unknown, Desc = "key+type")]
-        public Dictionary<string, string> Dict { get; private set; }
-
-        protected override void LoadValuesFromConfigurationXml(XmlNode node)
-        {
-            base.LoadValuesFromConfigurationXml(node);
-
-            Dict = new Dictionary<string, string>();
-
-            XmlNodeList nodes = node.SelectNodes("datas/add");
-            if (nodes != null && nodes.Count > 0)
-            {
-                foreach (XmlNode n in nodes)
-                {
-                    string key = XmlUtil.GetStringAttribute(n, "key", string.Empty);
-                    string type = XmlUtil.GetStringAttribute(n, "type", string.Empty);
-
-                    if (StringUtil.IsNullOrEmpty(key) || StringUtil.IsNullOrEmpty(type))
-                        continue;
-                    Dict[key] = type;
-                }
-            }
-        }
-    }
-
     internal class ContextData
     {
         private static readonly object obj = new object();
@@ -80,36 +21,76 @@ namespace Kiss.Web
                 {
                     if (datas == null)
                     {
-                        ContextDataConfig config = ContextDataConfig.Instance;
-
                         datas = new Dictionary<string, object>();
 
-                        foreach (string key in config.Dict.Keys)
+                        foreach (var item in Plugins.GetPlugins<ContextDataAttribute>())
                         {
-                            string type = config.Dict[key];
+                            object context = Activator.CreateInstance(item.Decorates);
+                            if (context == null)
+                                continue;
 
-                            try
-                            {
-                                Type t = Type.GetType(type);
-                                if (t == null)
-                                    continue;
-
-                                object context = Activator.CreateInstance(t);
-                                if (context == null)
-                                    continue;
-
-                                datas[key] = context;
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new WebException(string.Format("init context data failed! type:{0}", type), ex);
-                            }
+                            datas[item.Key] = context;
                         }
+
                     }
                 }
 
                 return datas;
             }
+        }
+    }
+
+    /// <summary>
+    /// mark a type to context data. can use it like this $!context_data_key.***
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public sealed class ContextDataAttribute : PluginAttribute
+    {
+        // See the attribute guidelines at 
+        //  http://go.microsoft.com/fwlink/?LinkId=85236
+        readonly string key;
+
+        // This is a positional argument
+        public ContextDataAttribute(string key)
+        {
+            this.key = key;
+        }
+
+        public string Key
+        {
+            get { return key; }
+        }
+    }
+
+    [ContextData("utils")]
+    class ContextDataUtils
+    {
+        public static string[] split(string str)
+        {
+            return StringUtil.Split(str, StringUtil.Comma, true, true);
+        }
+
+        public static string trim(string str, int maxlength)
+        {
+            return StringUtil.Trim(str, maxlength);
+        }
+
+        public static DateTime now { get { return DateTime.Now; } }
+
+        public static string htmlEncode(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return string.Empty;
+
+            return HttpUtility.HtmlEncode(str);
+        }
+
+        public static string urlEncode(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return string.Empty;
+
+            return HttpUtility.UrlEncode(str);
         }
     }
 }
