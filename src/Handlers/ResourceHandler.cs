@@ -199,12 +199,12 @@ namespace Kiss.Web
             {
                 case ".css":
                     site = JContext.Current.Site;
-                    url = HttpContext.Current.IsDebuggingEnabled && !site.CombinCss ? StringUtil.CombinUrl(site.VirtualPath, "res.axd?r=") : Utility.FormatCssUrl("res.axd?r=");
+                    url = HttpContext.Current.IsDebuggingEnabled && !site.CombinCss ? StringUtil.CombinUrl(site.VirtualPath, "res.axd?r=") : Utility.FormatCssUrl(site, "res.axd?r=");
                     version = site.CssVersion;
                     break;
                 case ".js":
                     site = JContext.Current.Site;
-                    url = HttpContext.Current.IsDebuggingEnabled && !site.CombinJs ? StringUtil.CombinUrl(site.VirtualPath, "res.axd?r=") : Utility.FormatJsUrl("res.axd?r=");
+                    url = HttpContext.Current.IsDebuggingEnabled && !site.CombinJs ? StringUtil.CombinUrl(site.VirtualPath, "res.axd?r=") : Utility.FormatJsUrl(site, "res.axd?r=");
                     version = site.JsVersion;
                     break;
                 default:

@@ -19,8 +19,6 @@ namespace Kiss.Web.Ajax
         public const string QUERYSTRING = "querystring";
         public const string JSONP = "jsonp";
 
-        private static readonly ILogger logger = LogManager.GetLogger<AjaxHttpHandler>();
-
         #endregion
 
         #region IHttpHandler Members
@@ -87,13 +85,11 @@ namespace Kiss.Web.Ajax
                     if (c.Type != null)
                         result = m.Invoke(c.Type, methodJsonArgs);
                     else
-                        result = m.Invoke(c.TypeString, methodJsonArgs);
-
-                    ResponseUtil.OutputJson(context.Response, result, cacheMinutes, jsonp);
+                        result = m.Invoke(c.TypeString, methodJsonArgs);                    
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("ajax handler error." + ExceptionUtil.WriteException(ex));
+                    LogManager.GetLogger<AjaxHttpHandler>().Error("ajax handler error." + ExceptionUtil.WriteException(ex));
 
                     AjaxServerException ajaxEx = null;
                     if (m != null)
@@ -104,6 +100,8 @@ namespace Kiss.Web.Ajax
                     else
                         result = string.Empty;
                 }
+
+                ResponseUtil.OutputJson(context.Response, result, cacheMinutes, jsonp);
             }
         }
 

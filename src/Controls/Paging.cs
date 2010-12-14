@@ -217,7 +217,7 @@ namespace Kiss.Web.Controls
 
             if (SummaryTemplate != null)
             {
-                Template t = new Template();
+                Control t = new Control();
                 SummaryTemplate.InstantiateIn(t);
                 t.RenderControl(writer);
             }

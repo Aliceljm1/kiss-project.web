@@ -661,7 +661,7 @@ namespace Kiss.Web
         public string GetUrl(string name, bool withDomain)
         {
             if (UrlMapping.Urls.ContainsKey(name))
-                return withDomain ? Utility.FormatUrlWithDomain(UrlMapping.Urls[name]) : UrlMapping.Urls[name];
+                return withDomain ? Utility.FormatUrlWithDomain(Site, UrlMapping.Urls[name]) : UrlMapping.Urls[name];
             return string.Empty;
         }
 
@@ -723,6 +723,8 @@ namespace Kiss.Web
         }
 
         public IHost Host { get { return ServiceLocator.Instance.Resolve<IHost>(); } }
+
+        public ISite DefaultSite { get { return Kiss.Web.SiteConfig.Instance; } }
 
         #endregion
 

@@ -76,7 +76,7 @@ namespace Kiss.Web
                         if (index == -1)
                             return;
 
-                        string path = Utility.FormatCssUrl(string.Empty).TrimEnd('/');
+                        string path = Utility.FormatCssUrl(JContext.Current.Site, string.Empty).TrimEnd('/');
 
                         StringBuilder sb = new StringBuilder();
                         foreach (string fileName in fileNames)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Web;
 using System.Web.UI;
 using Kiss.Utils;
 
@@ -8,7 +9,7 @@ namespace Kiss.Web.Controls
     /// <summary>
     /// Encapsulated rendering of style based on the selected skin.
     /// </summary>
-    public class Style : Control
+    public class Style : Control, IContextAwaredControl
     {
         private string _media;
         /// <summary>
@@ -44,12 +45,12 @@ namespace Kiss.Web.Controls
                 if (!string.IsNullOrEmpty(_href))
                 {
                     if (_href.StartsWith("/") || _href.StartsWith(".") || _href.StartsWith("~"))
-                        return Utility.FormatCssUrl(ResolveUrl(_href));
+                        return Utility.FormatCssUrl(CurrentSite, ResolveUrl(_href));
 
                     if (_href.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
                         return _href;
 
-                    return StringUtil.CombinUrl(Utility.StylePath, _href);
+                    return StringUtil.CombinUrl(Utility.FormatCssUrl(CurrentSite, string.Format(CurrentSite.CssRoot, CurrentSite.DefaultTheme)), _href);
                 }
                 else
                     return string.Empty;
@@ -101,22 +102,22 @@ namespace Kiss.Web.Controls
         {
             base.OnLoad(e);
 
-            JContext jc = JContext.Current;
+            ISite site = CurrentSite ?? JContext.Current.Site;
 
             string href = Href;
             if (!string.IsNullOrEmpty(href))
             {
-                if (!jc.Site.CombinCss)
+                if (!site.CombinCss)
                 {
                     if (href.Contains("?"))
-                        href += ("&v=" + jc.Site.CssVersion);
+                        href += ("&v=" + site.CssVersion);
                     else
-                        href += ("?v=" + jc.Site.CssVersion);
+                        href += ("?v=" + site.CssVersion);
                 }
 
-                Head.AddStyle(href,
+                Head.AddStyle(site, href,
                     this.Media,
-                    jc.Context,
+                    HttpContext.Current,
                     this.RelativePosition,
                     _enqueue);
             }
@@ -133,6 +134,9 @@ namespace Kiss.Web.Controls
         protected override void Render(HtmlTextWriter output)
         {
         }
+
+        private ISite _site;
+        public ISite CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
     }
 
     /// <summary>
@@ -162,10 +166,12 @@ namespace Kiss.Web.Controls
         public StyleRelativePosition Position;
         public string StyleTag;
         public string Url { get; set; }
+        public ISite Site { get; set; }
         public bool ForceCombin { get; set; }
 
-        public StyleQueueItem(string styleTag, StyleRelativePosition position, string url, bool forceCombin)
+        public StyleQueueItem(ISite site, string styleTag, StyleRelativePosition position, string url, bool forceCombin)
         {
+            Site = site;
             StyleTag = styleTag;
             Position = position;
             Url = url;

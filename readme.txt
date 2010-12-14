@@ -18,6 +18,10 @@ Todo:
 	多国语言支持优化
 	支持带模板参数的菜单项
 
+v2.1
+删除了一些Controls命名空间下的过时代码
+方便集成Area（支持使用默认站点的模板）
+
 v2.0
 控制器基类Controller的list方法使用IRepository的GetDataTable方法（需要Kiss1.6版本以上）
 Scripts控件不再JsMin脚本

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
@@ -37,19 +38,23 @@ namespace Kiss.Web.Controls
 
         /// <summary>
         /// Folder which contains the master files
-        /// </summary>
+        /// </summary>        
         private string themeFolder = null;
+        private bool _root = false;
         public string ThemeFolder
         {
             get
             {
+                JContext jc = JContext.Current;
+
                 if (themeFolder == null)
-                {
-                    JContext jc = JContext.Current;
-
                     return string.Format("{0}/{1}/masters/", jc.CombinUrl(jc.Site.ThemeRoot), ThemeName);
+                else if (themeFolder == "~")
+                {
+                    _root = true;
+                    ISite site = SiteConfig.Instance;
+                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(site.VirtualPath, site.ThemeRoot), site.DefaultTheme);
                 }
-
                 return themeFolder;
             }
             set
@@ -187,9 +192,11 @@ namespace Kiss.Web.Controls
                 foreach (Control ctrl in masterPage.Controls)
                 {
                     if (ctrl is MasterFileAwaredControl)
-                    {
                         (ctrl as MasterFileAwaredControl).MasterPageFileName = ThemeMasterFile;
-                    }
+
+                    if (ctrl is IContextAwaredControl)
+                        (ctrl as IContextAwaredControl).CurrentSite = _root ? SiteConfig.Instance : JContext.Current.Site;
+
                     // force load child controls
                     int i = ctrl.Controls.Count;
                 }
@@ -210,10 +217,12 @@ namespace Kiss.Web.Controls
             foreach (Control ctrl in ctrls)
             {
                 if (ctrl is MasterFileAwaredControl)
-                {
                     (ctrl as MasterFileAwaredControl).MasterPageFileName = LastThemeMasterFile;
-                }
-                else if (ctrl.Controls.Count > 0)
+
+                if (ctrl is IContextAwaredControl)
+                    (ctrl as IContextAwaredControl).CurrentSite = JContext.Current.Site;
+
+                if (ctrl.Controls.Count > 0)
                     FindRecur(ctrl.Controls);
             }
         }

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.Reflection;
 using System.Web.UI;
 using Kiss.Utils;
-using System.Reflection;
-using System.Collections.Specialized;
 
 namespace Kiss.Web.Controls
 {
@@ -31,18 +31,17 @@ namespace Kiss.Web.Controls
                 // make collection readonly again
                 isreadonly.SetValue(Request.QueryString, true, null);
 
-                Container container = new Container();
-                container.ThemeMasterFile = masterFile + ".ascx";
+                ISite site = JContext.Current.Site;
+                Control container = Page.LoadControl(string.Format("{0}/{1}/masters/{2}.ascx", StringUtil.CombinUrl(site.VirtualPath, site.ThemeRoot), site.DefaultTheme, masterFile));
 
                 Controls.Add(container);
             }
 
             base.OnPreInit(e);
         }
-
         JContext jc;
         Mvc.MvcModule module;
-        Action<JContext, Mvc.MvcModule> action = delegate(JContext jc, Mvc.MvcModule module) { module.invoker.InvokeAction(jc); };        
+        Action<JContext, Mvc.MvcModule> action = delegate(JContext jc, Mvc.MvcModule module) { module.invoker.InvokeAction(jc); };
 
         protected override void OnLoad(EventArgs e)
         {

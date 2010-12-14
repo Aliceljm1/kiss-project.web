@@ -28,7 +28,7 @@ namespace Kiss.Web.Controls
 
         #endregion
 
-        private ISite site;
+        ISite site;
 
         /// <summary>
         /// page title
@@ -105,16 +105,17 @@ namespace Kiss.Web.Controls
             if (queue == null || queue.Count == 0)
                 return;
 
-            Dictionary<string, List<string>> di = new Dictionary<string, List<string>>();
+            Dictionary<ISite, Dictionary<string, List<string>>> di = new Dictionary<ISite, Dictionary<string, List<string>>>();
+
             List<string> otherurls = new List<string>();
 
             foreach (StyleQueueItem si in queue)
             {
                 if (si.Position != position) continue;
 
-                if (!site.CombinCss || !si.ForceCombin)
+                if (!si.Site.CombinCss || !si.ForceCombin)
                     writer.WriteLine(si.StyleTag);
-                else if (site.CombinCss)
+                else if (si.Site.CombinCss)
                 {
                     string url = si.Url;
                     int index = url.LastIndexOf("/");
@@ -124,26 +125,32 @@ namespace Kiss.Web.Controls
                         continue;
                     }
 
-                    string path = url.Substring(0, index + 1);
-                    if (!di.ContainsKey(path))
-                        di[path] = new List<string>();
+                    if (!di.ContainsKey(si.Site))
+                        di[si.Site] = new Dictionary<string, List<string>>();
 
-                    di[path].Add(url);
+                    string path = url.Substring(0, index + 1);
+                    if (!di[si.Site].ContainsKey(path))
+                        di[si.Site][path] = new List<string>();
+
+                    di[si.Site][path].Add(url);
                 }
             }
 
-            if (site.CombinCss)
+            foreach (ISite s in di.Keys)
             {
-                foreach (string path in di.Keys)
+                if (!s.CombinCss)
+                    continue;
+
+                foreach (string path in di[s].Keys)
                 {
                     string dir = path;
-                    int index = path.IndexOf(site.VirtualPath);
+                    int index = path.IndexOf(s.VirtualPath);
                     if (index != -1)
-                        dir = path.Substring(index + site.VirtualPath.Length);
+                        dir = path.Substring(index + s.VirtualPath.Length);
                     writer.WriteLine(string.Format(styleFormat,
-                                        Utility.FormatCssUrl(string.Format("{2}rescombiner.axd?f={0}&t=text/css&v={1}",
-                                                                ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(di[path])),
-                                                                site.CssVersion,
+                                        Utility.FormatCssUrl(s, string.Format("{2}rescombiner.axd?f={0}&t=text/css&v={1}",
+                                                                ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(di[s][path])),
+                                                                s.CssVersion,
                                                                 dir)),
                                         "screen"));
                 }
@@ -275,10 +282,10 @@ namespace Kiss.Web.Controls
         /// </summary>
         public static void AddStyle(string url, string media, HttpContext context, bool enqueue)
         {
-            AddStyle(url, media, context, StyleRelativePosition.Unspecified, enqueue);
+            AddStyle(JContext.Current.Site, url, media, context, StyleRelativePosition.Unspecified, enqueue);
         }
 
-        public static void AddStyle(string url, string media, HttpContext context, StyleRelativePosition position, bool enqueue)
+        public static void AddStyle(ISite site, string url, string media, HttpContext context, StyleRelativePosition position, bool enqueue)
         {
             Queue styleQueue = context.Items[styleKey] as Queue;
             if (styleQueue == null)
@@ -286,7 +293,7 @@ namespace Kiss.Web.Controls
                 styleQueue = new Queue();
                 context.Items[styleKey] = styleQueue;
             }
-            styleQueue.Enqueue(new StyleQueueItem(string.Format(styleFormat, url, media), position, url, enqueue));
+            styleQueue.Enqueue(new StyleQueueItem(site, string.Format(styleFormat, url, media), position, url, enqueue));
         }
 
         #endregion

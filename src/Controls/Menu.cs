@@ -17,6 +17,8 @@ namespace Kiss.Web.Controls
 
             public MenuType Type { get; internal set; }
 
+            public ISite Site { get; internal set; }
+
             public List<NavigationItem> Items { get; set; }
         }
 
@@ -43,6 +45,7 @@ namespace Kiss.Web.Controls
             FilterEventArgs e = new FilterEventArgs();
             e.Type = Type;
             e.Items = GetDataSource(Type, Key);
+            e.Site = CurrentSite;
 
             OnFilter(e);
 
@@ -51,14 +54,14 @@ namespace Kiss.Web.Controls
             base.Render(writer);
         }
 
-        public static List<NavigationItem> GetDataSource(MenuType type)
+        public List<NavigationItem> GetDataSource(MenuType type)
         {
             return GetDataSource(type, null);
         }
 
-        public static List<NavigationItem> GetDataSource(MenuType type, string key)
+        public List<NavigationItem> GetDataSource(MenuType type, string key)
         {
-            return GetDataSource(JContext.Current.Site, type, key);
+            return GetDataSource(CurrentSite, type, key);
         }
 
         public static List<NavigationItem> GetDataSource(ISite site, MenuType type, string key)
@@ -66,10 +69,33 @@ namespace Kiss.Web.Controls
             JContext jc = JContext.Current;
 
             List<NavigationItem> list = new List<NavigationItem>();
+
             int index = jc.Navigation.Index;
             int subIndex = jc.Navigation.SubIndex;
 
             Dictionary<int, NavigationItem> Items = UrlMappingModule.Instance.Provider.GetMenuItemsBySite(site);
+
+            string currentSiteKey = jc.Site.SiteKey;
+
+            if (site.SiteKey != currentSiteKey)
+            {
+                foreach (var k in Items.Keys)
+                {
+                    if (Items[k].Name == currentSiteKey)
+                    {
+                        index = k;
+                    }
+
+                    foreach (var k2 in Items[k].Children.Keys)
+                    {
+                        if (Items[k].Children[k2].Name == currentSiteKey)
+                        {
+                            index = k;
+                            subIndex = k2;
+                        }
+                    }
+                }
+            }
 
             List<int> keys;
             int key_index;
@@ -86,7 +112,7 @@ namespace Kiss.Web.Controls
 
                         NavigationItem item = Items[i].Clone() as NavigationItem;
                         item.Selected = index == i;
-                        item.Url = GetUrl(jc, item.Url);
+                        item.Url = GetUrl(site, item.Url);
 
                         key_index = keys.IndexOf(i);
 
@@ -110,7 +136,7 @@ namespace Kiss.Web.Controls
 
                             NavigationItem item = subItems[i].Clone() as NavigationItem;
                             item.Selected = subIndex == i;
-                            item.Url = GetUrl(jc, item.Url);
+                            item.Url = GetUrl(site, item.Url);
 
                             key_index = keys.IndexOf(i);
 
@@ -131,7 +157,7 @@ namespace Kiss.Web.Controls
 
                         NavigationItem item = Items[i].Clone() as NavigationItem;
                         item.Selected = index == i;
-                        item.Url = GetUrl(jc, item.Url);
+                        item.Url = GetUrl(site, item.Url);
                         item.SubItems = new List<NavigationItem>();
 
                         key_index = keys.IndexOf(i);
@@ -145,7 +171,7 @@ namespace Kiss.Web.Controls
                             if (!children[j].Visible) continue;
                             NavigationItem subItem = children[j].Clone() as NavigationItem;
                             subItem.Selected = item.Selected && subIndex == j;
-                            subItem.Url = GetUrl(jc, subItem.Url);
+                            subItem.Url = GetUrl(site, subItem.Url);
 
                             key_index = sub_keys.IndexOf(j);
 
@@ -188,7 +214,7 @@ namespace Kiss.Web.Controls
             return list;
         }
 
-        private static string GetUrl(JContext jc, string url)
+        private static string GetUrl(ISite site, string url)
         {
             if (StringUtil.IsNullOrEmpty(url))
                 return "#";
@@ -198,7 +224,7 @@ namespace Kiss.Web.Controls
             else if (url.StartsWith("~"))
                 return ServerUtil.ResolveUrl(url);
 
-            return jc.CombinUrl(url);
+            return StringUtil.CombinUrl(site.VirtualPath, url);
         }
 
         public enum MenuType

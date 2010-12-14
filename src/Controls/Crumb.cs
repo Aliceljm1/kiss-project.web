@@ -19,7 +19,7 @@ namespace Kiss.Web.Controls
             NavigationInfo nav = JContext.Current.Navigation;
             if (!nav.OK) return;
 
-            List<NavigationItem> items = Menu.GetDataSource(Menu.MenuType.Cascade);
+            List<NavigationItem> items = Menu.GetDataSource(JContext.Current.Site, Menu.MenuType.Cascade, string.Empty);
 
             NavigationItem item1 = items[nav.Index];
 

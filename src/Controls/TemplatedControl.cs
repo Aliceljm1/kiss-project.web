@@ -8,7 +8,7 @@ namespace Kiss.Web.Controls
     /// 控件基类，支持加载不同的ascx文件
     /// </summary>
     [ParseChildren(true), PersistChildren(false)]
-    public class TemplatedControl : Control, INamingContainer
+    public class TemplatedControl : Control, INamingContainer, IContextAwaredControl
     {
         const string SkinFolderFormat = "{0}/{1}/skins/";
 
@@ -28,6 +28,9 @@ namespace Kiss.Web.Controls
         #endregion
 
         JContext jc = JContext.Current;
+
+        private ISite _site;
+        public ISite CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
 
         #region props
 
@@ -205,8 +208,10 @@ namespace Kiss.Web.Controls
 
         private string GetSkinFolder(string theme, bool lang)
         {
+            CurrentSite = CurrentSite ?? jc.Site;
+
             return string.Format(SkinFolderFormat,
-                jc.CombinUrl(jc.Site.ThemeRoot),
+                StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),
                 !lang || StringUtil.IsNullOrEmpty(jc.Navigation.LanguageCode) ? theme : string.Format("{0}-{1}", theme, jc.Navigation.LanguageCode));
         }
 

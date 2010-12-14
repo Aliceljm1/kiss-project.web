@@ -68,6 +68,7 @@
     <Compile Include="Ajax\AjaxParam.cs" />
     <Compile Include="Ajax\AjaxServerException.cs" />
     <Compile Include="Cache\WebCacheProvider.cs" />
+    <Compile Include="Controls\IContextAwaredControl.cs" />
     <Compile Include="KissHttpApplication.cs" />
     <Compile Include="ControlPanelItemRenderer.cs" />
     <Compile Include="ClientScriptProxy.cs" />
@@ -76,7 +77,6 @@
     <Compile Include="Controls\ContentPlaceHolder.cs" />
     <Compile Include="Controls\Crumb.cs" />
     <Compile Include="Controls\Head.cs" />
-    <Compile Include="Controls\LoginView.cs" />
     <Compile Include="Controls\MasterPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -97,19 +97,9 @@
     <Compile Include="Mvc\ControllerResolver.cs" />
     <Compile Include="Controls\Menu.cs" />
     <Compile Include="Controls\Paging.cs" />
-    <Compile Include="Controls\RepeaterPlusNone.cs" />
-    <Compile Include="Controls\ScriptBlock.cs" />
     <Compile Include="Controls\Scripts.cs" />
-    <Compile Include="Controls\SmartDropDownList.cs" />
     <Compile Include="Controls\Style.cs" />
     <Compile Include="Controls\TemplatedControl.cs" />
-    <Compile Include="Controls\Template.cs" />
-    <Compile Include="Controls\ViewPage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\ViewUserControl.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Controls\Util.cs" />
     <Compile Include="EventBroker.cs" />
     <Compile Include="Handlers\RedirectHandler.cs" />

@@ -5,35 +5,26 @@ namespace Kiss.Web
 {
     public static class Utility
     {
-        public static string FormatCssUrl(string url)
+        public static string FormatCssUrl(ISite site, string url)
         {
-            return CombinHost(JContext.Current.Site.CssHost, url);
+            return CombinHost(site, site.CssHost, url);
         }
 
-        public static string FormatJsUrl(string url)
+        public static string FormatJsUrl(ISite site, string url)
         {
-            return CombinHost(JContext.Current.Site.JsHost, url);
+            return CombinHost(site, site.JsHost, url);
         }
 
-        public static string FormatUrlWithDomain(string url)
+        public static string FormatUrlWithDomain(ISite site, string url)
         {
-            return CombinHost(JContext.Current.Site.Host, url);
+            return CombinHost(site, site.Host, url);
         }
 
-        public static string StylePath
-        {
-            get
-            {
-                JContext jc = JContext.Current;
-                return FormatCssUrl(string.Format(jc.Site.CssRoot, jc.Theme));
-            }
-        }
-
-        private static string CombinHost(string host, string relativeUrl)
+        private static string CombinHost(ISite site, string host, string relativeUrl)
         {
             string domain = HttpContext.Current == null ? host : HttpContext.Current.IsDebuggingEnabled ? string.Empty : host;
 
-            return StringUtil.CombinUrl(domain, StringUtil.CombinUrl(JContext.Current.Site.VirtualPath, relativeUrl));
+            return StringUtil.CombinUrl(domain, StringUtil.CombinUrl(site.VirtualPath, relativeUrl));
         }
     }
 }
