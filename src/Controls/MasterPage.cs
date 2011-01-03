@@ -31,8 +31,14 @@ namespace Kiss.Web.Controls
                 // make collection readonly again
                 isreadonly.SetValue(Request.QueryString, true, null);
 
-                ISite site = JContext.Current.Site;
-                Control container = Page.LoadControl(string.Format("{0}/{1}/masters/{2}.ascx", StringUtil.CombinUrl(site.VirtualPath, site.ThemeRoot), site.DefaultTheme, masterFile));
+                //ISite site = JContext.Current.Site;
+                //Control container = Page.LoadControl(string.Format("{0}/{1}/masters/{2}.ascx",
+                //    StringUtil.CombinUrl(site.VirtualPath, site.ThemeRoot),
+                //    JContext.Current.Theme,
+                //    masterFile));
+
+                Container container = new Container();
+                container.ThemeMasterFile = masterFile + ".ascx";
 
                 Controls.Add(container);
             }

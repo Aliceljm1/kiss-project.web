@@ -42,7 +42,7 @@ namespace Kiss.Web.UrlMapping
         public string IncomingQueryStringBehaviorStr { get; protected set; }
         public IncomingQueryStringBehavior IncomingQueryStringBehavior { get; private set; }
 
-        [ConfigProp( "ignoreExtensions", DefaultValue = ".css .jpg .jpeg .gif .png .axd .htm .html .js .xml .swf .gallery .icon" )]
+        [ConfigProp( "ignoreExtensions", DefaultValue = ".css .jpg .jpeg .gif .png .axd .htm .html .js .xml .swf .gallery .icon .ico .flv .zip .rar" )]
         public string IgnoreExtensions { get; protected set; }
 
         [ConfigProp( "allowExtensions" )]

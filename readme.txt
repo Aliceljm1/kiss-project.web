@@ -21,6 +21,9 @@ Todo:
 v2.1
 删除了一些Controls命名空间下的过时代码
 方便集成Area（支持使用默认站点的模板）
+去除对flv文件的托管
+修复在站点群下对当前站点主题的影响
+修复MasterPage中模板无继承关系时，页面事件的执行顺序问题
 
 v2.0
 控制器基类Controller的list方法使用IRepository的GetDataTable方法（需要Kiss1.6版本以上）
