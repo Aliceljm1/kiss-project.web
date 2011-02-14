@@ -488,7 +488,7 @@ namespace Kiss.Web
             get
             {
                 if (_isdesignMode == null || !_isdesignMode.HasValue)
-                    _isdesignMode = QueryString["edit"] != null && User.HasPermission("site.widget");
+                    _isdesignMode = QueryString["edit"] != null && User.HasPermission("menu:widget_home");
                 return _isdesignMode.Value;
             }
         }

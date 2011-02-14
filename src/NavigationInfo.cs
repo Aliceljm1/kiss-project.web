@@ -117,7 +117,17 @@ namespace Kiss.Web
                         }
                     }
                     else
-                        _id = Url.Id;
+                    {
+                        if (Url.Id.StartsWith("?"))
+                        {
+                            string k = Url.Id.Substring(1);
+                            _id = JContext.Current.QueryString[k];
+                            if (StringUtil.IsNullOrEmpty(_id))
+                                _id = JContext.Current.Context.Request.Params[k];
+                        }
+                        else
+                            _id = Url.Id;
+                    }
                 }
 
                 return _id;
@@ -163,11 +173,10 @@ namespace Kiss.Web
                     {
                         if (Url.Action.StartsWith("?"))
                         {
-                            string act = Url.Action.Substring(1);
-                            JContext jc = JContext.Current;
-                            _action = jc.QueryString[act];
+                            string k = Url.Action.Substring(1);
+                            _action = JContext.Current.QueryString[k];
                             if (StringUtil.IsNullOrEmpty(_action))
-                                _action = jc.Context.Request.Form[act];
+                                _action = JContext.Current.Context.Request.Params[k];
                         }
                         else
                             _action = Url.Action;

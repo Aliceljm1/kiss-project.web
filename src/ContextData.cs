@@ -92,5 +92,10 @@ namespace Kiss.Web
 
             return HttpUtility.UrlEncode(str);
         }
+
+        public static bool isValid(DateTime dt)
+        {
+            return dt < DateTime.MaxValue && dt > DateTime.MinValue;
+        }
     }
 }

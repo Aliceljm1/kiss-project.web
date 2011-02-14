@@ -34,6 +34,18 @@ namespace Kiss.Web.Controls
             }
         }
 
+        public static event EventHandler<FilterEventArgs> BeforeFilter;
+
+        static void OnBeforeFilter(FilterEventArgs e)
+        {
+            EventHandler<FilterEventArgs> handler = BeforeFilter;
+
+            if (handler != null)
+            {
+                handler(null, e);
+            }
+        }
+
         public MenuType Type { get; set; }
 
         public string Key { get; set; }
@@ -211,7 +223,14 @@ namespace Kiss.Web.Controls
                     break;
             }
 
-            return list;
+            FilterEventArgs e = new FilterEventArgs();
+            e.Type = type;
+            e.Items = list;
+            e.Site = site;
+
+            OnBeforeFilter(e);
+
+            return e.Items;
         }
 
         private static string GetUrl(ISite site, string url)

@@ -100,6 +100,9 @@ namespace Kiss.Web
             PropertyInfo p = typeof(HttpRuntime).GetProperty("FileChangesMonitor",
                 BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 
+            if (p == null)
+                return;
+
             object o = p.GetValue(null, null);
             if (o == null) return;
 

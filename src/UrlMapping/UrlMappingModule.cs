@@ -174,6 +174,8 @@ namespace Kiss.Web.UrlMapping
 
         protected void RerouteRequest(HttpApplication app, string newPath, NameValueCollection qs, NameValueCollection incomingQS)
         {
+            JContext jc = JContext.Current;
+
             // signal to the future page handler that we rerouted from a different URL
             HttpContext.Current.Items.Add(kCONTEXTITEMS_RAWURLKEY, HttpContext.Current.Request.RawUrl);
             HttpContext.Current.Items.Add(kCONTEXTITEMS_ADDEDQSKEY, qs);
@@ -192,10 +194,10 @@ namespace Kiss.Web.UrlMapping
             // apply the querystring to the path
             newPath = ApplyQueryString(newPath, qs);
 
-            JContext.Current.QueryString.Clear();
-            JContext.Current.QueryString.Add(qs);
+            jc.QueryString.Clear();
+            jc.QueryString.Add(qs);
             if (urlQueryString != null && urlQueryString.HasKeys())
-                JContext.Current.QueryString.Add(urlQueryString);
+                jc.QueryString.Add(urlQueryString);
 
             // if configured, apply the incoming query string variables too
             if (_qsBehavior == IncomingQueryStringBehavior.PassThrough)
@@ -204,7 +206,7 @@ namespace Kiss.Web.UrlMapping
                 _qs.Remove("kissMasterFile");
                 _qs.Remove("__VIEWSTATE");
                 newPath = ApplyQueryString(newPath, _qs);
-                JContext.Current.QueryString.Add(_qs);
+                jc.QueryString.Add(_qs);
             }
 
             // perform the redirection
@@ -386,6 +388,7 @@ namespace Kiss.Web.UrlMapping
         {
             qs = new NameValueCollection();
             JContext jc = JContext.Current;
+
             foreach (UrlMappingItem item in _provider.UrlMappings ?? new UrlMappingItemCollection())
             {
                 Match match = item.UrlTarget.Match(urlRequested);
@@ -415,8 +418,11 @@ namespace Kiss.Web.UrlMapping
                 }
 
                 if (s)
-                {
+                {                    
                     jc.Navigation.Set(item);
+
+                    // temp use
+                    jc.QueryString.Add(qs);
 
                     OnUrlMatched();
 

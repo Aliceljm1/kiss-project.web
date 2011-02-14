@@ -3,6 +3,6 @@ using Kiss.Config;
 
 [assembly: AssemblyTitle("Kiss.Web")]
 
-[assembly: AssemblyVersion("2.1")]
+[assembly: AssemblyVersion("2.3")]
 
 [assembly: Config]

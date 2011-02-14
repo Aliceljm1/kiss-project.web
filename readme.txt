@@ -18,6 +18,14 @@ Todo:
 	多国语言支持优化
 	支持带模板参数的菜单项
 
+v2.3
+菜单增加OnBeforeFilter事件，用于在Filter事件之前做一些额外的处理（比如添加菜单项）
+支持参数化的控制器Id
+
+v2.2
+增加了MONO编译参数，支持mono环境下的一些特殊代码
+修改了JContext中IsDesignMode的权限参数
+
 v2.1
 删除了一些Controls命名空间下的过时代码
 方便集成Area（支持使用默认站点的模板）

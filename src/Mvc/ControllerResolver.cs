@@ -53,9 +53,11 @@ namespace Kiss.Web.Mvc
                 if (asm.GetCustomAttributes(typeof(MvcAttribute), false).Length == 0)
                     continue;
 
+#if !MONO
                 // only load assembly in bin dir
                 if (!Directory.GetParent(new Uri(asm.CodeBase).LocalPath).FullName.Equals(binPath))
                     continue;
+#endif
 
                 foreach (var item in GetsControllerFromAssembly(asm))
                 {
