@@ -61,7 +61,13 @@ namespace Kiss.Web
             {
                 msg += string.Format("Request url:{0} to restart.", url);
 
-                Kiss.Utils.Net.HttpRequest.GetPageText(url);
+                try
+                {
+                    Kiss.Utils.Net.HttpRequest.GetPageText(url);
+                }
+                catch
+                {
+                }
             }
 
             LogManager.GetLogger<KissHttpApplication>().Info(msg);

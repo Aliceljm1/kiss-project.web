@@ -125,34 +125,40 @@ namespace Kiss.Web
             this.SendOutput(contentType, Output, useGZip);
         }
 
-        private static Dictionary<string, Assembly> asmcaches = new Dictionary<string, Assembly>();
+        private static readonly Dictionary<string, Assembly> asmcaches = new Dictionary<string, Assembly>();
 
-        private static Assembly FindAssembly(string ResourceTypeName)
+        private static Assembly FindAssembly(string resourceTypeName)
         {
-
-            if (asmcaches.ContainsKey(ResourceTypeName))
-                return asmcaches[ResourceTypeName];
+            if (asmcaches.ContainsKey(resourceTypeName))
+                return asmcaches[resourceTypeName];
 
             Assembly assembly = null;
-            ITypeFinder typefinder = ServiceLocator.Instance.Resolve<ITypeFinder>();
-            if (typefinder != null)
-                assembly = typefinder.FindAssembly(ResourceTypeName);
-            else
+
+            lock (resourceTypeName)
             {
-                foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+                if (asmcaches.ContainsKey(resourceTypeName))
+                    return asmcaches[resourceTypeName];
+
+                ITypeFinder typefinder = ServiceLocator.Instance.Resolve<ITypeFinder>();
+                if (typefinder != null)
+                    assembly = typefinder.FindAssembly(resourceTypeName);
+                else
                 {
-                    if (asm.FullName == ResourceTypeName || asm.GetName().Name == ResourceTypeName)
+                    foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
                     {
-                        assembly = asm;
-                        break;
+                        if (asm.FullName == resourceTypeName || asm.GetName().Name == resourceTypeName)
+                        {
+                            assembly = asm;
+                            break;
+                        }
                     }
+
+                    assembly = Assembly.Load(resourceTypeName);
                 }
 
-                assembly = Assembly.Load(ResourceTypeName);
+                if (assembly != null)
+                    asmcaches[resourceTypeName] = assembly;
             }
-
-            if (assembly != null)
-                asmcaches[ResourceTypeName] = assembly;
 
             return assembly;
         }

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Kiss.Web.Ajax
@@ -23,8 +22,8 @@ namespace Kiss.Web.Ajax
         {
             get
             {
-                if( Type != null )
-                    return Type.Name;
+                if (Type != null)
+                    return Type.FullName;
 
                 return TypeString;
             }

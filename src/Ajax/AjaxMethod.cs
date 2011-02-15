@@ -130,12 +130,15 @@ namespace Kiss.Web.Ajax
 
         private static object[] ConstructMethodArgs(List<AjaxParam> ps, string methodJsonArgs)
         {
+            ArrayList argsObject;
+
             try
             {
                 if (string.IsNullOrEmpty(methodJsonArgs))
-                    return null;
+                    argsObject = new ArrayList() { string.Empty };
+                else
+                    argsObject = JavaScriptConvert.DeserializeObject<ArrayList>(methodJsonArgs);
 
-                ArrayList argsObject = JavaScriptConvert.DeserializeObject<ArrayList>(methodJsonArgs);
                 for (int i = 0; i < ps.Count; i++)
                 {
                     AjaxParam p = ps[i];

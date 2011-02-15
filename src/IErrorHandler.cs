@@ -139,7 +139,7 @@ namespace Kiss.Web
 
             if (site == null || StringUtil.IsNullOrEmpty(site.ErrorPage))
             {
-                writer.Write("something ERROR happended! see <a href='{0}' target='_blank'>logs</a> for more detail.", ServerUtil.ResolveUrl("~/kiss/logs/1.aspx?SiteKey=default&sort=-DateCreate"));
+                writer.Write("something ERROR happended! see <a href='{0}' target='_blank'>logs</a> for more detail.", ServerUtil.ResolveUrl("~/logs/1.aspx?SiteKey=default&sort=-DateCreate"));
             }
             else
             {
