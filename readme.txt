@@ -23,6 +23,7 @@ v2.3
 支持参数化的控制器Id
 资源handler增加了同布锁
 修复ajaxhandler的处理泛型类时的一个bug
+Head控件优化
 
 v2.2
 增加了MONO编译参数，支持mono环境下的一些特殊代码

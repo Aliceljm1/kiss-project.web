@@ -50,8 +50,6 @@ namespace Kiss.Web.Controls
             if (!UseCustomSettings)
                 writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />");
 
-            base.Render(writer);
-
             RenderTitle(site, writer);
 
             RenderMetaTags(writer);
@@ -64,6 +62,8 @@ namespace Kiss.Web.Controls
 
             RenderAdditionHeader(writer);
             RenderRawContent(writer);
+
+            base.Render(writer);
 
             writer.Write("</head>");
         }

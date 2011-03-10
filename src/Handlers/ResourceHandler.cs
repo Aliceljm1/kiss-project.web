@@ -134,7 +134,7 @@ namespace Kiss.Web
 
             Assembly assembly = null;
 
-            lock (resourceTypeName)
+            lock (asmcaches)
             {
                 if (asmcaches.ContainsKey(resourceTypeName))
                     return asmcaches[resourceTypeName];
