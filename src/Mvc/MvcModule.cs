@@ -4,7 +4,7 @@ using Kiss.Utils;
 
 namespace Kiss.Web.Mvc
 {
-    public class MvcModule : IStartable
+    public class MvcModule
     {
         static readonly ILogger logger = LogManager.GetLogger<MvcModule>();
 
@@ -39,7 +39,7 @@ namespace Kiss.Web.Mvc
 
         public virtual void Start()
         {
-            invoker = new ActionInvoker();            
+            invoker = new ActionInvoker();
 
             EventBroker.Instance.PostMapRequestHandler += Invoke;
         }

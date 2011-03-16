@@ -12,7 +12,7 @@ namespace Kiss.Web.UrlMapping
     /// <summary>
     /// 重定向
     /// </summary>
-    public class UrlMappingModule : IStartable, IStoppable
+    public class UrlMappingModule
     {
         #region props
 
@@ -418,7 +418,7 @@ namespace Kiss.Web.UrlMapping
                 }
 
                 if (s)
-                {                    
+                {
                     jc.Navigation.Set(item);
 
                     // temp use
