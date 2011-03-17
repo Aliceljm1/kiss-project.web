@@ -1,6 +1,5 @@
 ﻿using System.Web;
 using Kiss.Utils;
-using Newtonsoft.Json;
 
 namespace Kiss.Web.Utils
 {
@@ -44,32 +43,12 @@ namespace Kiss.Web.Utils
             else
                 ServerUtil.AddCache(response, -1);
 
-            string r;
-
-            if (result is string)
-                r = JavaScriptConvert.ToString(result);
-            else if (result is bool)
-                r = result.ToString().ToLower();
-            else if (result == null)
-                r = JavaScriptConvert.Null;
-            else if (result is int)
-                r = JavaScriptConvert.ToString(result);
-            else
-                r = JavaScriptConvert.SerializeObject(result);
+            string r = new Kiss.Json.JavaScriptSerializer().Serialize(result);
 
             if (isJsonp)
                 r = string.Format("{0}({1})", jsonp, r);
 
-            //if (RequestUtil.SupportGZip())
-            //{
-            //    Response.AppendHeader("Content-Encoding", "gzip");
-            //    byte[] buffer = GZipUtil.GZipMemory(r, Encoding.UTF8);
-            //    Response.BinaryWrite(buffer);
-            //}
-            //else
-            //{
             response.Write(r);
-            // }
         }
     }
 }

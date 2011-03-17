@@ -13,7 +13,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Kiss.Utils;
-using Newtonsoft.Json;
 
 namespace Kiss.Web.Ajax
 {
@@ -137,7 +136,7 @@ namespace Kiss.Web.Ajax
                 if (string.IsNullOrEmpty(methodJsonArgs))
                     argsObject = new ArrayList() { string.Empty };
                 else
-                    argsObject = JavaScriptConvert.DeserializeObject<ArrayList>(methodJsonArgs);
+                    argsObject = new Kiss.Json.JavaScriptSerializer().Deserialize<ArrayList>(methodJsonArgs);
 
                 for (int i = 0; i < ps.Count; i++)
                 {

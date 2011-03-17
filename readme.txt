@@ -20,6 +20,7 @@ Todo:
 
 v2.4
 代码重构
+移除对Newtonsoft.Json的依赖
 
 v2.3
 菜单增加OnBeforeFilter事件，用于在Filter事件之前做一些额外的处理（比如添加菜单项）

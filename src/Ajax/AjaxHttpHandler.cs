@@ -4,7 +4,6 @@ using System.Web.SessionState;
 using Kiss.Utils;
 using Kiss.Web.UrlMapping;
 using Kiss.Web.Utils;
-using Newtonsoft.Json;
 
 namespace Kiss.Web.Ajax
 {
@@ -85,7 +84,7 @@ namespace Kiss.Web.Ajax
                     if (c.Type != null)
                         result = m.Invoke(c.Type, methodJsonArgs);
                     else
-                        result = m.Invoke(c.TypeString, methodJsonArgs);                    
+                        result = m.Invoke(c.TypeString, methodJsonArgs);
                 }
                 catch (Exception ex)
                 {
@@ -96,9 +95,9 @@ namespace Kiss.Web.Ajax
                         ajaxEx = m.Exception;
 
                     if (ajaxEx != null)
-                        result = JavaScriptConvert.DeserializeObject("{ \"" + AJAX_EXCEPTION_UNID + "\": { \"action\":\"" + ajaxEx.Action + "\", \"parameter\":\"" + ajaxEx.Parameter + "\" }}");
+                        result = new Kiss.Json.JavaScriptSerializer().DeserializeObject("{ \"" + AJAX_EXCEPTION_UNID + "\": { \"action\":\"" + ajaxEx.Action + "\", \"parameter\":\"" + ajaxEx.Parameter + "\" }}");
                     else
-                        result = string.Empty;
+                        result = null;
                 }
 
                 ResponseUtil.OutputJson(context.Response, result, cacheMinutes, jsonp);
