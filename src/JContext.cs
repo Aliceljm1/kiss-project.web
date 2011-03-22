@@ -688,21 +688,6 @@ namespace Kiss.Web
             return CombinUrl(baseUrl);
         }
 
-        private string _theme;
-        /// <summary>
-        /// current theme
-        /// </summary>
-        public string Theme
-        {
-            get
-            {
-                if (StringUtil.IsNullOrEmpty(_theme))
-                    _theme = Site.DefaultTheme;
-                return _theme;
-            }
-            set { _theme = value; }
-        }
-
         #region Engine
 
         private ISite _site;
@@ -744,7 +729,7 @@ namespace Kiss.Web
         {
             get
             {
-                return CombinUrl(string.Format("/themes/{0}", Theme));
+                return CombinUrl(string.Format("/themes/{0}", Site.Theme));
             }
         }
 

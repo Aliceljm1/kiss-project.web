@@ -10,6 +10,9 @@ namespace Kiss.Web
         string VirtualPath { get; }
         bool CombinJs { get; }
         bool CombinCss { get; }
+        /// <summary>
+        /// 默认主题
+        /// </summary>
         string DefaultTheme { get; }
         string Authority { get; }
         string Title { get; }
@@ -40,5 +43,10 @@ namespace Kiss.Web
         string RoleKey { get; }
 
         string SiteKey { get; }
+
+        /// <summary>
+        /// 当前主题
+        /// </summary>
+        string Theme { get; set; }
     }
 }

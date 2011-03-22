@@ -176,7 +176,7 @@ namespace Kiss.Web.Controls
             get
             {
                 if (StringUtil.IsNullOrEmpty(_themeName))
-                    _themeName = jc.Theme;
+                    _themeName = CurrentSite.Theme;
                 return _themeName;
             }
         }

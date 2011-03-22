@@ -4,6 +4,7 @@ using System.Web;
 using System.Xml;
 using Kiss.Config;
 using Kiss.Utils;
+using Kiss.Web.Utils;
 
 namespace Kiss.Web
 {
@@ -146,6 +147,23 @@ namespace Kiss.Web
                 }
 
                 return _virtualPath;
+            }
+        }
+
+        public string Theme
+        {
+            get
+            {
+                string t = JContext.Current.Items["SiteConfig.Theme"] as string;
+                
+                if (string.IsNullOrEmpty(t))
+                    t = DefaultTheme;
+
+                return t;
+            }
+            set
+            {
+                JContext.Current.Items["SiteConfig.Theme"] = value;
             }
         }
     }

@@ -18,6 +18,10 @@ Todo:
 	多国语言支持优化
 	支持带模板参数的菜单项
 
+v2.5
+修复Container控件的一个bug
+移除JContext的Theme属性
+
 v2.4
 代码重构
 移除对Newtonsoft.Json的依赖

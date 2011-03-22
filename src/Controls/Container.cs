@@ -53,7 +53,7 @@ namespace Kiss.Web.Controls
                 {
                     _root = true;
                     ISite site = SiteConfig.Instance;
-                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(site.VirtualPath, site.ThemeRoot), jc.Theme);
+                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(site.VirtualPath, site.ThemeRoot), site.Theme);
                 }
                 return themeFolder;
             }
@@ -70,7 +70,7 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return JContext.Current.Theme;
+                return JContext.Current.Site.Theme;
             }
         }
 
