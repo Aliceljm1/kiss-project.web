@@ -16,12 +16,16 @@ namespace Kiss.Web.Controls
         /// </summary>
         public bool Templated { get; set; }
 
+        private bool hasMasterFile = false;
+
         protected override void OnPreInit(EventArgs e)
         {
             string masterFile = Request.QueryString["kissMasterFile"];
 
             if (StringUtil.HasText(masterFile))
             {
+                hasMasterFile = true;
+
                 // reflect to readonly
                 PropertyInfo isreadonly = typeof(NameValueCollection).GetProperty("IsReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
                 // make collection editable
@@ -30,12 +34,6 @@ namespace Kiss.Web.Controls
                 Request.QueryString.Remove("kissMasterFile");
                 // make collection readonly again
                 isreadonly.SetValue(Request.QueryString, true, null);
-
-                //ISite site = JContext.Current.Site;
-                //Control container = Page.LoadControl(string.Format("{0}/{1}/masters/{2}.ascx",
-                //    StringUtil.CombinUrl(site.VirtualPath, site.ThemeRoot),
-                //    JContext.Current.Theme,
-                //    masterFile));
 
                 Container container = new Container();
                 container.ThemeMasterFile = masterFile + ".ascx";
@@ -75,7 +73,7 @@ namespace Kiss.Web.Controls
 
         protected override void Render(HtmlTextWriter writer)
         {
-            if (Templated)
+            if (Templated && hasMasterFile)
                 writer.Write(Util.Render(delegate(HtmlTextWriter w) { base.Render(w); }));
             else
                 base.Render(writer);

@@ -4,8 +4,8 @@ using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
-using Kiss.Plugin;
 using Kiss.Utils;
+using Kiss.Plugin;
 
 namespace Kiss.Web.UrlMapping
 {
@@ -16,25 +16,27 @@ namespace Kiss.Web.UrlMapping
     {
         #region props
 
-        #region events
+        private Dictionary<string, Dictionary<string, UrlMappingItem>> _caches = new Dictionary<string, Dictionary<string, UrlMappingItem>>();
 
-        /// <summary>
-        /// Occurs when the url is matched
-        /// </summary>
-        public static event EventHandler<EventArgs> UrlMatched;
-
-        /// <summary>
-        /// Raises the Saved event.
-        /// </summary>
-        public void OnUrlMatched()
+        private Dictionary<string, UrlMappingItem> _site_caches
         {
-            if (UrlMatched != null)
+            get
             {
-                UrlMatched(this, EventArgs.Empty);
+                string siteKey = JContext.Current.Site.SiteKey;
+                if (_caches.ContainsKey(siteKey))
+                    return _caches[siteKey];
+
+                lock (_caches)
+                {
+                    if (_caches.ContainsKey(siteKey))
+                        return _caches[siteKey];
+
+                    _caches[siteKey] = new Dictionary<string, UrlMappingItem>();
+                }
+
+                return _caches[siteKey];
             }
         }
-
-        #endregion
 
         public static UrlMappingModule Instance { get; private set; }
 
@@ -56,6 +58,26 @@ namespace Kiss.Web.UrlMapping
 
         #endregion
 
+        #region events
+
+        /// <summary>
+        /// Occurs when the url is matched
+        /// </summary>
+        public static event EventHandler<EventArgs> UrlMatched;
+
+        /// <summary>
+        /// Raises the Saved event.
+        /// </summary>
+        public void OnUrlMatched()
+        {
+            if (UrlMatched != null)
+            {
+                UrlMatched(this, EventArgs.Empty);
+            }
+        }
+
+        #endregion
+
         #region ctor
 
         public UrlMappingModule()
@@ -66,26 +88,40 @@ namespace Kiss.Web.UrlMapping
 
         #endregion
 
-        public NameValueCollection GetMappedQueryString(string urlRequested)
+        public NameValueCollection GetMappedQueryString(string urlRequested, out UrlMappingItem mapping)
         {
+            mapping = null;
+
             urlRequested = GetUrlRequested(urlRequested);
-            foreach (UrlMappingItem item in _provider.UrlMappings ?? new UrlMappingItemCollection())
+
+            Dictionary<string, UrlMappingItem> sitecaches = _site_caches;
+
+            if (sitecaches.ContainsKey(urlRequested))
+                mapping = sitecaches[urlRequested];
+
+            if (mapping == null)
             {
-                Match match = item.UrlTarget.Match(urlRequested);
-
-                if (match.Success)
+                foreach (UrlMappingItem item in _provider.UrlMappings ?? new UrlMappingItemCollection())
                 {
-                    // do we want to add querystring parameters for dynamic mappings?
-                    NameValueCollection qs = new NameValueCollection();
-                    if (match.Groups.Count > 1)
+                    Match match = item.UrlTarget.Match(urlRequested);
+
+                    if (match.Success)
                     {
-                        for (int i = 1; i < match.Groups.Count; i++)
-                            qs.Add(item.UrlTarget.GroupNameFromNumber(i), match.Groups[i].Value);
+                        // do we want to add querystring parameters for dynamic mappings?
+                        NameValueCollection qs = new NameValueCollection();
+                        if (match.Groups.Count > 1)
+                        {
+                            for (int i = 1; i < match.Groups.Count; i++)
+                                qs.Add(item.UrlTarget.GroupNameFromNumber(i), match.Groups[i].Value);
+                        }
+
+
+                        mapping = item;
+                        if (!item.UrlTemplate.Contains("["))
+                            sitecaches[urlRequested] = item;
+
+                        return qs;
                     }
-
-                    JContext.Current.Navigation.Set(item);
-
-                    return qs;
                 }
             }
 
@@ -131,7 +167,7 @@ namespace Kiss.Web.UrlMapping
         void ProcessUrl(object sender, EventArgs e)
         {
             HttpApplication app = (sender as HttpApplication);
-            if (app == null)
+            if (app == null || !CheckExtension(app.Request.Path))
                 return;
 
             string urlRequested = GetUrlRequested(app.Request);
@@ -152,7 +188,7 @@ namespace Kiss.Web.UrlMapping
                 switch (_noMatchAction)
                 {
                     case NoMatchAction.PassThrough:
-                        // do nothing; allow the request to continut to be processed normally;                                
+                        // do nothing; allow the request to continue to be processed normally;
                         break;
                     case NoMatchAction.Redirect:
                         RerouteRequest(app, _noMatchRedirectPage, null, app.Request.QueryString);
@@ -388,49 +424,71 @@ namespace Kiss.Web.UrlMapping
         {
             qs = new NameValueCollection();
             JContext jc = JContext.Current;
+            PluginSetting setting = PluginSettings.Get<UrlMappingInitializer>();
 
-            foreach (UrlMappingItem item in _provider.UrlMappings ?? new UrlMappingItemCollection())
+            UrlMappingItem matched = null;
+
+            Dictionary<string, UrlMappingItem> siteCache = _site_caches;
+            if (siteCache.ContainsKey(urlRequested))
+                matched = siteCache[urlRequested];
+
+            if (matched == null)
             {
-                Match match = item.UrlTarget.Match(urlRequested);
+                bool s = false;
 
-                bool s = match.Success;
-
-                if (s)
+                foreach (UrlMappingItem item in _provider.UrlMappings ?? new UrlMappingItemCollection())
                 {
-                    // add querystring parameters for dynamic mappings
-                    for (int i = 1; i < match.Groups.Count; i++)
-                        qs.Add(item.UrlTarget.GroupNameFromNumber(i), match.Groups[i].Value);
-                }
-                else if (StringUtil.IsNullOrEmpty(jc.Navigation.LanguageCode))
-                {
-                    Regex regex = new Regex(string.Format(@"^(?<lang>[a-zA-z\-]*)/{0}", item.UrlTarget.ToString().Substring(1)));
+                    Match match = item.UrlTarget.Match(urlRequested);
 
-                    match = regex.Match(urlRequested);
                     s = match.Success;
+
                     if (s)
                     {
-                        jc.Navigation.LanguageCode = match.Groups[1].Value;
-
                         // add querystring parameters for dynamic mappings
-                        for (int i = 2; i < match.Groups.Count; i++)
+                        for (int i = 1; i < match.Groups.Count; i++)
                             qs.Add(item.UrlTarget.GroupNameFromNumber(i), match.Groups[i].Value);
                     }
-                }
+                    else if (setting != null && setting["support_multi_lang"].ToBoolean(false) && StringUtil.IsNullOrEmpty(jc.Navigation.LanguageCode))
+                    {
+                        Regex regex = new Regex(string.Format(@"^(?<lang>[a-zA-z\-]*)/{0}", item.UrlTarget.ToString().Substring(1)));
 
-                if (s)
-                {
-                    jc.Navigation.Set(item);
+                        match = regex.Match(urlRequested);
+                        s = match.Success;
+                        if (s)
+                        {
+                            jc.Navigation.LanguageCode = match.Groups[1].Value;
 
-                    // temp use
-                    jc.QueryString.Add(qs);
+                            // add querystring parameters for dynamic mappings
+                            for (int i = 2; i < match.Groups.Count; i++)
+                                qs.Add(item.UrlTarget.GroupNameFromNumber(i), match.Groups[i].Value);
+                        }
+                    }
 
-                    OnUrlMatched();
+                    if (s)
+                    {
+                        // add to cache if urltemplate is paramless
+                        if (!item.UrlTemplate.Contains("["))
+                        {
+                            siteCache[urlRequested] = item;
+                        }
 
-                    newPath = item.Redirection;
+                        // temp use
+                        jc.QueryString.Add(qs);
 
-                    return true;
+                        matched = item;
+                        break;
+                    }
                 }
             }
+
+            if (matched != null)
+            {
+                jc.Navigation.Set(matched);
+                OnUrlMatched();
+                newPath = matched.Redirection;
+                return true;
+            }
+
             newPath = string.Empty;
             return false;
         }

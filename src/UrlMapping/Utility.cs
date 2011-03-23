@@ -14,6 +14,11 @@ namespace Kiss.Web.UrlMapping
             return redirection;
         }
 
+        public static UrlMappingItem CreateTemplatedMappingItem(string templatedUrl)
+        {
+            return CreateTemplatedMappingItem(string.Empty, templatedUrl, GetHref(string.Empty), IncomingQueryStringBehavior.PassThrough);
+        }
+
         /// <summary>
         /// Creates a <see cref="UrlMappingItem" /> given a name, templated URL string, and redirection string.
         /// </summary>
@@ -42,6 +47,7 @@ namespace Kiss.Web.UrlMapping
         public static UrlMappingItem CreateTemplatedMappingItem(string name, string templatedUrl, string redirection, IncomingQueryStringBehavior qsBehavior)
         {
             UrlMappingItem item = new UrlMappingItem(name, CreateTemplatedMappingRegex(templatedUrl, qsBehavior), redirection);
+            item.UrlTemplate = templatedUrl;
             return item;
         }
 

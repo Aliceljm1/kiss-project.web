@@ -216,7 +216,7 @@ namespace Kiss.Web
             }
         }
 
-        public void Set(UrlMapping.UrlMappingItem item)
+        public NavigationInfo Set(UrlMapping.UrlMappingItem item)
         {
             OK = true;
             Url = item;
@@ -231,6 +231,8 @@ namespace Kiss.Web
             {
                 SetExtendedAttribute(key, Url[key]);
             }
+
+            return this;
         }
     }
 }

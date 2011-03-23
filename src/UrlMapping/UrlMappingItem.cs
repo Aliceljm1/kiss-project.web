@@ -96,7 +96,7 @@ namespace Kiss.Web.UrlMapping
             // first things first
             foreach (var item in first)
             {
-                var configed = second.FindByAction(item.Id, item.Action);
+                var configed = second.FindByAction(item.Id, item.Action, item.UrlTemplate);
                 if (configed == null)
                     col.Add(item);
                 else
@@ -113,12 +113,12 @@ namespace Kiss.Web.UrlMapping
             return col;
         }
 
-        public UrlMappingItem FindByAction(string controller, string action)
+        public UrlMappingItem FindByAction(string controller, string action, string urltemplate)
         {
             return Find(delegate(UrlMappingItem item)
             {
                 if (item == null) return false;
-                return item.Id == controller && item.Action == action;
+                return item.Id == controller && item.Action == action && item.UrlTemplate == urltemplate;
             });
         }
     }

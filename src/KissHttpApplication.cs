@@ -26,7 +26,11 @@ namespace Kiss.Web
                 sl.AddComponent("Kiss.typeFinder", typeof(ITypeFinder), typeof(WebAppTypeFinder));
 
                 if (!Context.IsCustomErrorEnabled && !Context.IsDebuggingEnabled)
-                    sl.AddComponent("Kiss.errorhandler", typeof(IErrorHandler), typeof(ErrorHandler));
+                {
+                    ErrorHandler eh = new ErrorHandler();
+                    eh.Start();
+                    sl.AddComponentInstance<IErrorHandler>(eh);
+                }
             });
 
             LogManager.GetLogger<KissHttpApplication>().Debug("ALL components initialized.");

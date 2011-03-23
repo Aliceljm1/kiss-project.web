@@ -62,10 +62,14 @@ namespace Kiss.Web.Ajax
 
         public AjaxClass FindClass(string className)
         {
-            if (string.Equals(className, "gAjax", StringComparison.InvariantCultureIgnoreCase))
+            return FindClass(className, string.Empty);
+        }
+
+        public AjaxClass FindClass(string className, string controllerId)
+        {
+            if (string.Equals(className, "gAjax", StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrEmpty(controllerId))
             {
-                JContext jc = JContext.Current;
-                Type t = ControllerResolver.Instance.GetControllerType(jc.Navigation.Id);
+                Type t = ControllerResolver.Instance.GetControllerType(controllerId);
                 if (t != null && AjaxConfiguration.ControllerAjax.ContainsKey(t))
                     return AjaxConfiguration.ControllerAjax[t];
             }
@@ -94,7 +98,7 @@ namespace Kiss.Web.Ajax
                 }
             }
 
-            throw new AjaxException("can't find ajax method. className:" + c.TypeString + " methodName: " + methodName);
+            throw new AjaxException("can't find ajax method. className:" + c.Key + " methodName: " + methodName);
         }
 
         #endregion

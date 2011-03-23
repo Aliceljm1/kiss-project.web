@@ -21,6 +21,14 @@ Todo:
 v2.5
 修复Container控件的一个bug
 移除JContext的Theme属性
+修复ErrorHandler的一个bug
+修改AjaxHttpHandler为控制器，并增加自动初始化配置类（不需要配置web.config中的httphandle节点了）
+UrlMappingInitializer插件配置增加support_multi_lang节点，配置是否支持通过url设置多国语言类型
+路由匹配优化，对不含参数的url增加路由缓存
+修复ajax请求中获取UrlReferrer路由信息的bug
+路由配置href节点默认为空（以前默认为master）
+重构了资源handler，资源压缩合并handler。1，不需要配置web.config中的httphandle节点了；2，移除了gzip和js/css minify的功能
+在debug模式下，资源文件也缓存
 
 v2.4
 代码重构

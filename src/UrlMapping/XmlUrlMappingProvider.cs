@@ -281,7 +281,7 @@ namespace Kiss.Web.UrlMapping
                     // ensure urlTemplate and redirection are present
                     string name = XmlUtil.GetStringAttribute(node, "name", string.Empty);
                     string urlTemplate = XmlUtil.GetStringAttribute(node, "template", string.Empty);
-                    string redirection = Utility.GetHref(XmlUtil.GetStringAttribute(node, "href", "master"));
+                    string redirection = Utility.GetHref(XmlUtil.GetStringAttribute(node, "href", string.Empty));
 
                     if (string.IsNullOrEmpty(urlTemplate))
                         throw new UrlMappingException("There is an XmlUrlMappingModule error.  All <url> tags in the mapping file require a 'template' attribute.");

@@ -67,7 +67,7 @@ namespace Kiss.Web
 
             SetScriptRended(resourceName);
 
-            RegisterClientScript(writer, ResourceHandler.GetResourceUrl(assemblyName, resourceName), noCombin);
+            RegisterClientScript(writer, Resources.Utility.GetResourceUrl(assemblyName, resourceName), noCombin);
         }
 
         public void RegisterJsBlock(HtmlTextWriter writer, string key, string script, bool addScriptTags)
@@ -135,9 +135,9 @@ namespace Kiss.Web
             SetScriptRended(resourceName);
 
             if (string.IsNullOrEmpty(baseUrl))
-                Head.AddStyle(ResourceHandler.GetResourceUrl(assemblyName, resourceName));
+                Head.AddStyle(Resources.Utility.GetResourceUrl(assemblyName, resourceName));
             else
-                Head.AddStyle(StringUtil.CombinUrl(baseUrl, ResourceHandler.GetResourceUrl(assemblyName, resourceName)));
+                Head.AddStyle(StringUtil.CombinUrl(baseUrl, Resources.Utility.GetResourceUrl(assemblyName, resourceName)));
         }
 
         public void RegisterCssResource(string assemblyName, string resourceName)
@@ -159,7 +159,7 @@ namespace Kiss.Web
         /// <returns></returns>
         public string GetWebResourceUrl(Control control, Type type, string resourceName)
         {
-            return ResourceHandler.GetResourceUrl(type, resourceName);
+            return Resources.Utility.GetResourceUrl(type, resourceName);
         }
 
         public void RegisterCssBlock(string css, string key)

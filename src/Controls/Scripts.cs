@@ -56,7 +56,7 @@ namespace Kiss.Web.Controls
             {
                 writer.Write(
                     string.Format("<script src='{0}' type='text/javascript'></script>",
-                        Utility.FormatJsUrl(JContext.Current.Site, string.Format("rescombiner.axd?f={0}&t=text/javascript&v={1}",
+                        Utility.FormatJsUrl(JContext.Current.Site, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(urls)),
                                                             jsversion))));
             }

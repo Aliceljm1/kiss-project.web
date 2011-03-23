@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Web;
-using System.Web.SessionState;
 using Kiss.Utils;
+using Kiss.Web.Mvc;
 using Kiss.Web.UrlMapping;
 using Kiss.Web.Utils;
 
 namespace Kiss.Web.Ajax
 {
-    public class AjaxHttpHandler : IHttpHandler, IReadOnlySessionState
+    [Controller("_ajax_")]
+    class AjaxController : Controller
     {
         #region fields
 
@@ -20,16 +21,11 @@ namespace Kiss.Web.Ajax
 
         #endregion
 
-        #region IHttpHandler Members
-
-        public bool IsReusable
-        {
-            get { return false; }
-        }
-
-        public void ProcessRequest(HttpContext context)
+        void proc()
         {
             JContext jc = JContext.Current;
+            HttpContext context = jc.Context;
+
             // set a ajax request token
             jc.IsAjaxRequest = true;
 
@@ -46,7 +42,15 @@ namespace Kiss.Web.Ajax
             {
                 UrlMappingModule module = UrlMappingModule.Instance;
                 if (module != null)
-                    jc.QueryString.Add(module.GetMappedQueryString(context.Request.UrlReferrer.AbsolutePath));
+                {
+                    UrlMappingItem mapping = null;
+                    jc.QueryString.Add(module.GetMappedQueryString(context.Request.UrlReferrer.AbsolutePath, out mapping));
+
+                    if (mapping != null)
+                    {
+                        jc.Navigation = new NavigationInfo().Set(mapping);
+                    }
+                }
             }
 
             // set view data 
@@ -72,7 +76,7 @@ namespace Kiss.Web.Ajax
 
                 try
                 {
-                    AjaxClass c = config.FindClass(classId);
+                    AjaxClass c = config.FindClass(classId, jc.Navigation.Id);
 
                     m = config.FindMethod(c, methodName);
 
@@ -88,7 +92,7 @@ namespace Kiss.Web.Ajax
                 }
                 catch (Exception ex)
                 {
-                    LogManager.GetLogger<AjaxHttpHandler>().Error("ajax handler error." + ExceptionUtil.WriteException(ex));
+                    LogManager.GetLogger<AjaxController>().Error("ajax handler error." + ExceptionUtil.WriteException(ex));
 
                     AjaxServerException ajaxEx = null;
                     if (m != null)
@@ -99,11 +103,11 @@ namespace Kiss.Web.Ajax
                     else
                         result = null;
                 }
-
-                ResponseUtil.OutputJson(context.Response, result, cacheMinutes, jsonp);
             }
-        }
 
-        #endregion
+            ResponseUtil.OutputJson(context.Response, result, cacheMinutes, jsonp);
+
+            context.Response.End();
+        }
     }
 }

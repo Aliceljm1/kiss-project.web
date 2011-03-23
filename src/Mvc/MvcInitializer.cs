@@ -1,13 +1,10 @@
-﻿using System;
-using Kiss.Plugin;
+﻿using Kiss.Plugin;
 
 namespace Kiss.Web.Mvc
 {
-    [AutoInit(Title = "mvc", Priority = 0)]
+    [AutoInit(Title = "mvc")]
     public class MvcInitializer : IPluginInitializer
     {
-        //const string KEY = "Kiss.mvc";
-
         #region IPluginInitializer Members
 
         public void Init(ServiceLocator sl, PluginSetting setting)

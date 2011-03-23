@@ -7,7 +7,7 @@ namespace Kiss.Web.UrlMapping
     /// <summary>
     /// url重定向配置基类
     /// </summary>
-    [ConfigNode( "urlMapping", Desc = "url重定向" )]
+    [ConfigNode("urlMapping", Desc = "url重定向")]
     public class UrlMappingConfig : ConfigBase
     {
         #region fields / properties
@@ -15,13 +15,13 @@ namespace Kiss.Web.UrlMapping
         /// <summary>
         /// 配置provider类型
         /// </summary>
-        [ConfigProp( "providerType", DefaultValue = "Kiss.Web.UrlMapping.XmlUrlMappingProvider, Kiss.Web" )]
+        [ConfigProp("providerType", DefaultValue = "Kiss.Web.UrlMapping.XmlUrlMappingProvider, Kiss.Web")]
         public string ProviderType { get; protected set; }
 
         /// <summary>
         /// url不匹配的操作
         /// </summary>
-        [ConfigProp( "noMatchAction", DefaultValue = "PassThrough", Options = "PassThrough,ThrowException,Return404,Redirect" )]
+        [ConfigProp("noMatchAction", DefaultValue = "PassThrough", Options = "PassThrough,ThrowException,Return404,Redirect")]
         public string NoMatchActionStr { get; protected set; }
 
         /// <summary>
@@ -32,36 +32,36 @@ namespace Kiss.Web.UrlMapping
         /// <summary>
         /// url不匹配重定向url
         /// </summary>
-        [ConfigProp( "noMatchRedirectUrl", DefaultValue = "404.html" )]
+        [ConfigProp("noMatchRedirectUrl", DefaultValue = "404.html")]
         public string NoMatchRedirectUrl { get; protected set; }
 
-        [ConfigProp( "automaticallyUpdateFormAction", ConfigPropAttribute.DataType.Boolean, DefaultValue = true )]
+        [ConfigProp("automaticallyUpdateFormAction", ConfigPropAttribute.DataType.Boolean, DefaultValue = true)]
         public bool AutoUpdateFormAction { get; protected set; }
 
-        [ConfigProp( "incomingQueryStringBehavior", DefaultValue = "PassThrough", Options = "PassThrough,Ingore,Include" )]
+        [ConfigProp("incomingQueryStringBehavior", DefaultValue = "PassThrough", Options = "PassThrough,Ingore,Include")]
         public string IncomingQueryStringBehaviorStr { get; protected set; }
         public IncomingQueryStringBehavior IncomingQueryStringBehavior { get; private set; }
 
-        [ConfigProp( "ignoreExtensions", DefaultValue = ".css .jpg .jpeg .gif .png .axd .htm .html .js .xml .swf .gallery .icon .ico .flv .zip .rar" )]
+        [ConfigProp("ignoreExtensions", DefaultValue = ".css .jpg .jpeg .gif .png .axd .htm .html .js .xml .swf .gallery .icon .ico .flv .zip .rar .txt")]
         public string IgnoreExtensions { get; protected set; }
 
-        [ConfigProp( "allowExtensions" )]
+        [ConfigProp("allowExtensions")]
         public string AllowExtensions { get; protected set; }
 
-        [ConfigProp( "urlProcessingEvent", DefaultValue = "AuthorizeRequest", Options = "BeginRequest,AuthenticateRequest,AuthorizeRequest" )]
+        [ConfigProp("urlProcessingEvent", DefaultValue = "AuthorizeRequest", Options = "BeginRequest,AuthenticateRequest,AuthorizeRequest")]
         public string UrlProcessingEventStr { get; protected set; }
         public UrlProcessingEvent UrlProcessingEvent { get; private set; }
 
         /// <summary>
         /// 配置文件路径
         /// </summary>
-        [ConfigProp( "urlMappingFile", DefaultValue = "~/App_Data/routes.config", Desc = "配置文件路径" )]
+        [ConfigProp("urlMappingFile", DefaultValue = "~/App_Data/routes.config", Desc = "配置文件路径")]
         public string UrlMappingFile { get; protected set; }
 
         /// <summary>
         /// 是否启用文件缓存依赖
         /// </summary>
-        [ConfigProp( "useDependency", ConfigPropAttribute.DataType.Boolean, DefaultValue = true, Desc = "是否启用文件缓存依赖" )]
+        [ConfigProp("useDependency", ConfigPropAttribute.DataType.Boolean, DefaultValue = true, Desc = "是否启用文件缓存依赖")]
         public bool UseDependency { get; protected set; }
 
         internal IUrlMappingProvider Provider { get; set; }
@@ -79,13 +79,13 @@ namespace Kiss.Web.UrlMapping
 
         #region override
 
-        protected override void LoadValuesFromConfigurationXml( XmlNode node )
+        protected override void LoadValuesFromConfigurationXml(XmlNode node)
         {
-            base.LoadValuesFromConfigurationXml( node );
+            base.LoadValuesFromConfigurationXml(node);
 
-            NoMatchAction = StringEnum<NoMatchAction>.SafeParse( NoMatchActionStr );
-            IncomingQueryStringBehavior = StringEnum<IncomingQueryStringBehavior>.SafeParse( IncomingQueryStringBehaviorStr );
-            UrlProcessingEvent = StringEnum<UrlProcessingEvent>.SafeParse( UrlProcessingEventStr );
+            NoMatchAction = StringEnum<NoMatchAction>.SafeParse(NoMatchActionStr);
+            IncomingQueryStringBehavior = StringEnum<IncomingQueryStringBehavior>.SafeParse(IncomingQueryStringBehaviorStr);
+            UrlProcessingEvent = StringEnum<UrlProcessingEvent>.SafeParse(UrlProcessingEventStr);
         }
 
         #endregion

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using Kiss.Utils;
@@ -14,7 +15,7 @@ namespace Kiss.Web
     /// <summary>
     /// Is notified of errors in the web context and tries to do something barely useful about them.
     /// </summary>
-    public class ErrorHandler : IErrorHandler, IAutoStart
+    public class ErrorHandler : IErrorHandler
     {
         private static ILogger _logger = null;
         private static ILogger logger
@@ -57,18 +58,10 @@ namespace Kiss.Web
 
             logger.Error(ExceptionUtil.WriteException(ex), ex);
 
-            JContext.Current.ViewData["_ex"] = ex;
-            JContext.Current.ViewData["_msg"] = ExceptionUtil.WriteException(ex, true);
-
-            HttpContext.Current.Response.StatusCode = 500;
+            HttpContext.Current.Response.StatusCode = 404;
 
             while (ex != null)
             {
-                if (!(ex is KissException) && JContext.Current.GetViewData("_title") == null)
-                {
-                    JContext.Current.ViewData["_title"] = ex.Message;
-                }
-
                 if (ex is HttpException)
                 {
                     HttpException httpEx = ex as HttpException;
@@ -80,11 +73,7 @@ namespace Kiss.Web
                 ex = ex.InnerException;
             }
 
-            NotifyErrorEventArgs arg = new NotifyErrorEventArgs()
-            {
-                Exception = ex
-            };
-            OnNotifyError(arg);
+            OnNotifyError(new NotifyErrorEventArgs() { Exception = ex });
 
             HttpContext.Current.Response.Clear();
             HttpContext.Current.Server.Transfer(new ErrorPage(), true);
@@ -128,29 +117,19 @@ namespace Kiss.Web
         {
             HttpContext.Current.Response.Clear();
 
-            ISite site = null;
-            try
-            {
-                site = JContext.Current.Site;
-            }
-            catch
-            {
-            }
+            string filename = Server.MapPath("~/404.html");
 
-            if (site == null || StringUtil.IsNullOrEmpty(site.ErrorPage))
+            if (!File.Exists(filename))
             {
-                writer.Write("something ERROR happended! see <a href='{0}' target='_blank'>logs</a> for more detail.", ServerUtil.ResolveUrl("~/logs/1.aspx?SiteKey=default&sort=-DateCreate"));
+                writer.Write("ERROR!");
             }
             else
             {
-                ITemplateEngine te = ServiceLocator.Instance.Resolve<ITemplateEngine>();
-
-                using (StringWriter sw = new StringWriter())
-                {
-                    te.Process(JContext.Current.ViewData, "errorpage", sw, site.ErrorPage);
-
-                    writer.Write(sw.GetStringBuilder().ToString());
-                }
+                string response = File.ReadAllText(filename, Encoding.UTF8);
+                if (string.IsNullOrEmpty(response))
+                    writer.Write("ERROR!");
+                else
+                    writer.Write(response);
             }
 
             base.Render(writer);

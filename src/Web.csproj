@@ -58,13 +58,17 @@
     <Compile Include="Ajax\AjaxClass.cs" />
     <Compile Include="Ajax\AjaxConfig.cs" />
     <Compile Include="Ajax\AjaxException.cs" />
-    <Compile Include="Ajax\AjaxHttpHandler.cs" />
+    <Compile Include="Ajax\AjaxController.cs" />
+    <Compile Include="Ajax\AjaxInitializer.cs" />
     <Compile Include="Ajax\AjaxMethod.cs" />
     <Compile Include="Ajax\AjaxMethodAttribute.cs" />
     <Compile Include="Ajax\AjaxParam.cs" />
     <Compile Include="Ajax\AjaxServerException.cs" />
     <Compile Include="Cache\WebCacheProvider.cs" />
     <Compile Include="Controls\IContextAwaredControl.cs" />
+    <Compile Include="IErrorHandler.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="KissHttpApplication.cs" />
     <Compile Include="ControlPanelItemRenderer.cs" />
     <Compile Include="ClientScriptProxy.cs" />
@@ -98,13 +102,9 @@
     <Compile Include="Controls\TemplatedControl.cs" />
     <Compile Include="Controls\Util.cs" />
     <Compile Include="EventBroker.cs" />
-    <Compile Include="Handlers\RedirectHandler.cs" />
-    <Compile Include="Handlers\ResourceHandler.cs" />
+    <Compile Include="Resources\ResourceController.cs" />
     <Compile Include="ContextData.cs" />
     <Compile Include="Cache\HttpContextCacheProvider.cs" />
-    <Compile Include="IErrorHandler.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="IWebContext.cs" />
     <Compile Include="HttpContextItem.cs" />
     <Compile Include="Mvc\MvcInitializer.cs" />
@@ -120,6 +120,8 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Utility.cs" />
+    <Compile Include="Resources\ResourceInitializer.cs" />
     <Compile Include="SiteConfig.cs" />
     <Compile Include="UrlMapping\UrlAttribute.cs" />
     <Compile Include="UrlMapping\UrlMappingInitializer.cs" />
@@ -134,7 +136,7 @@
     <Compile Include="WebContext.cs" />
     <Compile Include="WebExceptioin.cs" />
     <Compile Include="WebQuery.cs" />
-    <Compile Include="Handlers\ResourceCombinerHandler.cs" />
+    <Compile Include="Resources\ResourceCombineController.cs" />
     <Compile Include="Url.cs" />
     <Compile Include="UrlMapping\Enums.cs" />
     <Compile Include="UrlMapping\Utility.cs" />

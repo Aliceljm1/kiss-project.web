@@ -148,7 +148,7 @@ namespace Kiss.Web.Controls
                     if (index != -1)
                         dir = path.Substring(index + s.VirtualPath.Length);
                     writer.WriteLine(string.Format(styleFormat,
-                                        Utility.FormatCssUrl(s, string.Format("{2}rescombiner.axd?f={0}&t=text/css&v={1}",
+                                        Utility.FormatCssUrl(s, string.Format("{2}_resc.aspx?f={0}&t=text/css&v={1}",
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(di[s][path])),
                                                                 s.CssVersion,
                                                                 dir)),
