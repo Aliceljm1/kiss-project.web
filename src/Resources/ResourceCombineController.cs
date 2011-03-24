@@ -128,8 +128,7 @@ namespace Kiss.Web.Resources
         {
             if (bytes == null || bytes.Length == 0)
                 return;
-
-            response.AppendHeader("Content-Length", bytes.Length.ToString());
+            
             ContentType = contentType;
 
             ServerUtil.AddCache(60 * 24 * 90);
