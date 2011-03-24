@@ -50,16 +50,16 @@ namespace Kiss.Web.Resources
             {
                 case ".css":
                     site = JContext.Current.Site;
-                    url = HttpContext.Current.IsDebuggingEnabled && !site.CombinCss ? StringUtil.CombinUrl(site.VirtualPath, "_res.aspx?r=") : Web.Utility.FormatCssUrl(site, "_res.aspx?r=");
+                    url = Web.Utility.FormatCssUrl(site, "_res.aspx?r=");
                     version = site.CssVersion;
                     break;
                 case ".js":
                     site = JContext.Current.Site;
-                    url = HttpContext.Current.IsDebuggingEnabled && !site.CombinJs ? StringUtil.CombinUrl(site.VirtualPath, "_res.aspx?r=") : Web.Utility.FormatJsUrl(site, "_res.aspx?r=");
+                    url = Web.Utility.FormatJsUrl(SiteConfig.Instance, "_res.aspx?r=");
                     version = site.JsVersion;
                     break;
                 default:
-                    url = "_res.aspx?r=";
+                    url = StringUtil.CombinUrl(SiteConfig.Instance.VirtualPath, "_res.aspx?r=");
                     break;
             }
 

@@ -32,6 +32,7 @@ UrlMappingInitializer插件配置增加support_multi_lang节点，配置是否支持通过url设置
 路由支持[]xxx.xx，匹配任意前缀路径
 修复rewrite后contenttype无法设置的bug
 修复设置content-length的bug
+javascript，图片资源引用优化
 
 v2.4
 代码重构
