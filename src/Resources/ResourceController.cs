@@ -155,14 +155,13 @@ namespace Kiss.Web.Resources
             response.End();
         }
 
-        private void SendOutput(HttpResponse response, string contentType, byte[] Output)
-        {
-            response.ContentType = contentType;
+        private void SendOutput(HttpResponse response, string contentType, byte[] output)
+        {           
+            ContentType = contentType;
 
             ServerUtil.AddCache(60 * 24 * 90);
 
-            response.BinaryWrite(Output);
-            response.End();
+            response.BinaryWrite(output);
         }
 
         #endregion

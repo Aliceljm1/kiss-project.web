@@ -138,5 +138,7 @@ namespace Kiss.Web.Mvc
 
             return jc.User.HasPermission(string.Concat("menu:", jc.Site.SiteKey, "_", menu));
         }
+
+        protected string ContentType { get { return httpContext.Items["_ContentType_"] as string ?? httpContext.Response.ContentType; } set { httpContext.Items["_ContentType_"] = value; httpContext.Response.ContentType = value; } }
     }
 }

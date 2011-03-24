@@ -59,8 +59,6 @@ namespace Kiss.Web.Resources
                 // Generate the response
                 WriteBytes(buffer, httpContext.Response, contentType);
             }
-
-            httpContext.Response.End();
         }
 
         private string GetFileContent(HttpContext context, string virtualPath)
@@ -132,12 +130,11 @@ namespace Kiss.Web.Resources
                 return;
 
             response.AppendHeader("Content-Length", bytes.Length.ToString());
-            response.ContentType = contentType;
+            ContentType = contentType;
 
             ServerUtil.AddCache(60 * 24 * 90);
 
             response.BinaryWrite(bytes);
-            response.Flush();
         }
 
         private string GetCacheKey(string setName, string version)

@@ -11,6 +11,10 @@ namespace Kiss.Web.Controls
     /// </summary>
     public class MasterPage : Page
     {
+        public MasterPage()
+        {
+        }
+
         /// <summary>
         /// 是否启用模板引擎渲染
         /// </summary>
@@ -73,6 +77,8 @@ namespace Kiss.Web.Controls
 
         protected override void Render(HtmlTextWriter writer)
         {
+            ContentType = Context.Items["_ContentType_"] as string ?? ContentType;
+
             if (Templated && hasMasterFile)
                 writer.Write(Util.Render(delegate(HtmlTextWriter w) { base.Render(w); }));
             else

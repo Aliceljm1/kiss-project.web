@@ -106,8 +106,7 @@ namespace Kiss.Web.Ajax
             }
 
             ResponseUtil.OutputJson(context.Response, result, cacheMinutes, jsonp);
-
-            context.Response.End();
+            ContentType = context.Response.ContentType;
         }
     }
 }
