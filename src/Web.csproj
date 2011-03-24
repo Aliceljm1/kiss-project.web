@@ -82,7 +82,7 @@
     </Compile>
     <Compile Include="IHost.cs" />
     <Compile Include="ISite.cs" />
-    <Compile Include="Models\Site.cs" />
+    <Compile Include="Site.cs" />
     <Compile Include="Mvc\ActionResult.cs" />
     <Compile Include="Mvc\AsyncAttribute.cs" />
     <Compile Include="Mvc\Controller.cs" />

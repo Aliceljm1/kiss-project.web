@@ -1,5 +1,4 @@
-﻿
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Kiss.Web.UrlMapping
 {
@@ -135,9 +134,15 @@ namespace Kiss.Web.UrlMapping
             string s = templatedUrl;
             foreach (Match m in matches)
             {
-                string tokenName = m.Value.Substring(1, m.Value.Length - 2);
-                string replacement = string.Format(@"(?<{0}>[\-?a-zA-Z0-9_\.\u00a4-\uffe5+]*)", tokenName);
-                s = s.Replace(m.Value, replacement);
+                if (m.Value.Length == 2)
+                {
+                    s = s.Replace(m.Value, @"(?<_pre_>[/\-?a-zA-Z0-9_\.\u00a4-\uffe5+]*)");
+                }
+                else
+                {
+                    string tokenName = m.Value.Substring(1, m.Value.Length - 2);
+                    s = s.Replace(m.Value, string.Format(@"(?<{0}>[\-?a-zA-Z0-9_\.\u00a4-\uffe5+]*)", tokenName));
+                }
             }
 
             // if the matchCompletely option is desired, add anchors to the regex string

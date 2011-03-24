@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Kiss.Utils;
 using System.Web;
+using Kiss.Utils;
 using Kiss.Web.Utils;
 
 namespace Kiss.Web.Resources

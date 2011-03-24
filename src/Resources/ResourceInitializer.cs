@@ -20,15 +20,7 @@ namespace Kiss.Web.Resources
 
             urlMapping.AddMapping(item);
 
-            item = UrlMapping.Utility.CreateTemplatedMappingItem("_resc.aspx");
-            item.Id = "_resc_";
-            item.Action = "proc";
-            item.Index = -1;
-            item.SubIndex = -1;
-
-            urlMapping.AddMapping(item);
-
-            item = UrlMapping.Utility.CreateTemplatedMappingItem("themes/[theme]/_resc.aspx");
+            item = UrlMapping.Utility.CreateTemplatedMappingItem("[]_resc.aspx");
             item.Id = "_resc_";
             item.Action = "proc";
             item.Index = -1;
