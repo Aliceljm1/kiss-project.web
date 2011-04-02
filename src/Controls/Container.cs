@@ -24,17 +24,10 @@ namespace Kiss.Web.Controls
         /// <summary>
         /// Master样式文件名
         /// </summary>
-        public string ThemeMasterFile
-        {
-            get
-            {
-                return _themeMasterFile;
-            }
-            set
-            {
-                _themeMasterFile = value;
-            }
-        }
+        public string ThemeMasterFile { get { return _themeMasterFile; } set { _themeMasterFile = value; } }
+
+        private ISite _site;
+        public ISite CurrentSite { get { if (_site == null)_site = JContext.Current.Site; return _site; } set { _site = value; } }
 
         /// <summary>
         /// Folder which contains the master files
@@ -45,10 +38,8 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                JContext jc = JContext.Current;
-
                 if (themeFolder == null)
-                    return string.Format("{0}/{1}/masters/", jc.CombinUrl(jc.Site.ThemeRoot), ThemeName);
+                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot), ThemeName);
                 else if (themeFolder == "~")
                 {
                     _root = true;
@@ -70,7 +61,7 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return JContext.Current.Site.Theme;
+                return CurrentSite.Theme;
             }
         }
 
@@ -86,8 +77,7 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                JContext jc = JContext.Current;
-                return string.Format("{0}/default/masters/{1}", jc.CombinUrl(jc.Site.ThemeRoot), ThemeMasterFile);
+                return string.Format("{0}/default/masters/{1}", StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot), ThemeMasterFile);
             }
         }
 
@@ -195,7 +185,7 @@ namespace Kiss.Web.Controls
                         (ctrl as MasterFileAwaredControl).MasterPageFileName = ThemeMasterFile;
 
                     if (ctrl is IContextAwaredControl)
-                        (ctrl as IContextAwaredControl).CurrentSite = _root ? SiteConfig.Instance : JContext.Current.Site;
+                        (ctrl as IContextAwaredControl).CurrentSite = _root ? SiteConfig.Instance : CurrentSite;
 
                     // force load child controls
                     int i = ctrl.Controls.Count;
@@ -220,7 +210,7 @@ namespace Kiss.Web.Controls
                     (ctrl as MasterFileAwaredControl).MasterPageFileName = LastThemeMasterFile;
 
                 if (ctrl is IContextAwaredControl)
-                    (ctrl as IContextAwaredControl).CurrentSite = JContext.Current.Site;
+                    (ctrl as IContextAwaredControl).CurrentSite = CurrentSite;
 
                 if (ctrl.Controls.Count > 0)
                     FindRecur(ctrl.Controls);

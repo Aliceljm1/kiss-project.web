@@ -20,6 +20,7 @@ namespace Kiss.Web.Resources
         void proc()
         {
             HttpRequest request = httpContext.Request;
+            HttpResponse response = httpContext.Response;
 
             // Read setName, contentType and version. All are required. They are
             // used as cache key
@@ -57,7 +58,7 @@ namespace Kiss.Web.Resources
                 logger.Debug("refresh combined url: {0}", request.Url.AbsoluteUri);
 
                 // Generate the response
-                WriteBytes(buffer, httpContext.Response, contentType);
+                WriteBytes(buffer, response, contentType);
             }
         }
 
@@ -128,7 +129,7 @@ namespace Kiss.Web.Resources
         {
             if (bytes == null || bytes.Length == 0)
                 return;
-            
+
             ContentType = contentType;
 
             ServerUtil.AddCache(60 * 24 * 90);

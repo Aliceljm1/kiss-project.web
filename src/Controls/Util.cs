@@ -5,7 +5,7 @@ using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
-    internal static class Util
+    public static class Util
     {
         public delegate void RenderFunc(HtmlTextWriter writer);
 

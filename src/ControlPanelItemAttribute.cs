@@ -11,7 +11,7 @@ namespace Kiss.Web
     {
         public override bool IsAuthorized(Principal user)
         {
-            if (StringUtil.HasText(Permission))
+            if (user != null && StringUtil.HasText(Permission))
                 return user.HasPermission(Permission);
 
             return true;

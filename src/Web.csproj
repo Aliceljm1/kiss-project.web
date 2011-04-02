@@ -70,7 +70,7 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="KissHttpApplication.cs" />
-    <Compile Include="ControlPanelItemRenderer.cs" />
+    <Compile Include="ControlPanelItemAttribute.cs" />
     <Compile Include="ClientScriptProxy.cs" />
     <Compile Include="Controls\Container.cs" />
     <Compile Include="Controls\Content.cs" />

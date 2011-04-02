@@ -18,6 +18,9 @@ Todo:
 	多国语言支持优化
 	支持带模板参数的菜单项
 
+v2.6
+修改ControlPanelItemAttribute的一个bug
+
 v2.5
 修复Container控件的一个bug
 移除JContext的Theme属性
