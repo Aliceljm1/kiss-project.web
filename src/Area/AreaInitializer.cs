@@ -10,7 +10,7 @@ using Kiss.Web.UrlMapping;
 
 namespace Kiss.Web.Area
 {
-    [AutoInit(Title = "构件化", Priority = 8)]
+    [AutoInit(Title = "Area", Priority = 8)]
     public class AreaInitializer : IPluginInitializer
     {
         internal static readonly Dictionary<string, SiteConfig> Areas = new Dictionary<string, SiteConfig>();

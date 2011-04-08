@@ -2,7 +2,7 @@
 
 namespace Kiss.Web.Mvc
 {
-    [AutoInit(Title = "mvc")]
+    [AutoInit(Title = "Mvc")]
     public class MvcInitializer : IPluginInitializer
     {
         #region IPluginInitializer Members

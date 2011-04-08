@@ -43,6 +43,7 @@ v2.6
 	不在锁定area的bin目录下的dll文件
 	支持自动解压areas目录下的zip文件到站点根目录
 	增加对解压的UnauthorizedAccessException异常处理
+更新了插件的显示名称
 
 v2.5
 修复Container控件的一个bug
