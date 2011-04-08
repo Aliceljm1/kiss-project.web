@@ -64,6 +64,9 @@
     <Compile Include="Ajax\AjaxMethodAttribute.cs" />
     <Compile Include="Ajax\AjaxParam.cs" />
     <Compile Include="Ajax\AjaxServerException.cs" />
+    <Compile Include="Area\AreaInitializer.cs" />
+    <Compile Include="Area\AreaUrlMappingProvider.cs" />
+    <Compile Include="Area\Host.cs" />
     <Compile Include="Cache\WebCacheProvider.cs" />
     <Compile Include="Controls\IContextAwaredControl.cs" />
     <Compile Include="IErrorHandler.cs">
