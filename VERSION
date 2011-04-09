@@ -21,6 +21,7 @@ Todo:
 v2.7
 JContext增加RenderContent属性（默认为true），用于设置是否要渲染皮肤（一般用于Ajax Post请求，不渲染页面）
 支持在构件中修改area.config文件和bin目录后，回收工作进程
+优化MasterPage
 
 v2.6
 修改ControlPanelItemAttribute的一个bug

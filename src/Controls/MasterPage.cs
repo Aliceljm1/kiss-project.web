@@ -46,8 +46,8 @@ namespace Kiss.Web.Controls
 
             base.OnPreInit(e);
         }
+
         JContext jc;
-        Mvc.MvcModule module;
         Action<JContext, Mvc.MvcModule> action = delegate(JContext jc, Mvc.MvcModule module) { module.invoker.InvokeAction(jc); };
 
         protected override void OnLoad(EventArgs e)
@@ -56,15 +56,16 @@ namespace Kiss.Web.Controls
 
             jc = JContext.Current;
 
-            module = ServiceLocator.Instance.Resolve<Mvc.MvcModule>();
-
             if (jc.IsAsync)
                 RegisterAsyncTask(new PageAsyncTask(BeginAsyncOperation, EndAsyncOperation, TimeoutAsyncOperation, null));
         }
 
         IAsyncResult BeginAsyncOperation(object sender, EventArgs e, AsyncCallback cb, object state)
         {
-            return action.BeginInvoke(jc, module, cb, state);
+            return action.BeginInvoke(jc,
+                ServiceLocator.Instance.Resolve<Mvc.MvcModule>(),
+                cb,
+                state);
         }
 
         void EndAsyncOperation(IAsyncResult ar)
