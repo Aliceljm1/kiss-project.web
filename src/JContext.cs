@@ -456,6 +456,12 @@ namespace Kiss.Web
 
         public bool IsAsync { get; internal set; }
 
+        private bool _renderContent = true;
+        /// <summary>
+        /// 是否渲染皮肤
+        /// </summary>
+        public bool RenderContent { get { return _renderContent; } set { _renderContent = value; } }
+
         /// <summary>
         /// 是否是提交表单
         /// </summary>

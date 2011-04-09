@@ -35,10 +35,13 @@ namespace Kiss.Web.Controls
                 // make collection readonly again
                 isreadonly.SetValue(Request.QueryString, true, null);
 
-                Container container = new Container();
-                container.ThemeMasterFile = masterFile + ".ascx";
+                if (JContext.Current.RenderContent)
+                {
+                    Container container = new Container();
+                    container.ThemeMasterFile = masterFile + ".ascx";
 
-                Controls.Add(container);
+                    Controls.Add(container);
+                }
             }
 
             base.OnPreInit(e);
@@ -75,7 +78,7 @@ namespace Kiss.Web.Controls
         {
             ContentType = Context.Items["_ContentType_"] as string ?? ContentType;
 
-            if (Templated && hasMasterFile)
+            if (Templated && hasMasterFile && JContext.Current.RenderContent)
                 writer.Write(Util.Render(delegate(HtmlTextWriter w) { base.Render(w); }));
             else
                 base.Render(writer);

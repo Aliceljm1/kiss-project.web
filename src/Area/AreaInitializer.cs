@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Web;
+using System.Web.Caching;
 using System.Xml;
 using Kiss.Plugin;
 using Kiss.Utils;
@@ -13,8 +15,10 @@ namespace Kiss.Web.Area
     [AutoInit(Title = "Area", Priority = 8)]
     public class AreaInitializer : IPluginInitializer
     {
+        const string kCACHE_KEY = "__AreaInitializer_cache_key__";
         internal static readonly Dictionary<string, SiteConfig> Areas = new Dictionary<string, SiteConfig>();
         private static readonly ILogger logger = LogManager.GetLogger<AreaInitializer>();
+        private CacheDependency _fileDependency;
 
         #region IPluginInitializer Members
 
@@ -35,13 +39,21 @@ namespace Kiss.Web.Area
 
             ControllerResolver resolver = ControllerResolver.Instance;
 
-            load_areas(resolver);
+            List<string> files = load_areas(resolver);
+
+            _fileDependency = new CacheDependency(files.ToArray());
+            HttpRuntime.Cache.Insert(kCACHE_KEY, "dummyValue", _fileDependency, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.NotRemovable, (k, v, r) =>
+            {
+                File.SetLastWriteTime(ServerUtil.MapPath("~/Web.config"), DateTime.Now);
+            });
 
             logger.Debug("AreaInitializer done.");
         }
 
-        private static void load_areas(ControllerResolver resolver)
+        private static List<string> load_areas(ControllerResolver resolver)
         {
+            List<string> monitor_paths = new List<string>();
+
             List<string> privateBins = new List<string>() { "bin" };
 #if !MONO
             var m = typeof(AppDomainSetup).GetMethod("UpdateContextProperty", BindingFlags.NonPublic | BindingFlags.Static);
@@ -67,12 +79,16 @@ namespace Kiss.Web.Area
 
                 Areas.Add(@"/" + areaName, config);
 
+                monitor_paths.Add(configfile);
+
                 // load assemblies
                 string bindir = Path.Combine(dir, "bin");
 
                 if (Directory.Exists(bindir))
                 {
                     privateBins.Add(bindir);
+
+                    monitor_paths.Add(bindir);
 
 #if !MONO
                     // hack !!!
@@ -105,6 +121,8 @@ namespace Kiss.Web.Area
                     resolver.SetSiteControllers(areaName, types);
                 }
             }
+
+            return monitor_paths;
         }
 
         #endregion

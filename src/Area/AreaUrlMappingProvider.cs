@@ -149,7 +149,7 @@ namespace Kiss.Web.Area
             }
 
             _fileDependency = new CacheDependency(routefiles.ToArray());
-            HttpContext.Current.Cache.Insert(kCACHE_KEY, "dummyValue", _fileDependency);
+            HttpRuntime.Cache.Insert(kCACHE_KEY, "dummyValue", _fileDependency);
 
             _latestRefresh = DateTime.Now;
         }

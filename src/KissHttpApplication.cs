@@ -57,7 +57,7 @@ namespace Kiss.Web
 
         protected void Application_End(object sender, EventArgs e)
         {
-            string msg = "Application is ending...";
+            string msg = "Application is End!";
 
             string url = Application["SITE_URL"] as string;
 
