@@ -6,7 +6,7 @@ namespace Kiss.Web.Ajax
     [AutoInit(Title = "Ajax")]
     public class AjaxInitializer : IPluginInitializer
     {
-        public void Init(ServiceLocator sl, PluginSetting setting)
+        public void Init(ServiceLocator sl, ref PluginSetting setting)
         {
             if (!setting.Enable) return;
 

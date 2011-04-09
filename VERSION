@@ -44,6 +44,26 @@ v2.6
 	支持自动解压areas目录下的zip文件到站点根目录
 	增加对解压的UnauthorizedAccessException异常处理
 更新了插件的显示名称
+更新了IPluginInitializer的实现
+集成原有DynamicQuery组件的功能
+	v1.4
+	代码重构
+
+	v1.3
+	修改了设置pagesize的逻辑。只有在query的pagesize未设置（等于-1）的情况下，动态配置的pagesize才会生效
+
+	v1.2
+	支持动态属性
+
+	v1.1
+	支持手动设置orderby属性
+	模板解析上下文增加了一些常用的utils
+
+	v1.0
+	模板引擎增加变量jc（JContext）
+	查询增加了pageSize属性，用于配置分页大小
+	支持对不同方法的查询条件
+	修改了设置pagesize的逻辑
 
 v2.5
 修复Container控件的一个bug

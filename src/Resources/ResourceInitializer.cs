@@ -6,7 +6,7 @@ namespace Kiss.Web.Resources
     [AutoInit(Title = "Resource")]
     public class ResourceInitializer : IPluginInitializer
     {
-        public void Init(ServiceLocator sl, PluginSetting setting)
+        public void Init(ServiceLocator sl, ref PluginSetting setting)
         {
             if (!setting.Enable) return;
 
