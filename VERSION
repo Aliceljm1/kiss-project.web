@@ -18,6 +18,9 @@ Todo:
 	多国语言支持优化
 	支持带模板参数的菜单项
 
+v2.8
+修复Ajax权限问题
+
 v2.7
 JContext增加RenderContent属性（默认为true），用于设置是否要渲染皮肤（一般用于Ajax Post请求，不渲染页面）
 支持在构件中修改area.config文件和bin目录后，回收工作进程

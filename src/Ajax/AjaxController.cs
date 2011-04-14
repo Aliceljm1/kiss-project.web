@@ -49,6 +49,9 @@ namespace Kiss.Web.Ajax
                     if (mapping != null)
                     {
                         jc.Navigation = new NavigationInfo().Set(mapping);
+
+                        // fire url matched event
+                        module.OnUrlMatched();
                     }
                 }
             }

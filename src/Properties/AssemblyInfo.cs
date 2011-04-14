@@ -4,7 +4,7 @@ using Kiss.Web.Mvc;
 
 [assembly: AssemblyTitle("Kiss.Web")]
 
-[assembly: AssemblyVersion("2.7.*")]
+[assembly: AssemblyVersion("2.8.*")]
 
 [assembly: Config]
 
