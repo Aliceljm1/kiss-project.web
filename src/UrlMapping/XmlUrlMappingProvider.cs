@@ -151,84 +151,7 @@ namespace Kiss.Web.UrlMapping
 
             // remember the refresh time
             _latestRefresh = DateTime.Now;
-        }
-
-        private static NavigationInfo GetMenuInfo(XmlNode node, Dictionary<int, NavigationItem> menuItems)
-        {
-            NavigationInfo menuItem = new NavigationInfo() { Index = -1, SubIndex = -1 };
-
-            XmlNode subMenuNode, menuNode;
-
-            XmlNode pNode = node.ParentNode;
-            if (pNode == null || pNode.Name != "menu")
-                return menuItem;
-
-            // get parent node's title
-            menuItem.Title = XmlUtil.GetStringAttribute(pNode, "title", string.Empty);
-            menuItem.Desc = XmlUtil.GetStringAttribute(pNode, "desc", string.Empty);
-
-            if (pNode.ParentNode == null || pNode.ParentNode.Name != "menu")
-            {
-                menuNode = pNode;
-                subMenuNode = null;
-            }
-            else
-            {
-                subMenuNode = pNode;
-                menuNode = pNode.ParentNode;
-            }
-
-            menuItem.Index = XmlUtil.GetIntAttribute(menuNode, "index", XmlUtil.FindElementIndex(menuNode));
-            if (menuItem.Index == -1)
-                return menuItem;
-
-            if (!menuItems.ContainsKey(menuItem.Index))
-            {
-                NavigationItem item = GetMenuItem(menuNode);
-                item.Children = new Dictionary<int, NavigationItem>();
-
-                menuItems[menuItem.Index] = item;
-            }
-
-            if (subMenuNode != null)
-            {
-                menuItem.SubIndex = XmlUtil.GetIntAttribute(subMenuNode, "index", XmlUtil.FindElementIndex(subMenuNode as XmlElement));
-                if (menuItem.SubIndex == -1)
-                    return menuItem;
-
-                NavigationItem item = menuItems[menuItem.Index];
-                if (!item.Children.ContainsKey(menuItem.SubIndex))
-                {
-                    NavigationItem subItem = GetMenuItem(subMenuNode);
-
-                    item.Children[menuItem.SubIndex] = subItem;
-                }
-            }
-            else
-            {
-                menuItem.SubIndex = -1;
-            }
-
-            return menuItem;
-        }
-
-        private static NavigationItem GetMenuItem(XmlNode node)
-        {
-            NavigationItem item = new NavigationItem();
-
-            item.Name = XmlUtil.GetStringAttribute(node, "id", null);
-            item.Url = XmlUtil.GetStringAttribute(node, "url", string.Empty);
-            item.Title = XmlUtil.GetStringAttribute(node, "title", string.Empty);
-            item.Desc = XmlUtil.GetStringAttribute(node, "desc", string.Empty);
-            item.Icon = XmlUtil.GetStringAttribute(node, "icon", null);
-
-            foreach (XmlAttribute attr in node.Attributes)
-            {
-                item[attr.Name] = attr.Value;
-            }
-
-            return item;
-        }
+        }                
 
         #region IDisposable Members
 
@@ -277,7 +200,7 @@ namespace Kiss.Web.UrlMapping
 
                 if (node.Name == "menu")
                 {
-                    NavigationItem menuItem = GetMenuItem(node);
+                    NavigationItem menuItem = getMenuItem(node);
                     menuItem.Children = new Dictionary<int, NavigationItem>();
 
                     menuItems[i] = menuItem;
@@ -288,7 +211,7 @@ namespace Kiss.Web.UrlMapping
 
                         if (subNode.Name == "menu")
                         {
-                            NavigationItem sub_menuItem = GetMenuItem(subNode);
+                            NavigationItem sub_menuItem = getMenuItem(subNode);
                             menuItems[i].Children[j] = sub_menuItem;
 
                             foreach (XmlNode last_level in subNode.ChildNodes)
@@ -359,5 +282,22 @@ namespace Kiss.Web.UrlMapping
             return item;
         }
 
+        private static NavigationItem getMenuItem(XmlNode node)
+        {
+            NavigationItem item = new NavigationItem();
+
+            item.Name = XmlUtil.GetStringAttribute(node, "id", null);
+            item.Url = XmlUtil.GetStringAttribute(node, "url", string.Empty);
+            item.Title = XmlUtil.GetStringAttribute(node, "title", string.Empty);
+            item.Desc = XmlUtil.GetStringAttribute(node, "desc", string.Empty);
+            item.Icon = XmlUtil.GetStringAttribute(node, "icon", null);
+
+            foreach (XmlAttribute attr in node.Attributes)
+            {
+                item[attr.Name] = attr.Value;
+            }
+
+            return item;
+        }
     }
 }
