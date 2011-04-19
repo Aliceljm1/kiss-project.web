@@ -20,6 +20,7 @@ Todo:
 
 v2.8
 修复Ajax权限问题
+优化路由配置，menu节点不依赖于url节点
 
 v2.7
 JContext增加RenderContent属性（默认为true），用于设置是否要渲染皮肤（一般用于Ajax Post请求，不渲染页面）

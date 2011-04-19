@@ -219,6 +219,7 @@ namespace Kiss.Web.UrlMapping
             item.Name = XmlUtil.GetStringAttribute(node, "id", null);
             item.Url = XmlUtil.GetStringAttribute(node, "url", string.Empty);
             item.Title = XmlUtil.GetStringAttribute(node, "title", string.Empty);
+            item.Desc = XmlUtil.GetStringAttribute(node, "desc", string.Empty);
             item.Icon = XmlUtil.GetStringAttribute(node, "icon", null);
 
             foreach (XmlAttribute attr in node.Attributes)
@@ -254,81 +255,109 @@ namespace Kiss.Web.UrlMapping
 
         public static void ParseXml(string file, UrlMappingItemCollection routes, Dictionary<int, NavigationItem> menuItems, Dictionary<string, string> urls, IncomingQueryStringBehavior incomingQueryStringBehavior)
         {
-            if (File.Exists(file))
+            if (!File.Exists(file))
+                return;
+
+            XmlDocument xml = new XmlDocument();
+            try
             {
-                // parse the given xml file to retrieve the listing of URL items;
-                // the xml file should include tags in the form:
-                // <url name="" template="" href="" />
-                XmlDocument xml = new XmlDocument();
-                try
+                xml.Load(file);
+            }
+            catch (Exception ex)
+            {
+                throw new UrlMappingException("The error occurred while loading the route files.  A virtual path is required and the file must be well-formed.", ex);
+            }
+
+            menuItems.Clear();
+            urls.Clear();
+
+            for (int i = 0; i < xml.DocumentElement.ChildNodes.Count; i++)
+            {
+                XmlNode node = xml.DocumentElement.ChildNodes[i];
+
+                if (node.Name == "menu")
                 {
-                    xml.Load(file);
+                    NavigationItem menuItem = GetMenuItem(node);
+                    menuItem.Children = new Dictionary<int, NavigationItem>();
+
+                    menuItems[i] = menuItem;
+
+                    for (int j = 0; j < node.ChildNodes.Count; j++)
+                    {
+                        XmlNode subNode = node.ChildNodes[j];
+
+                        if (subNode.Name == "menu")
+                        {
+                            NavigationItem sub_menuItem = GetMenuItem(subNode);
+                            menuItems[i].Children[j] = sub_menuItem;
+
+                            foreach (XmlNode last_level in subNode.ChildNodes)
+                            {
+                                if (last_level.Name == "url")
+                                {
+                                    UrlMappingItem url = getUrlInfo(last_level, sub_menuItem, i, j, incomingQueryStringBehavior);
+
+                                    routes.Add(url);
+                                    if (StringUtil.HasText(url.Name))
+                                        urls.Add(url.Name, url.UrlTemplate);
+                                }
+                            }
+
+                        }
+                        else if (subNode.Name == "url")
+                        {
+                            UrlMappingItem url = getUrlInfo(subNode, menuItem, i, -1, incomingQueryStringBehavior);
+
+                            routes.Add(url);
+                            if (StringUtil.HasText(url.Name))
+                                urls.Add(url.Name, url.UrlTemplate);
+                        }
+                    }
                 }
-                catch (Exception ex)
+                else if (node.Name == "url")
                 {
-                    throw new UrlMappingException("The error occurred while loading the route files.  A virtual path is required and the file must be well-formed.", ex);
-                }
+                    UrlMappingItem url = getUrlInfo(node, new NavigationItem(), -1, -1, incomingQueryStringBehavior);
 
-                menuItems.Clear();
-                urls.Clear();
-
-                UrlMappingItem lastItem = null;
-
-                // parse the file for <urlMapping> tags
-                foreach (XmlNode node in xml.SelectNodes("//url"))
-                {
-                    // retrieve name, urlTemplate, and redirection attributes;
-                    // ensure urlTemplate and redirection are present
-                    string name = XmlUtil.GetStringAttribute(node, "name", string.Empty);
-                    string urlTemplate = XmlUtil.GetStringAttribute(node, "template", string.Empty);
-                    string redirection = Utility.GetHref(XmlUtil.GetStringAttribute(node, "href", string.Empty));
-
-                    if (string.IsNullOrEmpty(urlTemplate))
-                        throw new UrlMappingException("There is an XmlUrlMappingModule error.  All <url> tags in the mapping file require a 'template' attribute.");
-
-                    // still here, we can create the item and add to the collection
-                    UrlMappingItem item
-                          = Utility.CreateTemplatedMappingItem(
-                            name, urlTemplate, redirection, incomingQueryStringBehavior
-                           );
-                    item.UrlTemplate = urlTemplate;
-
-                    foreach (XmlAttribute attr in node.Attributes)
-                    {
-                        item[attr.Name] = attr.Value;
-                    }
-
-                    NavigationInfo menuItem = GetMenuInfo(node, menuItems);
-
-                    // get info from menu
-                    item.Index = menuItem.Index;
-                    item.SubIndex = menuItem.SubIndex;
-                    item.Title = XmlUtil.GetStringAttribute(node, "title", menuItem.Title);
-                    item.Desc = XmlUtil.GetStringAttribute(node, "desc", menuItem.Desc);
-
-                    item.Id = XmlUtil.GetStringAttribute(node, "id", null);
-                    item.Action = XmlUtil.GetStringAttribute(node, "action", null);
-
-                    routes.Add(item);
-
-                    if (StringUtil.HasText(item.Name))
-                        urls.Add(item.Name, item.UrlTemplate);
-
-                    // set self index
-                    if (lastItem == null)
-                    {
-                        item.SelfIndex = 0;
-                    }
-                    else
-                    {
-                        if (lastItem.Index == item.Index && lastItem.SubIndex == item.SubIndex)
-                            item.SelfIndex = lastItem.SelfIndex + 1;
-                        else
-                            item.SelfIndex = 0;
-                    }
-                    lastItem = item;
+                    routes.Add(url);
+                    if (StringUtil.HasText(url.Name))
+                        urls.Add(url.Name, url.UrlTemplate);
                 }
             }
         }
+
+        private static UrlMappingItem getUrlInfo(XmlNode node, NavigationItem menuItem, int index, int subIndex, IncomingQueryStringBehavior incomingQueryStringBehavior)
+        {
+            string name = XmlUtil.GetStringAttribute(node, "name", string.Empty);
+            string urlTemplate = XmlUtil.GetStringAttribute(node, "template", string.Empty);
+
+            if (string.IsNullOrEmpty(urlTemplate))
+                throw new UrlMappingException("There is an XmlUrlMappingModule error.  All <url> tags in the mapping file require a 'template' attribute.");
+
+            string redirection = Utility.GetHref(XmlUtil.GetStringAttribute(node, "href", string.Empty));
+
+            // still here, we can create the item and add to the collection
+            UrlMappingItem item
+                  = Utility.CreateTemplatedMappingItem(
+                    name, urlTemplate, redirection, incomingQueryStringBehavior
+                   );
+            item.UrlTemplate = urlTemplate;
+
+            // set custom attributes
+            foreach (XmlAttribute attr in node.Attributes)
+            {
+                item[attr.Name] = attr.Value;
+            }
+
+            item.Index = index;
+            item.SubIndex = subIndex;
+            item.Title = XmlUtil.GetStringAttribute(node, "title", menuItem.Title);
+            item.Desc = XmlUtil.GetStringAttribute(node, "desc", menuItem.Desc);
+
+            item.Id = XmlUtil.GetStringAttribute(node, "id", null);
+            item.Action = XmlUtil.GetStringAttribute(node, "action", null);
+
+            return item;
+        }
+
     }
 }
