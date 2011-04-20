@@ -89,18 +89,19 @@ namespace Kiss.Web.Controls
 
             string currentSiteKey = jc.Site.SiteKey;
 
+            // set menu index of root site
             if (site.SiteKey != currentSiteKey)
             {
                 foreach (var k in Items.Keys)
                 {
-                    if (Items[k].Name == currentSiteKey)
+                    if (string.Equals(Items[k].Name, currentSiteKey, StringComparison.InvariantCultureIgnoreCase))
                     {
                         index = k;
                     }
 
                     foreach (var k2 in Items[k].Children.Keys)
                     {
-                        if (Items[k].Children[k2].Name == currentSiteKey)
+                        if (string.Equals(Items[k].Children[k2].Name, currentSiteKey, StringComparison.InvariantCultureIgnoreCase))
                         {
                             index = k;
                             subIndex = k2;
