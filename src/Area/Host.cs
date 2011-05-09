@@ -22,6 +22,9 @@ namespace Kiss.Web.Area
 
         private static string getVirtualPath(string absolutePath)
         {
+            if (string.IsNullOrEmpty(absolutePath))
+                return "/";
+
             string appPath = HttpContext.Current.Request.ApplicationPath;
 
             if (appPath != "/")

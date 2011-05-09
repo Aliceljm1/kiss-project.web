@@ -56,7 +56,7 @@ namespace Kiss.Web.Query
                     if (string.IsNullOrEmpty(id))
                         continue;
 
-                    id = string.Format(FORMAT, site.SiteKey, id);
+                    id = string.Format(FORMAT, site.SiteKey, id.ToLower());
 
                     qc_dict[id] = new Qc()
                     {
@@ -139,7 +139,7 @@ namespace Kiss.Web.Query
             if (HttpContext.Current.Cache[kCACHE_KEY] == null)
                 Refresh();
 
-            string key = string.Format(FORMAT, site.SiteKey, id);
+            string key = string.Format(FORMAT, site.SiteKey, id.ToLower());
 
             if (qc_dict.ContainsKey(key))
                 return qc_dict[key];
@@ -158,7 +158,7 @@ namespace Kiss.Web.Query
         public string Orderby { get; set; }
     }
 
-    class Utils
+    public class Utils
     {
         public static readonly Utils Instance = new Utils();
 

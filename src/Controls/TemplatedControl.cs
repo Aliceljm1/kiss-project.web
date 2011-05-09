@@ -48,7 +48,13 @@ namespace Kiss.Web.Controls
                     {
                         string viewResultSkin = jc.Items["__viewResult__"] as string;
                         if (StringUtil.HasText(viewResultSkin))
+                        {
                             skinName = viewResultSkin;
+
+                            // set used in mvc to false if skinname contains '/'
+                            if (skinName.Contains("/"))
+                                UsedInMvc = false;
+                        }
                         else
                             skinName = jc.Navigation.Action;
                     }
