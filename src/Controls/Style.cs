@@ -102,20 +102,19 @@ namespace Kiss.Web.Controls
         {
             base.OnLoad(e);
 
-            ISite site = CurrentSite ?? JContext.Current.Site;
-
             string href = Href;
             if (!string.IsNullOrEmpty(href))
             {
-                if (!site.CombinCss)
+                if (!CurrentSite.CombinCss)
                 {
                     if (href.Contains("?"))
-                        href += ("&v=" + site.CssVersion);
+                        href += ("&v=" + CurrentSite.CssVersion);
                     else
-                        href += ("?v=" + site.CssVersion);
+                        href += ("?v=" + CurrentSite.CssVersion);
                 }
 
-                Head.AddStyle(site, href,
+                Head.AddStyle(CurrentSite,
+                    href,
                     this.Media,
                     HttpContext.Current,
                     this.RelativePosition,

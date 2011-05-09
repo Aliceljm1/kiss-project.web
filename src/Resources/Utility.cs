@@ -45,21 +45,20 @@ namespace Kiss.Web.Resources
             string url = null;
             string version = string.Empty;
 
-            ISite site = null;
+            ISite site = SiteConfig.Instance;
+
             switch (extension)
             {
                 case ".css":
-                    site = JContext.Current.Site;
                     url = Web.Utility.FormatCssUrl(site, "_res.aspx?r=");
                     version = site.CssVersion;
                     break;
                 case ".js":
-                    site = JContext.Current.Site;
-                    url = Web.Utility.FormatJsUrl(SiteConfig.Instance, "_res.aspx?r=");
+                    url = Web.Utility.FormatJsUrl(site, "_res.aspx?r=");
                     version = site.JsVersion;
                     break;
                 default:
-                    url = StringUtil.CombinUrl(SiteConfig.Instance.VirtualPath, "_res.aspx?r=");
+                    url = StringUtil.CombinUrl(site.VirtualPath, "_res.aspx?r=");
                     break;
             }
 

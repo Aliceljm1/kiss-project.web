@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web;
+using System;
 
 namespace Kiss.Web.Area
 {
@@ -29,9 +30,16 @@ namespace Kiss.Web.Area
 
             if (appPath != "/")
             {
-                var i = absolutePath.IndexOf(appPath);
-                if (i == 0)
-                    absolutePath = absolutePath.Substring(i + appPath.Length);
+                if (string.Equals(appPath, absolutePath, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    absolutePath = "/";
+                }
+                else
+                {
+                    var i = absolutePath.IndexOf(appPath);
+                    if (i == 0)
+                        absolutePath = absolutePath.Substring(appPath.Length);
+                }
             }
 
             string vp;

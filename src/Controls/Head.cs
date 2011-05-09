@@ -12,7 +12,7 @@ namespace Kiss.Web.Controls
     /// 该控件替代了html head, 提供了添加标题, MetaTags, css, opensearch的方法 
     /// </summary>
     [PersistChildren(true), ParseChildren(false)]
-    public class Head : Control
+    public class Head : Control, IContextAwaredControl
     {
         #region const
 
@@ -28,7 +28,8 @@ namespace Kiss.Web.Controls
 
         #endregion
 
-        ISite site;
+        private ISite _site;
+        public ISite CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
 
         /// <summary>
         /// page title
@@ -44,13 +45,11 @@ namespace Kiss.Web.Controls
 
         protected override void Render(HtmlTextWriter writer)
         {
-            site = JContext.Current.Site;
-
             writer.WriteLine("<head>");
             if (!UseCustomSettings)
                 writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />");
 
-            RenderTitle(site, writer);
+            RenderTitle(CurrentSite, writer);
 
             RenderMetaTags(writer);
             RenderLinkTags(writer);
@@ -74,9 +73,9 @@ namespace Kiss.Web.Controls
 
         protected virtual void RenderAdditionHeader(HtmlTextWriter writer)
         {
-            if (!string.IsNullOrEmpty(site.RawAdditionalHeader))
+            if (!string.IsNullOrEmpty(CurrentSite.RawAdditionalHeader))
             {
-                writer.WriteLine(site.RawAdditionalHeader);
+                writer.WriteLine(CurrentSite.RawAdditionalHeader);
             }
         }
 
@@ -219,8 +218,8 @@ namespace Kiss.Web.Controls
 
         protected virtual void RenderFavicon(HtmlTextWriter writer)
         {
-            if (StringUtil.HasText(site.FavIcon))
-                writer.WriteLine("<link rel=\"shortcut icon\" type=\"image/ico\" href=\"{0}\" />", site.FavIcon);
+            if (StringUtil.HasText(CurrentSite.FavIcon))
+                writer.WriteLine("<link rel=\"shortcut icon\" type=\"image/ico\" href=\"{0}\" />", CurrentSite.FavIcon);
         }
 
         #endregion

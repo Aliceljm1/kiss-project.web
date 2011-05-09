@@ -187,6 +187,16 @@ namespace Kiss.Web.Controls
                     if (ctrl is IContextAwaredControl)
                         (ctrl as IContextAwaredControl).CurrentSite = _root ? SiteConfig.Instance : CurrentSite;
 
+                    // load head's child
+                    if (ctrl is Head)
+                    {
+                        foreach (var item in ctrl.Controls)
+                        {
+                            if (item is IContextAwaredControl)
+                                (item as IContextAwaredControl).CurrentSite = _root ? SiteConfig.Instance : CurrentSite;
+                        }
+                    }
+
                     // force load child controls
                     int i = ctrl.Controls.Count;
                 }
