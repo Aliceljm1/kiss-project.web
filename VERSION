@@ -21,6 +21,7 @@ Todo:
 v2.9
 Host类bug修复
 支持设置Head控件子元素的当前站点
+jcontext增加DefaultThemePath属性, 指向主站点主题目录
 
 v2.8
 修复Ajax权限问题

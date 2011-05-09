@@ -731,11 +731,29 @@ namespace Kiss.Web
             return HttpUtility.HtmlEncode(str);
         }
 
+        /// <summary>
+        /// 指向当前站点的主题目录
+        /// </summary>
         public string ThemePath
         {
             get
             {
                 return CombinUrl(string.Format("/themes/{0}", Site.Theme));
+            }
+        }
+
+        /// <summary>
+        /// 指向主站点的主题目录
+        /// </summary>
+        public string DefaultThemePath
+        {
+            get
+            {
+                ISite site = Kiss.Web.SiteConfig.Instance;
+
+                string baseurl = string.Format("/themes/{0}", site.Theme);
+
+                return StringUtil.CombinUrl(site.VirtualPath, baseurl);
             }
         }
 
