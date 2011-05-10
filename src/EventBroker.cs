@@ -32,23 +32,24 @@ namespace Kiss.Web
 
             LogManager.GetLogger<EventBroker>().Info("Attach to HttpApplication {0}.", observedApplications);
 
-            app.BeginRequest += Application_BeginRequest;
-            app.AuthenticateRequest += application_AuthenticateRequest;
-            app.AuthorizeRequest += Application_AuthorizeRequest;
-            app.AcquireRequestState += Application_AcquireRequestState;
-            app.PostMapRequestHandler += application_PostMapRequestHandler;
-            app.Error += Application_Error;
+            app.BeginRequest += app_BeginRequest;
+            app.AuthenticateRequest += app_AuthenticateRequest;
+            app.AuthorizeRequest += app_AuthorizeRequest;
+            app.PostMapRequestHandler += app_PostMapRequestHandler;
+            app.AcquireRequestState += app_AcquireRequestState;
+            app.PostAcquireRequestState += app_PostAcquireRequestStateHandler;
+            app.Error += app_Error;
 
-            app.ReleaseRequestState += Application_ReleaseRequestState;
-            app.PreSendRequestHeaders += Application_PreSendRequestHeaders;
+            app.ReleaseRequestState += app_ReleaseRequestState;
+            app.PreSendRequestHeaders += app_PreSendRequestHeaders;
 
-            app.EndRequest += Application_EndRequest;
+            app.EndRequest += app_EndRequest;
 
-            app.Disposed += Application_Disposed;
+            app.Disposed += app_Disposed;
         }
 
         /// <summary>Detaches events from the application instance.</summary>
-        void Application_Disposed(object sender, EventArgs e)
+        void app_Disposed(object sender, EventArgs e)
         {
             Interlocked.Decrement(ref observedApplications);
 
@@ -56,78 +57,86 @@ namespace Kiss.Web
 
             HttpApplication app = sender as HttpApplication;
 
-            app.BeginRequest -= Application_BeginRequest;
-            app.AuthenticateRequest -= application_AuthenticateRequest;
-            app.AuthorizeRequest -= Application_AuthorizeRequest;
-            app.AcquireRequestState -= Application_AcquireRequestState;
-            app.PostMapRequestHandler -= application_PostMapRequestHandler;
-            app.Error -= Application_Error;
+            app.BeginRequest -= app_BeginRequest;
+            app.AuthenticateRequest -= app_AuthenticateRequest;
+            app.AuthorizeRequest -= app_AuthorizeRequest;
+            app.AcquireRequestState -= app_AcquireRequestState;
+            app.PostMapRequestHandler -= app_PostMapRequestHandler;
+            app.Error -= app_Error;
 
-            app.ReleaseRequestState -= Application_ReleaseRequestState;
-            app.PreSendRequestHeaders -= Application_PreSendRequestHeaders;
+            app.ReleaseRequestState -= app_ReleaseRequestState;
+            app.PreSendRequestHeaders -= app_PreSendRequestHeaders;
 
-            app.EndRequest -= Application_EndRequest;
+            app.EndRequest -= app_EndRequest;
         }
 
         public EventHandler<EventArgs> BeginRequest;
         public EventHandler<EventArgs> AuthenticateRequest;
         public EventHandler<EventArgs> AuthorizeRequest;
-        public EventHandler<EventArgs> AcquireRequestState;
         public EventHandler<EventArgs> PostMapRequestHandler;
+        public EventHandler<EventArgs> AcquireRequestState;
+        public EventHandler<EventArgs> PostAcquireRequestState;
         public EventHandler<EventArgs> Error;
         public EventHandler<EventArgs> EndRequest;
         public EventHandler<EventArgs> ReleaseRequestState;
         public EventHandler<EventArgs> PreSendRequestHeaders;
 
-        protected void Application_BeginRequest(object sender, EventArgs e)
+        protected void app_BeginRequest(object sender, EventArgs e)
         {
             if (BeginRequest != null && !IsStaticResource(sender))
                 BeginRequest(sender, e);
         }
 
-        void application_AuthenticateRequest(object sender, EventArgs e)
+        void app_AuthenticateRequest(object sender, EventArgs e)
         {
             if (AuthenticateRequest != null && !IsStaticResource(sender))
                 AuthenticateRequest(sender, e);
         }
 
-        protected void Application_AcquireRequestState(object sender, EventArgs e)
-        {
-            if (AcquireRequestState != null && !IsStaticResource(sender))
-                AcquireRequestState(sender, e);
-        }
 
-        protected void Application_AuthorizeRequest(object sender, EventArgs e)
+        protected void app_AuthorizeRequest(object sender, EventArgs e)
         {
             if (AuthorizeRequest != null && !IsStaticResource(sender))
                 AuthorizeRequest(sender, e);
         }
 
-        void application_PostMapRequestHandler(object sender, EventArgs e)
+        void app_PostMapRequestHandler(object sender, EventArgs e)
         {
             if (PostMapRequestHandler != null && !IsStaticResource(sender))
                 PostMapRequestHandler(sender, e);
         }
 
-        protected void Application_Error(object sender, EventArgs e)
+        protected void app_AcquireRequestState(object sender, EventArgs e)
+        {
+            if (AcquireRequestState != null && !IsStaticResource(sender))
+                AcquireRequestState(sender, e);
+        }
+
+        void app_PostAcquireRequestStateHandler(object sender, EventArgs e)
+        {
+            if (PostAcquireRequestState != null && !IsStaticResource(sender))
+                PostAcquireRequestState(sender, e);
+        }
+
+        protected void app_Error(object sender, EventArgs e)
         {
             if (Error != null && !IsStaticResource(sender))
                 Error(sender, e);
         }
 
-        protected void Application_ReleaseRequestState(object sender, EventArgs e)
+        protected void app_ReleaseRequestState(object sender, EventArgs e)
         {
             if (ReleaseRequestState != null && !IsStaticResource(sender))
                 ReleaseRequestState(sender, e);
         }
 
-        protected void Application_PreSendRequestHeaders(object sender, EventArgs e)
+        protected void app_PreSendRequestHeaders(object sender, EventArgs e)
         {
             if (PreSendRequestHeaders != null && !IsStaticResource(sender))
                 PreSendRequestHeaders(sender, e);
         }
 
-        protected void Application_EndRequest(object sender, EventArgs e)
+        protected void app_EndRequest(object sender, EventArgs e)
         {
             if (EndRequest != null && !IsStaticResource(sender))
                 EndRequest(sender, e);

@@ -41,7 +41,7 @@ namespace Kiss.Web.Mvc
         {
             invoker = new ActionInvoker();
 
-            EventBroker.Instance.PostMapRequestHandler += Invoke;
+            EventBroker.Instance.PostAcquireRequestState += Invoke;
         }
     }
 }
