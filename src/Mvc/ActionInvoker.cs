@@ -111,9 +111,17 @@ namespace Kiss.Web.Mvc
                 mi = mis[action];
             else
             {
-                foreach (MethodInfo m in t.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Instance))
+                foreach (MethodInfo m in t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                 {
-                    if (m.Name.Equals(action, StringComparison.InvariantCultureIgnoreCase))
+                    bool hasPostAttr = m.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
+                    bool hasAjaxAttr = m.GetCustomAttributes(typeof(Ajax.AjaxMethodAttribute), true).Length > 0;
+
+                    if (!m.ContainsGenericParameters &&
+                        m.Name.Equals(action, StringComparison.InvariantCultureIgnoreCase) &&
+                         !hasAjaxAttr &&
+                        ((jc.IsPost && hasPostAttr) || !hasPostAttr) &&
+                        m.GetParameters().Length == 0
+                        )
                     {
                         mi = m;
                         mis[action] = mi;

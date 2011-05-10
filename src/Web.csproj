@@ -69,6 +69,7 @@
     <Compile Include="Area\Host.cs" />
     <Compile Include="Cache\WebCacheProvider.cs" />
     <Compile Include="Controls\IContextAwaredControl.cs" />
+    <Compile Include="Controls\Layout.cs" />
     <Compile Include="IErrorHandler.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -91,7 +92,7 @@
     <Compile Include="Mvc\ActionResult.cs" />
     <Compile Include="Mvc\AsyncAttribute.cs" />
     <Compile Include="Mvc\Controller.cs" />
-    <Compile Include="Mvc\ControllerAttribute.cs" />
+    <Compile Include="Mvc\Attribute.cs" />
     <Compile Include="Mvc\ActionInvoker.cs" />
     <Compile Include="Mvc\IActionInvoker.cs" />
     <Compile Include="Mvc\MvcAttribute.cs" />
@@ -153,7 +154,9 @@
     <Compile Include="UrlMapping\XmlUrlMappingProvider.cs" />
     <Compile Include="WebAppTypeFinder.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="jQuery\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -17,4 +17,9 @@ namespace Kiss.Web.Mvc
 
         public string UrlId { get { return urlId; } }
     }
+
+    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    sealed class HttpPostAttribute : Attribute
+    {
+    }
 }
