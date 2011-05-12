@@ -52,9 +52,9 @@ namespace Kiss.Web.Resources
 
             // *** Retrieve information about resource embedded
             // *** Values are base64 encoded
-            string ResourceTypeName = request.QueryString["t"];
-            if (!string.IsNullOrEmpty(ResourceTypeName))
-                ResourceTypeName = Encoding.ASCII.GetString(Convert.FromBase64String(ResourceTypeName));
+            string assemblyName = request.QueryString["t"] ?? string.Empty;
+            if (!string.IsNullOrEmpty(assemblyName))
+                assemblyName = Encoding.ASCII.GetString(Convert.FromBase64String(assemblyName));
 
             string resource = request.QueryString["r"];
             if (string.IsNullOrEmpty(resource))
@@ -66,9 +66,8 @@ namespace Kiss.Web.Resources
 
             if (shorturl)
             {
-                if (StringUtil.HasText(ResourceTypeName))
-                    ResourceTypeName = Utility.PRENAMESPACE + ResourceTypeName;
-                resource = ResourceTypeName + "." + resource;
+                assemblyName = Utility.PRENAMESPACE + assemblyName;
+                resource = assemblyName + "." + resource;
             }
 
             // *** Try to locate the assembly that houses the Resource
@@ -76,11 +75,11 @@ namespace Kiss.Web.Resources
 
             // *** If no type is passed use the current assembly - otherwise
             // *** run through the loaded assemblies and try to find assembly
-            if (string.IsNullOrEmpty(ResourceTypeName))
+            if (string.IsNullOrEmpty(assemblyName))
                 resourceAssembly = this.GetType().Assembly;
             else
             {
-                resourceAssembly = FindAssembly(ResourceTypeName);
+                resourceAssembly = FindAssembly(assemblyName);
                 if (resourceAssembly == null)
                 {
                     SendErrorResponse(response, "Invalid Type Information");
@@ -156,7 +155,7 @@ namespace Kiss.Web.Resources
         }
 
         private void SendOutput(HttpResponse response, string contentType, byte[] output)
-        {           
+        {
             ContentType = contentType;
 
             ServerUtil.AddCache(60 * 24 * 90);

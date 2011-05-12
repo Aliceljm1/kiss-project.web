@@ -8,7 +8,7 @@ namespace Kiss.Web.Resources
 {
     public static class Utility
     {
-        internal const string PRENAMESPACE = "Kiss.Web.";
+        internal const string PRENAMESPACE = "Kiss.Web";
 
         public static string GetResourceUrl(Type type, string resourceName)
         {

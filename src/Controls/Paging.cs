@@ -152,7 +152,7 @@ namespace Kiss.Web.Controls
         {
             base.Render(writer);
 
-            ClientScriptProxy.Current.RegisterJsResource(writer, "Kiss.Web.jQuery", "Kiss.Web.jQuery.pagenavi.js");
+            ClientScriptProxy.Current.RegisterJsResource(writer, "Kiss.Web.jQuery.pagenavi.js");
 
             if (QueryCondition == null)
                 QueryCondition = JContext.Current.GetViewData(DataKey ?? "q") as QueryCondition;

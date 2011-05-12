@@ -1,0 +1,21 @@
+﻿.gtable { font-size: 12px; margin: 0px; width: 100%; text-align: left; border-collapse: collapse; border-bottom: none; background-color: #FFF; }
+.gtable th { white-space: nowrap; font-size: 13px; font-weight: normal; padding: 6px 8px; background: #EFEFEF; border-top: 1px solid #FFF; color: #333; text-align: left; }
+.gtable td { padding: 8px; background: none; border-top: 1px solid #CCC; color: #666; border-bottom: none !important; vertical-align: middle; }
+.gtable tr.odd td { background-color: #E8EDFF; }
+.gtable tr.hover td { background-color: #D0DAFD; }
+.gtable tr.selected td { background-color: #FFF9DE; }
+.gtable tr.footer { background: none !important; }
+.gtable tr.footer:hover td { background: none !important; }
+
+.gtable thead tr .sortable { background-repeat: no-repeat; background-position: center right; cursor: pointer; }
+.gtable thead tr .asc, .gtable thead tr .desc { background-color: #8dbdd8; }
+
+/* jQuery TreeTable Core 2.0 stylesheet
+ *
+ * This file contains styles that are used to display the tree table. Each tree
+ * table is assigned the +treeTable+ class.
+ * ========================================================================= */
+
+/* jquery.treeTable.collapsible
+ * ------------------------------------------------------------------------- */
+.treeTable tr td .expander { background-position: left center; background-repeat: no-repeat; cursor: pointer; padding: 0; zoom: 1; /* IE7 Hack */ }

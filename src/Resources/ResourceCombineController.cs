@@ -73,23 +73,28 @@ namespace Kiss.Web.Resources
                 if (virtualPath.StartsWith("/"))
                 {
                     string path = virtualPath;
-                    int index = path.IndexOf(site.VirtualPath);
-                    if (index != -1)
-                        path = path.Substring(index + site.VirtualPath.Length);
 
-                    if (path.StartsWith("themes", StringComparison.InvariantCultureIgnoreCase))
+                    if (path.IndexOf("_res.aspx") == -1)
                     {
-                        path = path.Substring(6);
+                        int index = path.IndexOf(site.VirtualPath);
+                        if (index != -1)
+                            path = path.Substring(index + site.VirtualPath.Length);
 
-                        path = string.Concat(VirtualPathUtility.ToAbsolute(jc.CombinUrl(site.ThemeRoot)), path);
+                        if (path.StartsWith("themes", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            path = path.Substring(6);
+
+                            path = string.Concat(VirtualPathUtility.ToAbsolute(jc.CombinUrl(site.ThemeRoot)), path);
+                        }
+                        else
+                            path = StringUtil.CombinUrl(site.VirtualPath, path);
                     }
-                    else
-                        path = StringUtil.CombinUrl(site.VirtualPath, path);
 
                     virtualPath = string.Format("{0}://{1}{2}",
                         context.Request.Url.Scheme,
                         jc.SiteConfig == null ? context.Request.Url.Authority : jc.SiteConfig.Authority,
                         path);
+
                 }
 
                 if (virtualPath.Contains("://"))

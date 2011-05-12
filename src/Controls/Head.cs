@@ -64,6 +64,9 @@ namespace Kiss.Web.Controls
 
             base.Render(writer);
 
+            // auto render jquery
+            ClientScriptProxy.Current.LoadjQuery(writer);
+
             writer.Write("</head>");
         }
 
@@ -143,9 +146,13 @@ namespace Kiss.Web.Controls
                 foreach (string path in di[s].Keys)
                 {
                     string dir = path;
+
                     int index = path.IndexOf(s.VirtualPath);
                     if (index != -1)
                         dir = path.Substring(index + s.VirtualPath.Length);
+                    else
+                        dir = string.Empty;// res.aspx
+
                     writer.WriteLine(string.Format(styleFormat,
                                         Utility.FormatCssUrl(s, string.Format("{2}_resc.aspx?f={0}&t=text/css&v={1}",
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(di[s][path])),

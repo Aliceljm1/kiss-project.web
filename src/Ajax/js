@@ -1,0 +1,62 @@
+﻿/* ajax manager */
+function handleException(result) {
+    var exc = result.__AjaxException;
+    if (exc.action == "JSMethod") {
+        result = null;
+        eval(exc.parameter + "()");
+    }
+    else if (exc.action == "JSEval") {
+        result = null;
+        eval(exc.parameter);
+    }
+    else if (exc.action == "returnValue") {
+        result = eval(exc.parameter);
+    }
+    return result;
+}
+
+function AjaxManager() { }
+
+AjaxManager.prototype = {
+    initialize: function () { },
+    getData: function (classId, methodName, args, ajaxType, callbackMethod, ajaxUrl) {
+        var result = null;
+        var asyncCall = false;
+        if (callbackMethod && typeof callbackMethod == "function") {
+            asyncCall = true;
+        }
+
+        $.ajax({
+            type: ajaxType || 'Post',
+            url: ajaxUrl || "/ajax.aspx",
+            async: asyncCall,
+            dataType: 'json',
+            data: "classId=" + encodeURIComponent(classId) +
+                        "&methodName=" + encodeURIComponent(methodName) +
+                        "&methodArgs=" + encodeURIComponent(JSON.stringify(args)) +
+                        "&querystring=" + encodeURIComponent(window.location.search),
+            success: function (e) {
+                result = e;
+                if (result != null && result.__AjaxException) {
+                    result = handleException(result);
+                }
+                if (callbackMethod) {
+                    callbackMethod(result);
+                }
+            },
+            error: function (e) {
+                if (result && result.__AjaxException) {
+                    result = handleException(result);
+                }
+                else {
+                    result = e.responseText;
+                }
+                if (callbackMethod) {
+                    callbackMethod(result);
+                }
+            }
+        });
+        return result;
+    }
+};
+var __ajaxManager = new AjaxManager();

@@ -1,0 +1,279 @@
+﻿/* 
+ *	Generic styles for all buttons
+ */
+.btn {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	font: bold 13px "Helvetica Neue", Helvetica, Arial, clean, sans-serif !important;
+	text-decoration: none !important;
+	/*text-shadow: 1px 1px 2px rgba(0,0,0,0.20);*/
+	background: none;
+	border: none;
+	white-space: nowrap;
+	cursor: pointer;
+	user-select: none;
+	-moz-user-select: none;
+	
+	/* Fix extra width padding in IE */
+	_width: 0;
+	overflow: visible;
+}
+
+.btn span {
+	display: block;						/* Prevents :active from working in IE--oh well! */
+	height: 24px;
+	padding-right: 12px;
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+
+.btn span span {
+	padding-right: 0;
+	padding-left: 12px;
+	line-height: 24px;
+	background-position: left top;
+}
+
+.btn span span span {
+	padding-left: 21px;
+	background-image: none;
+	background-repeat: no-repeat;
+	background-position: left center;
+	/* IE6 still requires a PNG transparency fix */ 
+	/* _background-image: none;		Or just hide icons from the undeserving IE6 */
+	/* _padding-left: 0;					Or just hide icons from the undeserving IE6 */
+}
+
+.btn span span span.after {
+	padding-left: 0px;
+	padding-right: 21px;
+	background-position: right center;
+	/* IE6 still requires a PNG transparency fix */ 
+	/* _padding-right: 0;					Or just hide icons from the undeserving IE6 */
+}
+
+.btn[disabled],
+.btn[disabled]:hover,
+.btn[disabled]:focus,
+.btn[disabled]:active,
+.btn.disabled,
+.btn.disabled:hover,
+.btn.disabled:focus,
+.btn.disabled:active {
+	color: #333 !important;
+	cursor: inherit;
+	text-shadow: none; 
+	opacity: 0.33;
+}
+
+.btn:hover span,
+.btn:focus span {
+	background-position: 100% -24px;
+}
+
+.btn:hover span span,
+.btn:focus span span {
+	background-position: 0% -24px;
+}
+
+.btn:active span {
+	background-position: 100% -48px;
+}
+
+.btn:active span span {
+	background-position: 0% -48px;
+}
+
+.btn[disabled] span,
+.btn.disabled span {
+	background-position: 100% -72px;
+}
+
+.btn[disabled] span span,
+.btn.disabled span span {
+	background-position: 0% -72px;
+}
+
+.btn:hover span span span,
+.btn:focus span span span,
+.btn:active span span span,
+.btn[disabled] span span span,
+.btn.disabled span span span {
+	background-position: left center;
+}
+
+.btn:hover span span span.after,
+.btn:focus span span span.after,
+.btn:active span span span.after,
+.btn[disabled] span span span.after,
+.btn.disabled span span span.after {
+	background-position: right center;
+}
+
+.btn img {
+	margin-right: 5px;
+	vertical-align: text-top;
+	/* IE6 Hack */
+	_margin-top: 4px;
+	_vertical-align: text-bottom;
+	/* IE6 still requires a PNG transparency fix */ 
+	/* _display: none;		Or just hide icons from the undeserving IE6 */
+}
+
+.btn img.after {
+	margin-right: 0;
+	margin-left: 5px;
+	/* IE6 still requires a PNG transparency fix */ 
+	/* _margin-left: 0;		Or just hide icons from the undeserving IE6 */
+}
+
+.btn.btnmedium	{ font-size: 15px !important; }
+.btn.btnlarge	{ font-size: 18px !important; }
+
+
+/* 
+ * Simple Skin Buttons
+ */
+
+.btn.btnsimple { 
+	position: relative; 
+	padding: 5px 10px 5px;
+	font: inherit;
+	font-size: 13px !important;
+	font-style: normal !important; 
+	font-weight: bold !important; 
+	color: #fff !important;
+	line-height: 1; 
+	background-image: url(_res.aspx?r=alF1ZXJ5LmJ0bi5wbmc=&t=&z=image/png&su=1);
+	background-repeat: repeat-x;
+	background-position: 0 0;
+	
+	/* Special effects */
+	/*text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25); */
+	border-radius: 5px; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	/*-moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5); 
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);*/
+	
+	/* IE only stuff */
+	border-bottom: 1px solid transparent\9;
+	_background-image: none;
+	
+	/* Cross browser inline block hack - http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+	display: -moz-inline-stack;
+	display: inline-block;
+	vertical-align: middle;
+	*display: inline !important;
+	position: relative;
+	
+	/* Force hasLayout in IE */
+	zoom: 1;
+	
+	/* Disable text selection (Firefox only)*/
+	-moz-user-select: none;
+}
+
+.btn.btnsimple::selection {
+	background: transparent;
+}
+
+.btn.btnsimple:hover,
+.btn.btnsimple:focus {
+	background-position: 0 -50px; 
+	color: #fff !important;
+}
+
+.btn.btnsimple:active { 
+	background-position: 0 -100px; 
+	/*-moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.7); */
+	/* Unfortunately, Safari doesn't support inset yet */
+	-webkit-box-shadow: none;
+	
+	/* IE only stuff */
+	border-bottom: 0\9;
+	border-top: 1px solid #666\9;
+}
+
+.btn.btnsimple[disabled], 
+.btn.btnsimple.disabled { 
+	background-position: 0 -150px; 
+	color: #333 !important;
+	text-shadow: none; 
+}
+
+.btn.btnsimple[disabled]:hover,
+.btn.btnsimple[disabled]:focus,
+.btn.btnsimple[disabled]:active,
+.btn.btnsimple.disabled:hover,
+.btn.btnsimple.disabled:focus,
+.btn.btnsimple.disabled:active {
+	/*-moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5); 
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);*/
+} 
+
+.btn.btnsimple span {
+	height: auto;
+	padding-left: 24px;
+	padding-right: 0;
+	background-position: left center;
+	background-repeat: no-repeat;
+	/* IE6 still requires a PNG transparency fix */ 
+	/* _padding-left: 0;		Or just hide icons from the undeserving IE6 */
+}
+
+.btn.btnsimple span.after {
+	padding-left: 0;
+	padding-right: 24px;
+	background-position: right center;
+	/* IE6 still requires a PNG transparency fix */ 
+	/* _padding-right: 0;		Or just hide icons from the undeserving IE6 */
+}
+
+/* Simple button colors */
+.btn.btnsimple					{ background-color: #333; }		/* Default */
+.btn.btnsimple.btnblack		{ background-color: #333; }
+.btn.btnsimple.btnred		{ background-color: #a90118; }
+.btn.btnsimple.btnorange	{ background-color: #ff8a00; }
+.btn.btnsimple.btnyellow	{ background-color: #ffb515; }
+.btn.btnsimple.btngreen		{ background-color: #59a901; }
+.btn.btnsimple.btnblue		{ background-color: #015ea9; }
+.btn.btnsimple.btnteal		{ background-color: #2daebf; }
+.btn.btnsimple.btnmagenta	{ background-color: #a9014b; }
+.btn.btnsimple.btnpurple	{ background-color: #9d01a9; }
+
+/* Simple button sizes */
+.btn.btnsimple.btnsmall          { padding: 4px 7px 5px; font-size: 11px !important; }
+.btn.btnsimple.btnsmall:active   { padding: 5px 7px 4px; }
+.btn.btnsimple.btnsmall2          { padding: 3px 6px 4px; font-size: 12px !important; }
+.btn.btnsimple.btnsmall2:active   { padding: 4px 6px 3px; }
+.btn.btnsimple                    { /* default */ }
+.btn.btnsimple:active             { padding: 6px 10px 4px; }
+.btn.btnsimple.btnmedium         { /* default */ }
+.btn.btnsimple.btnmedium:active  { padding: 6px 10px 4px; }
+.btn.btnsimple.btnlarge          { padding: 8px 14px 8px; font-size: 14px !important; }
+.btn.btnsimple.btnlarge:active   { padding: 9px 14px 7px; }
+.btn.btnsimple.btnxl             { padding: 8px 14px 8px; font-size: 16px !important; }
+.btn.btnsimple.btnxl:active      { padding: 9px 14px 7px; }
+.btn.btnsimple.btnxxl            { padding: 8px 14px 8px; font-size: 20px !important; }
+.btn.btnsimple.btnxxl:active     { padding: 9px 14px 7px; }
+.btn.btnsimple.btnxxxl           { padding: 8px 14px 8px; font-size: 26px !important; }
+.btn.btnsimple.btnxxxl:active    { padding: 9px 14px 7px; }
+
+.btn.btnsimple.btnsmall[disabled]:active,
+.btn.btnsimple.btnsmall.disabled:active   	{ padding: 4px 7px 5px; }
+.btn.btnsimple.btnsmall2[disabled]:active,
+.btn.btnsimple.btnsmall2.disabled:active   	{ padding: 3px 6px 4px; }
+.btn.btnsimple[disabled]:active,
+.btn.btnsimple.disabled:active 	            { padding: 5px 10px 5px; }
+.btn.btnsimple.btnmedium[disabled]:active,
+.btn.btnsimple.btnmedium.disabled:active 		{ padding: 6px 10px 4px; }
+.btn.btnsimple.btnlarge[disabled]:active,
+.btn.btnsimple.btnlarge.disabled:active   	{ padding: 8px 14px 8px; }
+.btn.btnsimple.btnxl[disabled]:active,
+.btn.btnsimple.btnxl.disabled:active	      { padding: 8px 14px 8px; }
+.btn.btnsimple.btnxxl[disabled]:active,
+.btn.btnsimple.btnxxl.disabled:active 		   { padding: 8px 14px 8px; }
+.btn.btnsimple.btnxxxl[disabled]:active,
+.btn.btnsimple.btnxxxl.disabled:active    	{ padding: 8px 14px 8px; }

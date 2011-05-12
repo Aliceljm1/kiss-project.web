@@ -83,6 +83,12 @@ namespace Kiss.Web
 
         public string ErrorPage { get; private set; }
 
+        /// <summary>
+        /// jquery ui theme
+        /// </summary>
+        [ConfigProp("jqueryui", DefaultValue = "smoothness", Options = "blacktie,blitzer,cupertino,darkhive,darkness,dotluv,eggplant,excitebike,flick,hotsneaks,humanity,lefrog,lightness,mintchoc,overcast,peppergrinder,redmond,smoothness,southstreet,start,sunny,swankypurse,trontastic,vader", Desc = "jquery ui theme")]
+        public string jQueryUI { get; private set; }
+
         internal static readonly Dictionary<int, NavigationItem> menu = new Dictionary<int, NavigationItem>();
         public Dictionary<int, NavigationItem> MenuItems { get { return menu; } }
 
@@ -138,7 +144,7 @@ namespace Kiss.Web
         {
             get
             {
-                if (_virtualPath == null)
+                if (_virtualPath == null && HttpContext.Current != null)
                 {
                     _virtualPath = StringUtil.CombinUrl(HttpContext.Current.Request.ApplicationPath, VP);
 
@@ -155,7 +161,7 @@ namespace Kiss.Web
             get
             {
                 string t = JContext.Current.Items["SiteConfig.Theme"] as string;
-                
+
                 if (string.IsNullOrEmpty(t))
                     t = DefaultTheme;
 

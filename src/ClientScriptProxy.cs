@@ -40,6 +40,32 @@ namespace Kiss.Web
         {
         }
 
+        #region JS
+        /// <summary>
+        /// Loads the appropriate jScript library out of the scripts directory
+        /// </summary>
+        /// <param name="control"></param>
+        public void LoadjQuery(HtmlTextWriter writer)
+        {
+            if (JContext.Current.IsAjaxRequest)
+                return;
+
+            RegisterJsResource(writer,
+                typeof(ClientScriptProxy),
+                "Kiss.Web.jQuery.js",
+                true);
+        }
+
+        public static string FormatjQueryBlock(string script)
+        {
+            return "jQuery(function(){" + script + "});";
+        }
+
+        public void RegisterJsResource(HtmlTextWriter writer, string resourceName)
+        {
+            RegisterJsResource(writer, GetType(), resourceName, false);
+        }
+
         /// <summary>
         /// Returns a WebResource or ScriptResource URL for script resources that are to be
         /// embedded as script includes.
@@ -61,12 +87,25 @@ namespace Kiss.Web
 
         public void RegisterJsResource(HtmlTextWriter writer, string assemblyName, string resourceName, bool noCombin)
         {
-            if (IsScriptRended(resourceName))
+            RegisterJs(writer, Resources.Utility.GetResourceUrl(assemblyName, resourceName), noCombin);
+        }
+
+        public void RegisterJs(HtmlTextWriter writer, string url)
+        {
+            RegisterJs(writer, url, false);
+        }
+
+        public void RegisterJs(HtmlTextWriter writer, string url, bool noCombin)
+        {
+            if (IsScriptRended(url))
                 return;
 
-            SetScriptRended(resourceName);
+            SetScriptRended(url);
 
-            RegisterClientScript(writer, Resources.Utility.GetResourceUrl(assemblyName, resourceName), noCombin);
+            if (!noCombin && JContext.Current.Site.CombinJs)
+                Scripts.AddRes(url);
+            else
+                writer.Write("<script src='{0}' type='text/javascript'></script>", url);
         }
 
         public void RegisterJsBlock(HtmlTextWriter writer, string key, string script, bool addScriptTags)
@@ -97,7 +136,9 @@ namespace Kiss.Web
 
             writer.Write(script);
         }
+        #endregion
 
+        #region CSS
         public void RegisterCss(string url)
         {
             if (string.IsNullOrEmpty(url))
@@ -121,9 +162,24 @@ namespace Kiss.Web
             Head.AddStyle(url);
         }
 
+        public void RegisterCssResource(string resourceName)
+        {
+            RegisterCssResource(GetType(), resourceName, null);
+        }
+
+        public void RegisterCssResource(Type type, string resourceName)
+        {
+            RegisterCssResource(type, resourceName, null);
+        }
+
         public void RegisterCssResource(Type type, string resourceName, string baseUrl)
         {
             RegisterCssResource(type.Assembly.GetName().Name, resourceName, baseUrl);
+        }
+
+        public void RegisterCssResource(string assemblyName, string resourceName)
+        {
+            RegisterCssResource(assemblyName, resourceName, null);
         }
 
         public void RegisterCssResource(string assemblyName, string resourceName, string baseUrl)
@@ -139,15 +195,16 @@ namespace Kiss.Web
                 Head.AddStyle(StringUtil.CombinUrl(baseUrl, Resources.Utility.GetResourceUrl(assemblyName, resourceName)));
         }
 
-        public void RegisterCssResource(string assemblyName, string resourceName)
+        public void RegisterCssBlock(string css, string key)
         {
-            RegisterCssResource(assemblyName, resourceName, null);
-        }
+            if (IsScriptRended(key))
+                return;
 
-        public void RegisterCssResource(Type type, string resourceName)
-        {
-            RegisterCssResource(type, resourceName, null);
+            SetScriptRended(key);
+
+            Head.AddRawContent(string.Format("<style type='text/css'>{0}</style>", css), HttpContext.Current);
         }
+        #endregion
 
         /// <summary>
         /// Returns a WebResource URL for non script resources
@@ -159,34 +216,6 @@ namespace Kiss.Web
         public string GetWebResourceUrl(Control control, Type type, string resourceName)
         {
             return Resources.Utility.GetResourceUrl(type, resourceName);
-        }
-
-        public void RegisterCssBlock(string css, string key)
-        {
-            if (IsScriptRended(key))
-                return;
-
-            SetScriptRended(key);
-
-            Head.AddRawContent(string.Format("<style type='text/css'>{0}</style>", css), HttpContext.Current);
-        }
-
-        public void RegisterClientScript(HtmlTextWriter writer, string url, bool noCombin)
-        {
-            if (IsScriptRended(url))
-                return;
-
-            SetScriptRended(url);
-
-            if (!noCombin && JContext.Current.Site.CombinJs)
-                Scripts.AddRes(url);
-            else
-                writer.Write("<script src='{0}' type='text/javascript'></script>", url);
-        }
-
-        public void RegisterClientScript(HtmlTextWriter writer, string url)
-        {
-            RegisterClientScript(writer, url, false);
         }
 
         #region help
