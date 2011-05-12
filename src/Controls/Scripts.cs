@@ -9,10 +9,13 @@ namespace Kiss.Web.Controls
     /// <summary>
     /// 该控件将输出合并的js
     /// </summary>
-    [PersistChildren(true), ParseChildren(false)]
-    public class Scripts : Control
+    [PersistChildren(true), ParseChildren(false), NonVisualControl(true)]
+    class Scripts : Control, IContextAwaredControl
     {
         const string ScriptKey = "__scripts__";
+
+        private ISite _site;
+        public ISite CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
 
         /// <summary>
         /// 重载Control的Render方法
@@ -31,8 +34,6 @@ namespace Kiss.Web.Controls
         /// <param name="writer"></param>
         protected virtual void RenderScripts(HtmlTextWriter writer)
         {
-            string jsversion = JContext.Current.Site.JsVersion;
-
             List<string> urls = new List<string>();
             List<string> blocks = new List<string>();
 
@@ -58,7 +59,7 @@ namespace Kiss.Web.Controls
                     string.Format("<script src='{0}' type='text/javascript'></script>",
                         Utility.FormatJsUrl(SiteConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(urls)),
-                                                            jsversion))));
+                                                            CurrentSite.JsVersion))));
             }
 
             if (blocks.Count > 0)

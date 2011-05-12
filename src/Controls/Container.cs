@@ -90,14 +90,6 @@ namespace Kiss.Web.Controls
             }
         }
 
-        private bool IsRootMaster
-        {
-            get
-            {
-                return string.Equals(ThemeMasterFile, "master.ascx", StringComparison.InvariantCultureIgnoreCase);
-            }
-        }
-
         private const string KEY_LastThemeMasterFile = "Kiss.lastThemeMasterFile";
         private string LastThemeMasterFile
         {
@@ -177,8 +169,26 @@ namespace Kiss.Web.Controls
         {
             Control masterPage = Page.LoadControl(masterpagefile);
 
-            if (IsRootMaster)
+            bool isRootMaster = false;
+
+            foreach (Control ctrl in masterPage.Controls)
             {
+                // head control only appear once in root master file
+                if (ctrl is Head)
+                {
+                    isRootMaster = true;
+                    break;
+                }
+            }
+
+            if (isRootMaster)
+            {
+                // manuall add scripts control
+                lock (masterPage.Controls.SyncRoot)
+                {
+                    masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Scripts());
+                }
+
                 foreach (Control ctrl in masterPage.Controls)
                 {
                     if (ctrl is MasterFileAwaredControl)
