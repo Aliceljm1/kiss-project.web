@@ -8,7 +8,7 @@ namespace Kiss.Web.UrlMapping
         {
             if (string.IsNullOrEmpty(redirection))
                 redirection = "~/default.aspx";
-            else if (redirection.IndexOf('.') == -1)// master file
+            else if (!redirection.Contains("/") && redirection.IndexOf('.') == -1)// master file
                 redirection = string.Format("~/default.aspx?kissMasterFile={0}", redirection);
             return redirection;
         }
