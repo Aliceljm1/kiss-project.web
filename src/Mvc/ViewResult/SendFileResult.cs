@@ -1,5 +1,4 @@
-﻿
-using System.Web;
+﻿using System.Web;
 
 namespace Kiss.Web.Mvc
 {
@@ -40,6 +39,7 @@ namespace Kiss.Web.Mvc
         {
             HttpContext httpContext = jc.Context;
 
+            httpContext.Items["_ContentType_"] = ContentType;
             httpContext.Response.ContentType = ContentType;
 
             if (RemoteFileName != null)
