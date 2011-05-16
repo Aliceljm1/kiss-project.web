@@ -88,7 +88,7 @@ namespace Kiss.Web.Controls
         {
             Js.Append("$(function() {");
 
-            Js.AppendFormat("$('{0}').accordion", HtmlId);
+            Js.AppendFormat("$('{0}').accordion", Selector);
             Js.Append("({");
 
             Js.AppendFormat("event:'{0}'", Event ?? "click");

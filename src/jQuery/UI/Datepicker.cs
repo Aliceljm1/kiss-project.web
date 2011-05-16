@@ -129,7 +129,7 @@ namespace Kiss.Web.Controls
         protected override void AppendJsBlock ( )
         {
             Js.Append ( "$(function(){" );
-            Js.AppendFormat ( "$('{0}')" , HtmlId );
+            Js.AppendFormat ( "$('{0}')" , Selector );
             Js.Append ( ".datepicker({" );
 
             Js.AppendFormat ( "changeMonth:{0}" , StringUtil.ToJsBoolean ( ChangeMonth ) );

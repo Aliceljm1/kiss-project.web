@@ -27,68 +27,68 @@ namespace Kiss.Web.Controls
 
         #endregion
 
-        protected override void AppendJsIncludes ( )
+        protected override void AppendJsIncludes()
         {
-            JsIncludes.Add ( "ui.core" );
-            JsIncludes.Add ( "ui.slider" );
+            JsIncludes.Add("ui.core");
+            JsIncludes.Add("ui.slider");
         }
 
-        protected override void AppendJsBlock ( )
+        protected override void AppendJsBlock()
         {
-            Js.Append ( "$(function() {" );
+            Js.Append("$(function() {");
 
-            Js.AppendFormat ( "$('{0}').slider(" , HtmlId );
-            Js.Append ( "{" );
+            Js.AppendFormat("$('{0}').slider(", Selector);
+            Js.Append("{");
 
-            Js.AppendFormat ( "animate:{0}" , Animate.ToString ( ).ToLower ( ) );
+            Js.AppendFormat("animate:{0}", Animate.ToString().ToLower());
 
-            if ( Max > 0 )
-                Js.AppendFormat ( ",max:{0}" , Max );
+            if (Max > 0)
+                Js.AppendFormat(",max:{0}", Max);
 
-            if ( Min > 0 )
-                Js.AppendFormat ( ",min:{0}" , Min );
+            if (Min > 0)
+                Js.AppendFormat(",min:{0}", Min);
 
-            if ( Vertical )
-                Js.Append ( ",orientation:'vertical'" );
+            if (Vertical)
+                Js.Append(",orientation:'vertical'");
 
-            if ( StringUtil.HasText ( Range ) )
-                Js.AppendFormat ( ",range:{0}" , Range );
+            if (StringUtil.HasText(Range))
+                Js.AppendFormat(",range:{0}", Range);
 
-            if ( Step > 0 )
-                Js.AppendFormat ( ",step:{0}" , Step );
+            if (Step > 0)
+                Js.AppendFormat(",step:{0}", Step);
 
-            if ( Value > 0 )
-                Js.AppendFormat ( ",value:{0}" , Value );
+            if (Value > 0)
+                Js.AppendFormat(",value:{0}", Value);
 
-            if ( StringUtil.HasText ( Values ) )
-                Js.AppendFormat ( ",values:{0}" , Values );
+            if (StringUtil.HasText(Values))
+                Js.AppendFormat(",values:{0}", Values);
 
-            if ( StringUtil.HasText ( onStart ) )
-                Js.AppendFormat ( ",start:{0}" , onStart );
+            if (StringUtil.HasText(onStart))
+                Js.AppendFormat(",start:{0}", onStart);
 
-            if ( StringUtil.HasText ( onSlide ) )
-                Js.AppendFormat ( ",slide:{0}" , onSlide );
+            if (StringUtil.HasText(onSlide))
+                Js.AppendFormat(",slide:{0}", onSlide);
 
-            if ( StringUtil.HasText ( onChange ) )
-                Js.AppendFormat ( ",change:{0}" , onChange );
+            if (StringUtil.HasText(onChange))
+                Js.AppendFormat(",change:{0}", onChange);
 
-            if ( StringUtil.HasText ( onStop ) )
-                Js.AppendFormat ( ",stop:{0}" , onStart );
+            if (StringUtil.HasText(onStop))
+                Js.AppendFormat(",stop:{0}", onStart);
 
-            Js.Append ( "});" );
+            Js.Append("});");
 
-            Js.Append ( "});" );
+            Js.Append("});");
         }
 
-        protected override void Render ( HtmlTextWriter writer )
+        protected override void Render(HtmlTextWriter writer)
         {
-            foreach ( string id in IdSelectors )
-                writer.Write ( "<div id='{0}'></div>" , id );
+            if (Selector.StartsWith("#"))
+                writer.Write("<div id='{0}'></div>", Selector.TrimStart('#'));
 
-            foreach ( string cls in ClassSelectors )
-                writer.Write ( "<div class='{0}'></div>" , cls );
+            else if (Selector.StartsWith("."))
+                writer.Write("<div class='{0}'></div>", Selector.TrimStart('.'));
 
-            base.Render ( writer );
+            base.Render(writer);
         }
     }
 }

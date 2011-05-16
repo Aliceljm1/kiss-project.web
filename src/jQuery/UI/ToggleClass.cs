@@ -7,7 +7,7 @@ namespace Kiss.Web.Controls
 
         protected override void AppendEffectFunc ( )
         {
-            Js.AppendFormat ( "$('{0}').toggleClass('{1}', {2});" , HtmlId , ClassName ?? "class1" , Duration );
+            Js.AppendFormat ( "$('{0}').toggleClass('{1}', {2});" , Selector , ClassName ?? "class1" , Duration );
         }
     }
 }

@@ -254,8 +254,6 @@
     <EmbeddedResource Include="jQuery\js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="jQuery\btn\css" />
-    <EmbeddedResource Include="jQuery\btn\png" />
     <EmbeddedResource Include="jQuery\calendar\css" />
     <EmbeddedResource Include="jQuery\calendar\js" />
   </ItemGroup>

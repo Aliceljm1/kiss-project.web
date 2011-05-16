@@ -71,7 +71,7 @@ namespace Kiss.Web.Controls
         protected override void AppendEffectFunc ( )
         {
             Js.AppendFormat ( "$('{0}').{1}('{2}',{3},{4}{5});" ,
-                HtmlId ,
+                Selector ,
                 Action.ToString ( ).ToLower ( ) ,
                 Name.ToString ( ).ToLower ( ) ,
                 Options ,

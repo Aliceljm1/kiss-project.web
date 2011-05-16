@@ -19,7 +19,7 @@ namespace Kiss.Web.Controls
         protected override void AppendJsBlock()
         {
             Js.Append("$(function(){");
-            Js.AppendFormat("$('{0}')", HtmlId);
+            Js.AppendFormat("$('{0}')", Selector);
             Js.Append(".sortable({");
 
             List<string> list = new List<string>();
@@ -34,7 +34,7 @@ namespace Kiss.Web.Controls
 
             Js.Append("});");
 
-            Js.AppendFormat("$('{0}').disableSelection();", HtmlId);
+            Js.AppendFormat("$('{0}').disableSelection();", Selector);
 
             Js.Append("});");
         }

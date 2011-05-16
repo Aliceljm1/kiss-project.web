@@ -20,39 +20,7 @@ namespace Kiss.Web.Controls
             get { return _proxy; }
         }
 
-        public string HtmlId { get; set; }
-
-        protected List<string> IdSelectors
-        {
-            get
-            {
-                List<string> list = new List<string>();
-
-                foreach (string str in HtmlId.Split(','))
-                {
-                    if (!str.Contains("."))
-                        list.Add(str.Replace("#", string.Empty));
-                }
-
-                return list;
-            }
-        }
-
-        protected List<string> ClassSelectors
-        {
-            get
-            {
-                List<string> list = new List<string>();
-
-                foreach (string str in HtmlId.Split(','))
-                {
-                    if (str.Contains("."))
-                        list.Add(str.Replace(".", string.Empty));
-                }
-
-                return list;
-            }
-        }
+        public string Selector { get; set; }
 
         protected List<string> JsIncludes { get; private set; }
         protected StringBuilder Js { get; private set; }
@@ -80,7 +48,7 @@ namespace Kiss.Web.Controls
 
         protected override void Render(HtmlTextWriter writer)
         {
-            base.Render(writer);
+            //base.Render(writer);
 
             // 在ajax环境下，不引用js libs
             if (!JContext.Current.IsAjaxRequest)
@@ -89,7 +57,7 @@ namespace Kiss.Web.Controls
                 RegisterJsInclucde(writer);
             }
 
-            if (StringUtil.IsNullOrEmpty(HtmlId))
+            if (StringUtil.IsNullOrEmpty(Selector))
                 return;
 
             AppendJsBlock();

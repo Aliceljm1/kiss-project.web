@@ -14,7 +14,7 @@ namespace Kiss.Web.Controls
         protected override void Render ( HtmlTextWriter writer )
         {
             writer.Write ( string.Format ( "<div id='{0}'></div>" ,
-                HtmlId ) );
+                Selector ) );
 
             base.Render ( writer );
         }
@@ -27,7 +27,7 @@ namespace Kiss.Web.Controls
 
         protected override void AppendJsBlock ( )
         {
-            Js.AppendFormat ( "$('{0}')" , HtmlId );
+            Js.AppendFormat ( "$('{0}')" , Selector );
             Js.Append ( ".progressbar({" );
             Js.AppendFormat ( "value: {0}" , Value );
 

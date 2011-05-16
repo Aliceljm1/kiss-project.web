@@ -43,7 +43,7 @@ namespace Kiss.Web.Controls
         {
             Js.Append("$(function() {");
 
-            Js.AppendFormat("$('{0}').button", HtmlId);
+            Js.AppendFormat("$('{0}').button", Selector);
             Js.Append("({");
 
             Js.AppendFormat("disabled:{0}", disabled.ToString().ToLower());

@@ -143,7 +143,7 @@ namespace Kiss.Web.Controls
         {
             Js.Append ( "$(function() {" );
 
-            Js.AppendFormat ( "$('{0}').tabs" , HtmlId );
+            Js.AppendFormat ( "$('{0}').tabs" , Selector );
             Js.Append ( "({" );
 
             Js.AppendFormat ( "event:'{0}'" , Event ?? "click" );
@@ -210,7 +210,7 @@ namespace Kiss.Web.Controls
             if ( Vertical )
             {
                 Js.Append ( ".addClass('ui-tabs-vertical ui-helper-clearfix');" );
-                Js.AppendFormat ( "$('{0} li').removeClass('ui-corner-top').addClass('ui-corner-left');" , HtmlId );
+                Js.AppendFormat ( "$('{0} li').removeClass('ui-corner-top').addClass('ui-corner-left');" , Selector );
             }
 
             Js.Append ( "});" );

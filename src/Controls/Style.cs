@@ -30,10 +30,6 @@ namespace Kiss.Web.Controls
             }
         }
 
-        public bool IncludeYUI { get; set; }
-
-        public bool IncludeButtonStyle { get; set; }
-
         private string _href;
         /// <summary>
         /// Property Href (string)
@@ -120,14 +116,6 @@ namespace Kiss.Web.Controls
                     this.RelativePosition,
                     _enqueue);
             }
-
-            if (IncludeYUI)
-                ClientScriptProxy.Current.RegisterCssResource("Kiss.Web.jQuery"
-                    , "Kiss.Web.jQuery.yui.css");
-
-            if (IncludeButtonStyle)
-                ClientScriptProxy.Current.RegisterCssResource("Kiss.Web.jQuery"
-                    , "Kiss.Web.jQuery.btn.css");
         }
 
         protected override void Render(HtmlTextWriter output)

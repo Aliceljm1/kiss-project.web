@@ -23,7 +23,7 @@ namespace Kiss.Web.Controls
 
         protected override void OnLoad ( EventArgs e )
         {
-            HtmlId = Min + "," + Max;
+            Selector = Min + "," + Max;
 
             StringBuilder js = new StringBuilder ( );
             js.Append ( "function(input){" );

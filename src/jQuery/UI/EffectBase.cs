@@ -69,7 +69,7 @@ namespace Kiss.Web.Controls
 
         protected override void AppendJsBlock ( )
         {
-            if (StringUtil.IsNullOrEmpty(HtmlId))
+            if (StringUtil.IsNullOrEmpty(Selector))
                 return;
 
             Js.AppendFormat ( ";var {0} = function()", FuncName );

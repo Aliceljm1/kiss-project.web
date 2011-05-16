@@ -23,7 +23,9 @@ namespace Kiss.Web.Controls
         #region props
 
         public bool AutoOpen { get; set; }
-        public bool CloseOnEscapse { get; set; }
+
+        private bool _closeOnEscapse = true;
+        public bool CloseOnEscapse { get { return _closeOnEscapse; } set { _closeOnEscapse = value; } }
         public string DialogClass { get; set; }
         public bool Draggable { get; set; }
         public int Height { get; set; }
@@ -32,7 +34,9 @@ namespace Kiss.Web.Controls
         public int MaxWidth { get; set; }
         public int MinHeight { get; set; }
         public int MinWidth { get; set; }
-        public bool Modal { get; set; }
+
+        private bool _modal = true;
+        public bool Modal { get { return _modal; } set { _modal = value; } }
         public string Position { get; set; }
         public bool Resizable { get; set; }
         public string Show { get; set; }
@@ -40,8 +44,6 @@ namespace Kiss.Web.Controls
         public string Title { get; set; }
         public int Width { get; set; }
         public int ZIndex { get; set; }
-
-        public bool AutoBind { get; set; }
 
         public string onBeforeclose { get; set; }
         public string onOpen { get; set; }
@@ -60,11 +62,13 @@ namespace Kiss.Web.Controls
         {
             List<string> list = new List<string>() { 
                 "ui.core",
-                "ui.widget",
-                "ui.mouse",
+                "ui.widget",                
                 "ui.position",
                 "ui.dialog"
             };
+
+            if (Resizable || Draggable)
+                list.Add("ui.mouse");
 
             if (Resizable)
                 list.Add("ui.resizable");
@@ -75,8 +79,7 @@ namespace Kiss.Web.Controls
             if (RequestUtil.IsIE6)
                 list.Add("Kiss.Web.jQuery.bgiframe.js");
 
-            if (AutoBind)
-                list.Add("Kiss.Web.jQuery.dialogutil.js");
+            list.Add("Kiss.Web.jQuery.dialogutil.js");
 
             JsIncludes.AddRange(list);
         }
@@ -84,7 +87,7 @@ namespace Kiss.Web.Controls
         protected override void AppendJsBlock()
         {
             Js.Append("jQuery(function(){");
-            Js.AppendFormat("jQuery('{0}')", HtmlId);
+            Js.AppendFormat("jQuery('{0}')", Selector);
             Js.Append(".dialog({");
 
             Js.AppendFormat("autoOpen: {0}", AutoOpen.ToString().ToLower());
@@ -173,31 +176,22 @@ namespace Kiss.Web.Controls
             if (StringUtil.HasText(onClose))
                 Js.AppendFormat(",close: {0}", onClose);
 
-            //if( Buttons != null && Buttons.Count > 0 )
-            //{
-            //    Js.Append( ",buttons: {" );
-            //    for( int i = 0; i < Buttons.Count; i++ )
-            //    {
-            //        Button btn = Buttons[ i ];
-            //        if( i > 0 )
-            //            Js.Append( "," );
-
-            //        Js.AppendFormat( "'{0}': {1}", btn.Text, btn.onClick );
-            //    }
-            //    Js.Append( "}" );
-            //}
-
             Js.Append("});");
 
-            if (AutoBind)
-            {
-                foreach (var id in StringUtil.Split(HtmlId, StringUtil.Comma, true, true))
-                {
-                    Js.AppendFormat("dialogutil('{0}');", id);
-                }
-            }
+            Js.AppendFormat("dialogutil('{0}');", Selector);
 
             Js.Append("});");
+        }
+
+        protected override void Render(HtmlTextWriter writer)
+        {
+            writer.Write(string.Format("<div id='{0}' style='display:none;'>", Selector.TrimStart('#')));
+
+            RenderChildren(writer);
+
+            writer.Write("</div>");
+
+            base.Render(writer);
         }
     }
 }
