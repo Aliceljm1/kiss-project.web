@@ -249,7 +249,7 @@ namespace Kiss.Web.UrlMapping
             if (newPath.StartsWith("~/"))
                 HttpContext.Current.RewritePath(newPath, false);
             else if (newPath.StartsWith("/"))
-                app.Response.Redirect(newPath);
+                app.Response.Redirect(jc.url(newPath));
             else if (newPath.StartsWith("http:") || newPath.StartsWith("https:"))
             {
                 app.Response.Status = "301 Moved Permanently";
