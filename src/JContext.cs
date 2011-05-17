@@ -246,14 +246,6 @@ namespace Kiss.Web
             set { returnUrl = value; }
         }
 
-        public int ObjId
-        {
-            get
-            {
-                return GetIntFromQueryString("Id", 0);
-            }
-        }
-
         public int PageIndex
         {
             get
