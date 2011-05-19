@@ -257,6 +257,9 @@
     <EmbeddedResource Include="jQuery\calendar\css" />
     <EmbeddedResource Include="jQuery\calendar\js" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="jQuery\scrollfollow.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
