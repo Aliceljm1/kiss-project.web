@@ -56,6 +56,9 @@ namespace Kiss.Web.Controls
         public string onResizeStop { get; set; }
         public string onClose { get; set; }
 
+        private bool _autoGenHtml = true;
+        public bool AutoGenHtml { get { return _autoGenHtml; } set { _autoGenHtml = value; } }
+
         #endregion
 
         protected override void AppendJsIncludes()
@@ -185,11 +188,13 @@ namespace Kiss.Web.Controls
 
         protected override void Render(HtmlTextWriter writer)
         {
-            writer.Write(string.Format("<div id='{0}' style='display:none;'>", Selector.TrimStart('#')));
+            if (AutoGenHtml)
+                writer.Write(string.Format("<div id='{0}' style='display:none;'>", Selector.TrimStart('#')));
 
             RenderChildren(writer);
 
-            writer.Write("</div>");
+            if (AutoGenHtml)
+                writer.Write("</div>");
 
             base.Render(writer);
         }
