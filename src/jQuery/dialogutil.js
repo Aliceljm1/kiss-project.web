@@ -1,5 +1,5 @@
 ﻿; var dialogutil = function (id) {
-    $('a[target="' + id + '"]').live('click', function () {
+    $('*[target="' + id + '"]').live('click', function () {
         var a = $(this);
         var ajax = a.attr('href');
         if (ajax && ajax.length > 1) {
