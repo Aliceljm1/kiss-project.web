@@ -30,6 +30,8 @@ namespace Kiss.Web.Controls
         protected override void AppendJsIncludes()
         {
             JsIncludes.Add("ui.core");
+            JsIncludes.Add("ui.widget");
+            JsIncludes.Add("ui.mouse");
             JsIncludes.Add("ui.slider");
         }
 
@@ -78,17 +80,6 @@ namespace Kiss.Web.Controls
             Js.Append("});");
 
             Js.Append("});");
-        }
-
-        protected override void Render(HtmlTextWriter writer)
-        {
-            if (Selector.StartsWith("#"))
-                writer.Write("<div id='{0}'></div>", Selector.TrimStart('#'));
-
-            else if (Selector.StartsWith("."))
-                writer.Write("<div class='{0}'></div>", Selector.TrimStart('.'));
-
-            base.Render(writer);
         }
     }
 }

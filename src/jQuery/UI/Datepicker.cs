@@ -118,65 +118,65 @@ namespace Kiss.Web.Controls
         /// The function receives the selected date(s) as text and the datepicker instance as parameters. 
         /// this refers to the associated input field.
         /// </summary>
-        public string onSelect { get; set; }
+        public string onSelect { get; set; }        
 
-        protected override void AppendJsIncludes ( )
+        protected override void AppendJsIncludes()
         {
-            JsIncludes.Add ( "ui.core" );
-            JsIncludes.Add ( "ui.datepicker" );
+            JsIncludes.Add("ui.core");
+            JsIncludes.Add("ui.datepicker");
         }
 
-        protected override void AppendJsBlock ( )
+        protected override void AppendJsBlock()
         {
-            Js.Append ( "$(function(){" );
-            Js.AppendFormat ( "$('{0}')" , Selector );
-            Js.Append ( ".datepicker({" );
+            Js.Append("$(function(){");
+            Js.AppendFormat("$('{0}')", Selector);
+            Js.Append(".datepicker({");
 
-            Js.AppendFormat ( "changeMonth:{0}" , StringUtil.ToJsBoolean ( ChangeMonth ) );
+            Js.AppendFormat("changeMonth:{0}", StringUtil.ToJsBoolean(ChangeMonth));
 
-            if ( ChangeYear )
-                Js.Append ( ",changeYear:true" );
+            if (ChangeYear)
+                Js.Append(",changeYear:true");
 
-            if ( StringUtil.HasText ( DateFormat ) )
-                Js.AppendFormat ( ",dateFormat:'{0}'" , DateFormat );
+            if (StringUtil.HasText(DateFormat))
+                Js.AppendFormat(",dateFormat:'{0}'", DateFormat);
 
-            if ( StringUtil.HasText ( ShowOn ) )
-                Js.AppendFormat ( ",showOn:'{0}'" , ShowOn );
+            if (StringUtil.HasText(ShowOn))
+                Js.AppendFormat(",showOn:'{0}'", ShowOn);
 
-            if ( StringUtil.HasText ( ButtonImage ) )
-                Js.AppendFormat ( ",buttonImage:'{0}'" , ButtonImage );
+            if (StringUtil.HasText(ButtonImage))
+                Js.AppendFormat(",buttonImage:'{0}'", ButtonImage);
 
-            if ( ButtonImageOnly )
-                Js.Append ( ",buttonImageOnly:true" );
+            if (ButtonImageOnly)
+                Js.Append(",buttonImageOnly:true");
 
-            if ( StringUtil.HasText ( MaxDate ) )
-                Js.AppendFormat ( ",maxDate:'{0}'" , MaxDate );
+            if (StringUtil.HasText(MaxDate))
+                Js.AppendFormat(",maxDate:'{0}'", MaxDate);
 
-            if ( StringUtil.HasText ( MinDate ) )
-                Js.AppendFormat ( ",minDate:'{0}'" , MinDate );
+            if (StringUtil.HasText(MinDate))
+                Js.AppendFormat(",minDate:'{0}'", MinDate);
 
-            if ( StringUtil.HasText ( ShowAnim ) )
-                Js.AppendFormat ( ",showAnim:'{0}'" , ShowAnim );
+            if (StringUtil.HasText(ShowAnim))
+                Js.AppendFormat(",showAnim:'{0}'", ShowAnim);
 
-            if ( StringUtil.HasText ( Duration ) )
-                Js.AppendFormat ( ",duration:'{0}'" , Duration );
+            if (StringUtil.HasText(Duration))
+                Js.AppendFormat(",duration:'{0}'", Duration);
 
-            if ( StringUtil.HasText ( onBeforeShow ) )
-                Js.AppendFormat ( ",beforeShow:{0}" , onBeforeShow );
+            if (StringUtil.HasText(onBeforeShow))
+                Js.AppendFormat(",beforeShow:{0}", onBeforeShow);
 
-            if ( StringUtil.HasText ( onBeforeShowDay ) )
-                Js.AppendFormat ( ",beforeShowDay:{0}" , onBeforeShowDay );
+            if (StringUtil.HasText(onBeforeShowDay))
+                Js.AppendFormat(",beforeShowDay:{0}", onBeforeShowDay);
 
-            if ( StringUtil.HasText ( onChangeMonthYear ) )
-                Js.AppendFormat ( ",onChangeMonthYear:{0}" , onChangeMonthYear );
+            if (StringUtil.HasText(onChangeMonthYear))
+                Js.AppendFormat(",onChangeMonthYear:{0}", onChangeMonthYear);
 
-            if ( StringUtil.HasText ( onClose ) )
-                Js.AppendFormat ( ",onClose:{0}" , onClose );
+            if (StringUtil.HasText(onClose))
+                Js.AppendFormat(",onClose:{0}", onClose);
 
-            if ( StringUtil.HasText ( onSelect ) )
-                Js.AppendFormat ( ",onSelect:{0}" , onSelect );
+            if (StringUtil.HasText(onSelect))
+                Js.AppendFormat(",onSelect:{0}", onSelect);
 
-            Js.Append ( "})});" );
+            Js.Append("})});");
         }
     }
 }
