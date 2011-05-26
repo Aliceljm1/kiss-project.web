@@ -26,7 +26,6 @@ namespace Kiss.Web.Mvc
                 response.Write("<script type='text/javascript'>");
                 response.Write(Script);
                 response.Write("</script>");
-                response.End();
             }
         }
     }

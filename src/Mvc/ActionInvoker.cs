@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading;
 using Kiss.Security;
 using Kiss.Utils;
+using Kiss.Json;
 
 namespace Kiss.Web.Mvc
 {
@@ -77,7 +78,11 @@ namespace Kiss.Web.Mvc
 
             if (ret != null)
             {
-                if (ret is ActionResult)
+                if (jc.IsPost)
+                {
+                    jc.Context.Response.Write(new JavaScriptSerializer().Serialize(ret));
+                }
+                else if (ret is ActionResult)
                 {
                     ActionResult actionResult = ret as ActionResult;
                     actionResult.ExecuteResult(jc);
