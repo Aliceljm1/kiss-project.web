@@ -807,7 +807,7 @@
 			else
 				updateTips(success.html());
 			if (opts.onSuccess && $.isFunction(opts.onSuccess))
-				opts.onSuccess.apply($this, [JSON.parse(data), status]);
+				opts.onSuccess.apply($this, [(data ? JSON.parse(data) : data), status]);
 		};
 
 		var _getTitle = function (ele) {
