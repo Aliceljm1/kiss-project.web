@@ -19,7 +19,7 @@ namespace Kiss.Web.Mvc
     }
 
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    sealed class HttpPostAttribute : Attribute
+    public sealed class HttpPostAttribute : Attribute
     {
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+using Kiss.Json;
 using Kiss.Security;
 using Kiss.Utils;
-using Kiss.Json;
 
 namespace Kiss.Web.Mvc
 {
@@ -57,10 +57,29 @@ namespace Kiss.Web.Mvc
                 }
 
             execute:
-                if (mi.IsStatic)
-                    ret = mi.Invoke(null, null);
+                if (jc.IsPost)
+                {
+                    // set rendercontent to false before invoke action
+                    jc.RenderContent = false;
+
+                    if (mi.GetParameters().Length == 1)
+                        ret = mi.Invoke(jc.Controller, new object[] { jc.Context.Request.Form });
+                    else
+                        ret = mi.Invoke(jc.Controller, null);
+
+                    if (ret != null && !jc.RenderContent)
+                        jc.Context.Response.Write(new JavaScriptSerializer().Serialize(ret));
+                }
                 else
+                {
                     ret = mi.Invoke(jc.Controller, null);
+
+                    if (ret != null && ret is ActionResult)
+                    {
+                        ActionResult actionResult = ret as ActionResult;
+                        actionResult.ExecuteResult(jc);
+                    }
+                }
             }
             catch (ThreadAbortException) { }// ignore this exception
             catch (Exception ex)
@@ -74,19 +93,6 @@ namespace Kiss.Web.Mvc
                     jc.Controller.GetType().Name,
                     mi.Name,
                     ex.Message), ex);
-            }
-
-            if (ret != null)
-            {
-                if (jc.IsPost)
-                {
-                    jc.Context.Response.Write(new JavaScriptSerializer().Serialize(ret));
-                }
-                else if (ret is ActionResult)
-                {
-                    ActionResult actionResult = ret as ActionResult;
-                    actionResult.ExecuteResult(jc);
-                }
             }
 
             return true;
@@ -110,7 +116,7 @@ namespace Kiss.Web.Mvc
 
             MethodInfo mi = null;
 
-            string action = jc.Navigation.Action;
+            string action = jc.Navigation.Action + ":" + jc.IsPost;
 
             if (mis.ContainsKey(action))
                 mi = mis[action];
@@ -122,10 +128,10 @@ namespace Kiss.Web.Mvc
                     bool hasAjaxAttr = m.GetCustomAttributes(typeof(Ajax.AjaxMethodAttribute), true).Length > 0;
 
                     if (!m.ContainsGenericParameters &&
-                        m.Name.Equals(action, StringComparison.InvariantCultureIgnoreCase) &&
+                        m.Name.Equals(jc.Navigation.Action, StringComparison.InvariantCultureIgnoreCase) &&
                          !hasAjaxAttr &&
                         ((jc.IsPost && hasPostAttr) || !hasPostAttr) &&
-                        m.GetParameters().Length == 0
+                        ((jc.IsPost && m.GetParameters().Length <= 1) || (!jc.IsPost && m.GetParameters().Length == 0))
                         )
                     {
                         mi = m;
