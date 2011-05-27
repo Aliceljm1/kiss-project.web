@@ -806,8 +806,15 @@
 				_tip.hide();
 			else
 				updateTips(success.html());
-			if (opts.onSuccess && $.isFunction(opts.onSuccess))
-				opts.onSuccess.apply($this, [(data ? JSON.parse(data) : data), status]);
+			if (opts.onSuccess && $.isFunction(opts.onSuccess)){
+                var r;
+                try {
+                    r = jQuery.parseJSON(data);
+                } catch (e) {
+                    r =  data;
+                }
+				opts.onSuccess.apply($this, [r, status]);
+            }
 		};
 
 		var _getTitle = function (ele) {
