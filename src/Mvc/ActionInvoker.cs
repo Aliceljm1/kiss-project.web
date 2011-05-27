@@ -122,7 +122,16 @@ namespace Kiss.Web.Mvc
                 mi = mis[action];
             else
             {
-                foreach (MethodInfo m in t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                List<MethodInfo> methods = new List<MethodInfo>(t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+                methods.Sort((x, y) =>
+                {
+                    bool hasPostAttr = x.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
+                    bool hasPostAttr_2 = y.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
+
+                    return hasPostAttr_2.CompareTo(hasPostAttr);
+                });
+
+                foreach (MethodInfo m in methods)
                 {
                     bool hasPostAttr = m.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
                     bool hasAjaxAttr = m.GetCustomAttributes(typeof(Ajax.AjaxMethodAttribute), true).Length > 0;
