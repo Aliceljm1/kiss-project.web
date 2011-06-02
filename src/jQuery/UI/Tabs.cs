@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web.UI;
 using Kiss.Utils;
 
 namespace Kiss.Web.Controls
@@ -125,95 +126,103 @@ namespace Kiss.Web.Controls
 
         #endregion
 
-        protected override void AppendJsIncludes ( )
+        protected override void AppendJsIncludes()
         {
-            List<string> list = new List<string> ( ) {
+            List<string> list = new List<string>() {
                 "ui.core",
                 "ui.widget",
                 "ui.tabs"
             };
 
-            if ( Sortable )
-                list.Add ( "ui.sortable" );
+            if (Sortable)
+                list.Add("ui.sortable");
 
-            JsIncludes.AddRange ( list );
+            JsIncludes.AddRange(list);
         }
 
-        protected override void AppendJsBlock ( )
+        protected override void AppendJsBlock()
         {
-            Js.Append ( "$(function() {" );
+            Js.Append("$(function() {");
 
-            Js.AppendFormat ( "$('{0}').tabs" , Selector );
-            Js.Append ( "({" );
+            Js.AppendFormat("$('{0}').tabs", Selector);
+            Js.Append("({");
 
-            Js.AppendFormat ( "event:'{0}'" , Event ?? "click" );
+            Js.AppendFormat("event:'{0}'", Event ?? "click");
 
-            if ( StringUtil.HasText ( AjaxOptions ) )
-                Js.AppendFormat ( ",ajaxOptions:{0}" , AjaxOptions );
+            if (StringUtil.HasText(AjaxOptions))
+                Js.AppendFormat(",ajaxOptions:{0}", AjaxOptions);
 
-            if ( Cache )
-                Js.Append ( ",cache:true" );
+            if (Cache)
+                Js.Append(",cache:true");
 
-            if ( Collapsible )
-                Js.Append ( ",collapsible:true" );
+            if (Collapsible)
+                Js.Append(",collapsible:true");
 
-            if ( StringUtil.HasText ( Cookie ) )
-                Js.AppendFormat ( ",cookie:{0}" , Cookie );
+            if (StringUtil.HasText(Cookie))
+                Js.AppendFormat(",cookie:{0}", Cookie);
 
-            if ( StringUtil.HasText ( Disabled ) )
-                Js.AppendFormat ( ",disabled:{0}" , Disabled );
+            if (StringUtil.HasText(Disabled))
+                Js.AppendFormat(",disabled:{0}", Disabled);
 
-            if ( StringUtil.HasText ( Fx ) )
-                Js.AppendFormat ( ",fx:{0}" , Fx );
+            if (StringUtil.HasText(Fx))
+                Js.AppendFormat(",fx:{0}", Fx);
 
-            if ( StringUtil.HasText ( IdPrefix ) )
-                Js.AppendFormat ( ",idPrefix:'{0}'" , IdPrefix );
+            if (StringUtil.HasText(IdPrefix))
+                Js.AppendFormat(",idPrefix:'{0}'", IdPrefix);
 
-            if ( StringUtil.HasText ( PanelTemplate ) )
-                Js.AppendFormat ( ",panelTemplate:\"{0}\"" , PanelTemplate );
+            if (StringUtil.HasText(PanelTemplate))
+                Js.AppendFormat(",panelTemplate:\"{0}\"", PanelTemplate);
 
-            if ( Selected > 0 )
-                Js.AppendFormat ( ",selected:{0}" , Selected );
+            if (Selected > 0)
+                Js.AppendFormat(",selected:{0}", Selected);
 
-            if ( StringUtil.HasText ( Spinner ) )
-                Js.AppendFormat ( ",spinner:'{0}'" , Spinner );
+            if (StringUtil.HasText(Spinner))
+                Js.AppendFormat(",spinner:'{0}'", Spinner);
 
-            if ( StringUtil.HasText ( TabTemplate ) )
-                Js.AppendFormat ( ",tabTemplate:\"{0}\"" , TabTemplate );
+            if (StringUtil.HasText(TabTemplate))
+                Js.AppendFormat(",tabTemplate:\"{0}\"", TabTemplate);
 
-            if ( StringUtil.HasText ( onSelect ) )
-                Js.AppendFormat ( ",select:{0}" , onSelect );
+            if (StringUtil.HasText(onSelect))
+                Js.AppendFormat(",select:{0}", onSelect);
 
-            if ( StringUtil.HasText ( onLoad ) )
-                Js.AppendFormat ( ",load:{0}" , onLoad );
+            if (StringUtil.HasText(onLoad))
+                Js.AppendFormat(",load:{0}", onLoad);
 
-            if ( StringUtil.HasText ( onShow ) )
-                Js.AppendFormat ( ",show:{0}" , onShow );
+            if (StringUtil.HasText(onShow))
+                Js.AppendFormat(",show:{0}", onShow);
 
-            if ( StringUtil.HasText ( onAdd ) )
-                Js.AppendFormat ( ",add:{0}" , onAdd );
+            if (StringUtil.HasText(onAdd))
+                Js.AppendFormat(",add:{0}", onAdd);
 
-            if ( StringUtil.HasText ( onRemove ) )
-                Js.AppendFormat ( ",remove:{0}" , onRemove );
+            if (StringUtil.HasText(onRemove))
+                Js.AppendFormat(",remove:{0}", onRemove);
 
-            if ( StringUtil.HasText ( onEnable ) )
-                Js.AppendFormat ( ",enable:{0}" , onEnable );
+            if (StringUtil.HasText(onEnable))
+                Js.AppendFormat(",enable:{0}", onEnable);
 
-            if ( StringUtil.HasText ( onDisable ) )
-                Js.AppendFormat ( ",disable:{0}" , onDisable );
+            if (StringUtil.HasText(onDisable))
+                Js.AppendFormat(",disable:{0}", onDisable);
 
-            Js.Append ( "})" );
+            Js.Append("})");
 
-            if ( Sortable )
-                Js.AppendFormat ( ".find('.ui-tabs-nav').sortable({0})" , Vertical ? "{axis:'y'}" : "{axis:'x'}" );
+            if (Sortable)
+                Js.AppendFormat(".find('.ui-tabs-nav').sortable({0})", Vertical ? "{axis:'y'}" : "{axis:'x'}");
 
-            if ( Vertical )
+            if (Vertical)
             {
-                Js.Append ( ".addClass('ui-tabs-vertical ui-helper-clearfix');" );
-                Js.AppendFormat ( "$('{0} li').removeClass('ui-corner-top').addClass('ui-corner-left');" , Selector );
+                Js.Append(".addClass('ui-tabs-vertical ui-helper-clearfix');");
+                Js.AppendFormat("$('{0} li').removeClass('ui-corner-top').addClass('ui-corner-left');", Selector);
             }
 
-            Js.Append ( "});" );
+            Js.Append("});");
+        }
+
+        protected override void Render(HtmlTextWriter writer)
+        {
+            base.Render(writer);
+
+            if (StringUtil.HasText(Cookie))
+                ClientScriptProxy.Current.RegisterJsResource(writer, "Kiss.Web.jQuery.cookie.js");
         }
     }
 }
