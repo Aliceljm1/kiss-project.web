@@ -930,6 +930,8 @@
 		if (opts.ajax) {
 			if (!opts.url)
 				opts.url = $this.attr('action') || window.location.toString();
+            if(opts.url && opts.url.indexOf('#') != -1)
+                opts.url = opts.url.substr(0, opts.url.indexOf('#'));
 			if (opts.submitFunc == null && !opts.url) {
 				alert('url不能为空'); return;
 			}
