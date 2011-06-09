@@ -87,7 +87,7 @@
                 var index = path.indexOf('.');
                 if (index != -1)
                     path = '1' + path.substr(index);
-
+                                
                 window.location = path + jQuery.query.set('sort', column);
             });
         };
