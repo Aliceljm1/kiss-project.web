@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
 using System.Web;
 using System.Web.UI;
 using Kiss.Utils;
@@ -41,9 +40,20 @@ namespace Kiss.Web.Controls
         /// </summary>
         public bool UseCustomSettings { get; set; }
 
-        #region override
+        /// <summary>
+        /// set to true to render with template engine
+        /// </summary>
+        public bool Templated { get; set; }
 
         protected override void Render(HtmlTextWriter writer)
+        {
+            if (Templated)
+                writer.Write(Util.Render((w) => { RenderHtml(w); }));
+            else
+                RenderHtml(writer);
+        }
+
+        private void RenderHtml(HtmlTextWriter writer)
         {
             writer.WriteLine("<head>");
             if (!UseCustomSettings)
@@ -69,8 +79,6 @@ namespace Kiss.Web.Controls
 
             writer.Write("</head>");
         }
-
-        #endregion
 
         #region Render Methods
 
@@ -196,16 +204,6 @@ namespace Kiss.Web.Controls
         protected virtual void RenderTitle(ISite site, HtmlTextWriter writer)
         {
             string title = Title ?? "$!jc.navigation.Title - $!jc.site.title";
-
-            if (!string.IsNullOrEmpty(title) && title.Contains("$"))
-            {
-                ITemplateEngine te = ServiceLocator.Instance.Resolve<ITemplateEngine>();
-                using (StringWriter sw = new StringWriter())
-                {
-                    te.Process(JContext.Current.ViewData, "title", sw, title);
-                    title = sw.GetStringBuilder().ToString();
-                }
-            }
 
             if (StringUtil.HasText(title))
                 writer.WriteLine("<title>{0}</title>", title);
