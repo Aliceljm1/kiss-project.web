@@ -62,22 +62,23 @@
 
         // sort
         var init_sort = function () {
-            if (!settings.sortablecolumns) return;
-            var columns = settings.sortablecolumns.split(',');
-            if (columns.length == 0)
-                return;
+            if (settings.sortablecolumns && typeof settings.sortablecolumns == 'string') {
+                var columns = settings.sortablecolumns.split(',');
 
-            jQuery.each(columns, function (i, v) {
-                var id = jQuery.trim(v);
-                if (id) $('thead tr th#' + id, $this).addClass('sortable');
-            });
+                jQuery.each(columns, function (i, v) {
+                    var id = jQuery.trim(v);
+                    if (id) $("thead tr [id='" + id + "']", $this).addClass('sortable');
+                });
+            }
+
+            if (!$.query) return;
 
             var asc = true;
             var sort = jQuery.query.get('sort');
-            if (sort) {
+            if (sort && typeof sort == 'string') {
                 asc = (sort.indexOf('-') == -1);
                 if (!asc) sort = sort.substr(1);
-                if (sort) $('thead [id=' + sort + ']', $this).addClass(asc ? 'asc' : 'desc');
+                if (sort) $("thead [id='" + sort + "']", $this).addClass(asc ? 'asc' : 'desc');
             }
 
             $('thead .sortable', $this).click(function () {
@@ -87,7 +88,7 @@
                 var index = path.indexOf('.');
                 if (index != -1)
                     path = '1' + path.substr(index);
-                                
+
                 window.location = path + jQuery.query.set('sort', column);
             });
         };
