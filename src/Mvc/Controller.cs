@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
 using Kiss.Query;
@@ -38,6 +39,70 @@ namespace Kiss.Web.Mvc
                 return _logger;
             }
         }
+
+        #region events
+
+        public class BeforeActionExecuteEventArgs : EventArgs
+        {
+            public static readonly new BeforeActionExecuteEventArgs Empty = new BeforeActionExecuteEventArgs();
+
+            public JContext JContext { get; private set; }
+            public object ReturnValue { get; set; }
+            public bool PreventDefault { get; set; }
+
+            public BeforeActionExecuteEventArgs()
+            {
+            }
+
+            public BeforeActionExecuteEventArgs(JContext jc)
+            {
+                JContext = jc;
+            }
+        }
+
+        public event EventHandler<BeforeActionExecuteEventArgs> BeforeActionExecute;
+
+        public virtual void OnBeforeActionExecute(BeforeActionExecuteEventArgs e)
+        {
+            EventHandler<BeforeActionExecuteEventArgs> handler = BeforeActionExecute;
+
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public class AfterActionExecuteEventArgs : EventArgs
+        {
+            public static readonly new AfterActionExecuteEventArgs Empty = new AfterActionExecuteEventArgs();
+
+            public JContext JContext { get; private set; }
+            public object Result { get; private set; }
+
+            public AfterActionExecuteEventArgs()
+            {
+            }
+
+            public AfterActionExecuteEventArgs(JContext jc, object result)
+            {
+                JContext = jc;
+                Result = result;
+            }
+        }
+
+        public event EventHandler<AfterActionExecuteEventArgs> AfterActionExecute;
+
+        public virtual void OnAfterActionExecute(object result)
+        {
+            EventHandler<AfterActionExecuteEventArgs> handler = AfterActionExecute;
+
+            if (handler != null)
+            {
+                handler(this, new AfterActionExecuteEventArgs(jc, result));
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// paging list

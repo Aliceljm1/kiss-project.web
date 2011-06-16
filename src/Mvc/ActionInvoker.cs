@@ -57,22 +57,37 @@ namespace Kiss.Web.Mvc
                 }
 
             execute:
+
+                // before execute action
+                Controller.BeforeActionExecuteEventArgs e = new Controller.BeforeActionExecuteEventArgs(jc);
+                jc.Controller.OnBeforeActionExecute(e);
+                if (e.PreventDefault)
+                {
+                    ret = e.ReturnValue;
+                }
+
                 if (jc.IsPost)
                 {
                     // set rendercontent to false before invoke action
                     jc.RenderContent = false;
 
-                    if (mi.GetParameters().Length == 1)
-                        ret = mi.Invoke(jc.Controller, new object[] { jc.Context.Request.Form });
-                    else
-                        ret = mi.Invoke(jc.Controller, null);
+                    if (!e.PreventDefault)
+                    {
+                        if (mi.GetParameters().Length == 1)
+                            ret = mi.Invoke(jc.Controller, new object[] { jc.Context.Request.Form });
+                        else
+                            ret = mi.Invoke(jc.Controller, null);
+                    }
 
                     if (ret != null && !jc.RenderContent)
                         jc.Context.Response.Write(new JavaScriptSerializer().Serialize(ret));
                 }
                 else
                 {
-                    ret = mi.Invoke(jc.Controller, null);
+                    if (!e.PreventDefault)
+                    {
+                        ret = mi.Invoke(jc.Controller, null);
+                    }
 
                     if (ret != null && ret is ActionResult)
                     {
@@ -80,6 +95,9 @@ namespace Kiss.Web.Mvc
                         actionResult.ExecuteResult(jc);
                     }
                 }
+
+                // after execute action
+                jc.Controller.OnAfterActionExecute(ret);
             }
             catch (ThreadAbortException) { }// ignore this exception
             catch (Exception ex)
