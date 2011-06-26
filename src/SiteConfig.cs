@@ -94,8 +94,6 @@ namespace Kiss.Web
 
         #endregion
 
-        private ExtendedAttributes _ext = new ExtendedAttributes();
-
         protected override void LoadValuesFromConfigurationXml(XmlNode node)
         {
             base.LoadValuesFromConfigurationXml(node);
@@ -103,25 +101,12 @@ namespace Kiss.Web
             ErrorPage = string.Empty;
             XmlNode error_node = node.SelectSingleNode("errorPage");
             if (error_node != null)
-                ErrorPage = error_node.Value;
-
-            foreach (XmlAttribute attr in node.Attributes)
-            {
-                _ext.SetExtendedAttribute(attr.Name, attr.Value);
-            }
+                ErrorPage = error_node.Value;            
         }
 
         public string Authority
         {
             get { return string.Empty; }
-        }
-
-        public string this[string key]
-        {
-            get
-            {
-                return _ext.GetExtendedAttribute(key);
-            }
         }
 
         public List<DictSchema> GetSchema(string type)
