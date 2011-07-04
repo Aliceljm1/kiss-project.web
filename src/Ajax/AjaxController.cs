@@ -102,7 +102,7 @@ namespace Kiss.Web.Ajax
                         ajaxEx = m.Exception;
 
                     if (ajaxEx != null)
-                        result = new Kiss.Json.JavaScriptSerializer().DeserializeObject("{ \"" + AJAX_EXCEPTION_UNID + "\": { \"action\":\"" + ajaxEx.Action + "\", \"parameter\":\"" + ajaxEx.Parameter + "\" }}");
+                        result = new { AJAX_EXCEPTION_UNID = new { action = ajaxEx.Action, parameter = ajaxEx.Parameter } };
                     else
                         result = null;
                 }

@@ -28,7 +28,7 @@ namespace Kiss.Web.Ajax
             CacheMinutes = -1;
             Type = AjaxMethodType.Post;
             OnExceptionAction = AjaxServerExceptionAction.JSEval;
-            OnExceptionParameter = "alert('error')";
+            OnExceptionParameter = "alert('Error！')";
         }
     }
 
