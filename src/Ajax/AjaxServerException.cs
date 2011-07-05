@@ -8,7 +8,7 @@
 
         public object ToJson()
         {
-            return new { __AjaxException = new { action = Action, parameter = Parameter } };
+            return new { __AjaxException = new { action = Action.ToString(), parameter = Parameter } };
         }
     }
 

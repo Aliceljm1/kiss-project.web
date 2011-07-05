@@ -830,7 +830,7 @@
                 r =  data;
             }
             if (r != null && r.__AjaxException) {
-                r = handleException(result);
+                r = handleException(r);
             }
 			if (opts.onSuccess && $.isFunction(opts.onSuccess)){                
 				opts.onSuccess.apply($this, [r, status]);
