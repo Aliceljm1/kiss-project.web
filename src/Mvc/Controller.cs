@@ -46,18 +46,9 @@ namespace Kiss.Web.Mvc
         {
             public static readonly new BeforeActionExecuteEventArgs Empty = new BeforeActionExecuteEventArgs();
 
-            public JContext JContext { get; private set; }
+            public JContext JContext { get; set; }
             public object ReturnValue { get; set; }
             public bool PreventDefault { get; set; }
-
-            public BeforeActionExecuteEventArgs()
-            {
-            }
-
-            public BeforeActionExecuteEventArgs(JContext jc)
-            {
-                JContext = jc;
-            }
         }
 
         public event EventHandler<BeforeActionExecuteEventArgs> BeforeActionExecute;
@@ -76,18 +67,8 @@ namespace Kiss.Web.Mvc
         {
             public static readonly new AfterActionExecuteEventArgs Empty = new AfterActionExecuteEventArgs();
 
-            public JContext JContext { get; private set; }
-            public object Result { get; private set; }
-
-            public AfterActionExecuteEventArgs()
-            {
-            }
-
-            public AfterActionExecuteEventArgs(JContext jc, object result)
-            {
-                JContext = jc;
-                Result = result;
-            }
+            public JContext JContext { get; set; }
+            public object Result { get; set; }
         }
 
         public event EventHandler<AfterActionExecuteEventArgs> AfterActionExecute;
@@ -98,7 +79,7 @@ namespace Kiss.Web.Mvc
 
             if (handler != null)
             {
-                handler(this, new AfterActionExecuteEventArgs(jc, result));
+                handler(this, new AfterActionExecuteEventArgs() { JContext = jc, Result = result });
             }
         }
 

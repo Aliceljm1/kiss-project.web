@@ -59,7 +59,7 @@ namespace Kiss.Web.Mvc
             execute:
 
                 // before execute action
-                Controller.BeforeActionExecuteEventArgs e = new Controller.BeforeActionExecuteEventArgs(jc);
+                Controller.BeforeActionExecuteEventArgs e = new Controller.BeforeActionExecuteEventArgs() { JContext = jc };
                 jc.Controller.OnBeforeActionExecute(e);
                 if (e.PreventDefault)
                 {

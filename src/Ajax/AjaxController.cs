@@ -8,15 +8,50 @@ using Kiss.Web.Utils;
 namespace Kiss.Web.Ajax
 {
     [Controller("_ajax_")]
-    class AjaxController : Controller
+    public sealed class AjaxController : Controller
     {
         #region fields
 
         public const string CLASS_ID_PARAM = "classId";
         public const string METHOD_NAME_PARAM = "methodName";
         public const string METHOD_ARGS_PARAM = "methodArgs";
-        public const string QUERYSTRING = "querystring";
         public const string JSONP = "jsonp";
+
+        #endregion
+
+        #region events
+
+        public class BeforeExecuteEventArgs : BeforeActionExecuteEventArgs
+        {
+            public static readonly new BeforeExecuteEventArgs Empty = new BeforeExecuteEventArgs();
+
+            public string TypeName { get; set; }
+            public string MethodName { get; set; }
+        }
+
+        public static event EventHandler<BeforeExecuteEventArgs> BeforeExecute;
+
+        public void OnBeforeExecute(BeforeExecuteEventArgs e)
+        {
+            EventHandler<BeforeExecuteEventArgs> handler = BeforeExecute;
+
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public static event EventHandler<AfterActionExecuteEventArgs> AfterExecute;
+
+        public void OnAfterExecute(object result)
+        {
+            EventHandler<AfterActionExecuteEventArgs> handler = AfterExecute;
+
+            if (handler != null)
+            {
+                handler(this, new AfterActionExecuteEventArgs() { JContext = jc, Result = result });
+            }
+        }
 
         #endregion
 
@@ -29,7 +64,7 @@ namespace Kiss.Web.Ajax
             jc.IsAjaxRequest = true;
 
             // get querystring
-            string qs = context.Request.Params[QUERYSTRING];
+            string qs = context.Request.Params["querystring"];
             if (StringUtil.HasText(qs))
             {
                 qs = qs.TrimStart('?');
@@ -64,8 +99,8 @@ namespace Kiss.Web.Ajax
             string jsonp = context.Request.Params[JSONP];
 
             object result;
-
             int cacheMinutes = -1;
+
             if (string.IsNullOrEmpty(classId) || string.IsNullOrEmpty(methodName))
             {
                 result = "null";
@@ -87,6 +122,15 @@ namespace Kiss.Web.Ajax
                     else if (StringUtil.HasText(m.CacheTest))
                         cacheMinutes = methodJsonArgs.Equals(m.CacheTest) ? cacheMinutes : -1;
 
+                    // before execute
+                    BeforeExecuteEventArgs e = new BeforeExecuteEventArgs() { JContext = jc, TypeName = c.Key, MethodName = m.MethodName };
+                    OnBeforeExecute(e);
+                    if (e.PreventDefault)
+                    {
+                        result = e.ReturnValue;
+                        goto response;
+                    }
+
                     if (c.Type != null)
                         result = m.Invoke(c.Type, methodJsonArgs);
                     else
@@ -106,6 +150,12 @@ namespace Kiss.Web.Ajax
                         result = null;
                 }
             }
+
+            goto response;
+
+        response:
+
+            OnAfterExecute(result);
 
             ResponseUtil.OutputJson(context.Response, result, cacheMinutes, jsonp);
             ContentType = context.Response.ContentType;
