@@ -799,6 +799,22 @@
 				tip.hide();
 		};
 
+        var handleException = function(result) {
+            var exc = result.__AjaxException;
+            if (exc.action == "JSMethod") {
+                result = null;
+                eval(exc.parameter + "()");
+            }
+            else if (exc.action == "JSEval") {
+                result = null;
+                eval(exc.parameter);
+            }
+            else if (exc.action == "returnValue") {
+                result = eval(exc.parameter);
+            }
+            return result;
+        };
+
 		var onSuccess = function (data, status) {
 			$.fn.gform.working = false;
 			var success = $('.success', $this);
@@ -806,13 +822,17 @@
 				_tip.hide();
 			else
 				updateTips(success.html());
-			if (opts.onSuccess && $.isFunction(opts.onSuccess)){
-                var r;
-                try {
-                    r = jQuery.parseJSON(data);
-                } catch (e) {
-                    r =  data;
-                }
+
+            var r;
+            try {
+                r = jQuery.parseJSON(data);
+            } catch (e) {
+                r =  data;
+            }
+            if (r != null && r.__AjaxException) {
+                r = handleException(result);
+            }
+			if (opts.onSuccess && $.isFunction(opts.onSuccess)){                
 				opts.onSuccess.apply($this, [r, status]);
             }
 		};
