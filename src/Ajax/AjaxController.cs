@@ -15,7 +15,6 @@ namespace Kiss.Web.Ajax
         public const string CLASS_ID_PARAM = "classId";
         public const string METHOD_NAME_PARAM = "methodName";
         public const string METHOD_ARGS_PARAM = "methodArgs";
-        public const string AJAX_EXCEPTION_UNID = "__AjaxException";
         public const string QUERYSTRING = "querystring";
         public const string JSONP = "jsonp";
 
@@ -102,7 +101,7 @@ namespace Kiss.Web.Ajax
                         ajaxEx = m.Exception;
 
                     if (ajaxEx != null)
-                        result = new { AJAX_EXCEPTION_UNID = new { action = ajaxEx.Action, parameter = ajaxEx.Parameter } };
+                        result = ajaxEx.ToJson();
                     else
                         result = null;
                 }
