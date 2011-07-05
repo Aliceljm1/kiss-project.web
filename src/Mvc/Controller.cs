@@ -5,6 +5,8 @@ using System.Web;
 using Kiss.Query;
 using Kiss.Utils;
 using Kiss.Web.Controls;
+using Kiss.Web.Utils;
+using Kiss.Web.Ajax;
 
 namespace Kiss.Web.Mvc
 {
@@ -30,7 +32,7 @@ namespace Kiss.Web.Mvc
         protected NameValueCollection form { get { return httpContext.Request.Form; } }
 
         private ILogger _logger;
-        protected ILogger logger
+        protected internal ILogger logger
         {
             get
             {
@@ -186,5 +188,21 @@ namespace Kiss.Web.Mvc
         }
 
         protected string ContentType { get { return httpContext.Items["_ContentType_"] as string ?? httpContext.Response.ContentType; } set { httpContext.Items["_ContentType_"] = value; httpContext.Response.ContentType = value; } }
+
+        protected internal virtual void OnException(Exception ex)
+        {
+            if (!jc.RenderContent)
+            {
+                ResponseUtil.OutputJson(httpContext.Response,
+                    new AjaxServerException() { Action = AjaxServerExceptionAction.JSEval, Parameter = string.Format("alert('{0}');", ex.Message) }.ToJson());
+            }
+            else
+            {
+                throw new MvcException(string.Format("execute {0}.{1} failed. {2}",
+                           jc.Navigation.Id,
+                           jc.Navigation.Action,
+                           ex.Message), ex);
+            }
+        }
     }
 }

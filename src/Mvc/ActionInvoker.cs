@@ -105,12 +105,9 @@ namespace Kiss.Web.Mvc
                 if (ex is TargetInvocationException)
                     ex = ex.InnerException;
 
-                LogManager.GetLogger<ActionInvoker>().Error(ExceptionUtil.WriteException(ex));
+                jc.Controller.logger.Error(ExceptionUtil.WriteException(ex));
 
-                throw new MvcException(string.Format("execute controller: {0}'s method: {1} failed. {2}",
-                    jc.Controller.GetType().Name,
-                    mi.Name,
-                    ex.Message), ex);
+                jc.Controller.OnException(ex);
             }
 
             return true;
