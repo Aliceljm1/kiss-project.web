@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using Kiss.Json;
 using Kiss.Security;
 using Kiss.Utils;
+using Kiss.Web.Utils;
 
 namespace Kiss.Web.Mvc
 {
@@ -80,7 +80,7 @@ namespace Kiss.Web.Mvc
                     }
 
                     if (ret != null && !jc.RenderContent)
-                        jc.Context.Response.Write(new JavaScriptSerializer().Serialize(ret));
+                        ResponseUtil.OutputJson(jc.Context.Response, ret);
                 }
                 else
                 {
