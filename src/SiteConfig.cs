@@ -101,7 +101,7 @@ namespace Kiss.Web
             ErrorPage = string.Empty;
             XmlNode error_node = node.SelectSingleNode("errorPage");
             if (error_node != null)
-                ErrorPage = error_node.Value;            
+                ErrorPage = error_node.Value;
         }
 
         public string Authority
@@ -129,9 +129,9 @@ namespace Kiss.Web
         {
             get
             {
-                if (_virtualPath == null && HttpContext.Current != null)
+                if (_virtualPath == null)
                 {
-                    _virtualPath = StringUtil.CombinUrl(HttpContext.Current.Request.ApplicationPath, VP);
+                    _virtualPath = StringUtil.CombinUrl(HttpRuntime.AppDomainAppVirtualPath, VP);
 
                     if (_virtualPath != "/" && !_virtualPath.EndsWith("/"))
                         _virtualPath += "/";

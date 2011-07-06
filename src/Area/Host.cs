@@ -26,7 +26,7 @@ namespace Kiss.Web.Area
             if (string.IsNullOrEmpty(absolutePath))
                 return "/";
 
-            string appPath = HttpContext.Current.Request.ApplicationPath;
+            string appPath = HttpRuntime.AppDomainAppVirtualPath;
 
             if (appPath != "/")
             {
