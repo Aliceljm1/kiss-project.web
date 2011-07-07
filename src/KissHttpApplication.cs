@@ -55,28 +55,6 @@ namespace Kiss.Web
             EventBroker.Instance.Attach(this);
         }
 
-        protected void Application_End(object sender, EventArgs e)
-        {
-            string msg = "Application is End!";
-
-            string url = Application["SITE_URL"] as string;
-
-            if (url != null)
-            {
-                msg += string.Format("Request url:{0} to restart.", url);
-
-                try
-                {
-                    Kiss.Utils.Net.HttpRequest.GetPageText(url);
-                }
-                catch
-                {
-                }
-            }
-
-            LogManager.GetLogger<KissHttpApplication>().Info(msg);
-        }
-
         private void onBeginRequest(object sender, EventArgs e)
         {
             JContext jc = JContext.Current;
@@ -93,10 +71,6 @@ namespace Kiss.Web
             {
                 if (jc.Site != null)
                     context.Items["SITE_KEY"] = jc.Site.SiteKey;
-
-                // record site url
-                if (Application["SITE_URL"] == null)
-                    Application["SITE_URL"] = string.Format("{0}://{1}{2}", context.Request.Url.Scheme, context.Request.Url.Authority, context.Request.ApplicationPath);
 
                 if (!context.Response.IsRequestBeingRedirected)
                     context.Response.AddHeader("X-Powered-By", "TXTEK.COM");
