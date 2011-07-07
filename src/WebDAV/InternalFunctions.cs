@@ -219,51 +219,6 @@ namespace Kiss.Web.WebDAV
 
 
 		/// <summary>
-		/// Internal function for retrieving the NonPathPart since it is not available via the framework (internal property)
-		/// </summary>
-		/// <param name="httpApplication"></param>
-		/// <returns></returns>
-		internal static string GetNonPathPart(HttpApplication httpApplication)
-		{
-			if (httpApplication == null)
-				throw new ArgumentNullException("HttpApplication", InternalFunctions.GetResourceString("ArgumentNullException", "HttpApplication"));
-
-			string _completePath = httpApplication.Request.Url.AbsoluteUri;
-			string _relativePath = httpApplication.Request.Url.AbsolutePath;
-
-			return _completePath.Substring(0, _completePath.Length - _relativePath.Length);
-		}
-
-
-		/// <summary>
-		/// Internal function for obtaining a URIPath's relative path (Removes the NonPathPart)
-		/// </summary>
-		/// <param name="httpApplication"></param>
-		/// <param name="URIPath"></param>
-		/// <returns></returns>
-		internal static string GetRelativePath(HttpApplication httpApplication, string URIPath)
-		{
-			if (httpApplication == null)
-				throw new ArgumentNullException("HttpApplication", InternalFunctions.GetResourceString("ArgumentNullException", "HttpApplication"));
-
-			string _nonPathPart = GetNonPathPart(httpApplication);
-
-			string _retValue;
-			if (URIPath.ToLower().StartsWith(_nonPathPart.ToLower()))
-				_retValue = URIPath.Remove(0, _nonPathPart.Length);
-			else
-				_retValue = URIPath;
-
-			//Remove the application path
-			string _appPath = httpApplication.Request.ApplicationPath;
-			if (_retValue.ToLower().StartsWith(_appPath.ToLower()))
-				_retValue = _retValue.Remove(0, _appPath.Length);
-
-			return HttpUtility.UrlDecode(_retValue.Trim('/'));
-		}
-
-
-		/// <summary>
 		/// Retrieve the resource string
 		/// </summary>
 		/// <param name="resourceName"></param>

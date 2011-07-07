@@ -18,7 +18,8 @@ namespace Kiss.Web.WebDAV.BaseClasses
         private int __httpResponseCode = (int)ServerResponseCode.Ok;
         private int __internalStatusCode = (int)ServerResponseCode.Ok;
         private bool __fireOnProcessDavRequest = true;
-        protected static readonly ILogger logger = LogManager.GetLogger<DavMethodBase>();
+        private ILogger _logger;
+        protected ILogger logger { get { if (_logger == null) _logger = LogManager.GetLogger(GetType()); return _logger; } }
 
         /// <summary>
         /// Dav Method Framework Base Class
@@ -352,7 +353,7 @@ namespace Kiss.Web.WebDAV.BaseClasses
 
                 logger.Debug("DavMethodBase - RelativeRequestPath: " + this.HttpApplication.Request.FilePath);
 
-                return InternalFunctions.GetRelativePath(this.HttpApplication, this.HttpApplication.Request.FilePath);
+                return new Url(HttpApplication.Request.FilePath).Path;
             }
         }
 

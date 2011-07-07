@@ -167,7 +167,17 @@ namespace Kiss.Web.WebDAV
                 httpApplication.Response.StatusCode = _statusCode;
 
                 //Perhaps implement...
-                //httpApplication.Request.InputStream.Close();				
+                //httpApplication.Request.InputStream.Close();	
+
+                try
+                {
+                    httpApplication.Response.End();
+                }
+                catch (System.Threading.ThreadAbortException)
+                {
+                    //Do nothing... this is expected
+
+                }
             }
         }
 
