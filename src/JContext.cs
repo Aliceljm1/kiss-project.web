@@ -402,15 +402,7 @@ namespace Kiss.Web
             {
                 if (_user == null)
                 {
-                    if (IsAjaxRequest)
-                    {
-                        if (IsAuth)
-                            _user = new Principal(Context.User.Identity);
-                        else
-                            _user = null;
-                    }
-                    else
-                        _user = Context.User as Principal;
+                    _user = Context.User as Principal;
                 }
 
                 return _user;
@@ -441,10 +433,11 @@ namespace Kiss.Web
 
         #endregion
 
+        private bool? _isAjaxRequest;
         /// <summary>
         /// 当前请求是否是ajax
         /// </summary>
-        public bool IsAjaxRequest { get; internal set; }
+        public bool IsAjaxRequest { get { if (_isAjaxRequest == null) _isAjaxRequest = Context.Request.Headers["X-Requested-With"] == "XMLHttpRequest"; return _isAjaxRequest.Value; } internal set { _isAjaxRequest = value; } }
 
         public bool IsAsync { get; internal set; }
 
