@@ -41,6 +41,8 @@
             else {
                 $(this).attr("title", settings.selectTip);
             }
+
+            $this.trigger('gtable.row_selected', [$this.getSelectedRowIds()]);
         });
 
         if (headerCheckbox.attr('checked'))
@@ -57,6 +59,8 @@
                     });
                     $(this).toggleClass('selected');
                 }
+
+                $this.trigger('gtable.row_selected', [$this.getSelectedRowIds()]);
             });
         }
 
