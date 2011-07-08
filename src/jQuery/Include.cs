@@ -74,10 +74,13 @@ namespace Kiss.Web.Controls
 
                         foreach (var item in Directory.GetFiles(Path.GetDirectoryName(path), js.Substring(index + 1), SearchOption.AllDirectories))
                         {
+                            string relativePath = item.ToLower().Replace(path.ToLower(), string.Empty);
+                            relativePath = relativePath.Replace(Path.DirectorySeparatorChar, '/');
+
                             if (vp.StartsWith("~"))
-                                proxy.RegisterJs(writer, StringUtil.CombinUrl(ServerUtil.ResolveUrl(vp), Path.GetFileName(item)));
+                                proxy.RegisterJs(writer, StringUtil.CombinUrl(ServerUtil.ResolveUrl(vp), relativePath));
                             else
-                                proxy.RegisterJs(writer, jc.CombinUrl(StringUtil.CombinUrl(vp, Path.GetFileName(item))));
+                                proxy.RegisterJs(writer, jc.CombinUrl(StringUtil.CombinUrl(vp, relativePath)));
                         }
                     }
                     else
