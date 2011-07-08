@@ -19,6 +19,7 @@ namespace Kiss.Web.Area
         internal static readonly Dictionary<string, SiteConfig> Areas = new Dictionary<string, SiteConfig>();
         private static readonly ILogger logger = LogManager.GetLogger<AreaInitializer>();
         private CacheDependency _fileDependency;
+        private static readonly List<string> IGNORES_DIR = new List<string>() { "app_data", "bin" };
 
         #region IPluginInitializer Members
 
@@ -62,6 +63,11 @@ namespace Kiss.Web.Area
 
             foreach (var dir in Directory.GetDirectories(ServerUtil.MapPath("~")))
             {
+                string areaName = Path.GetFileName(dir).ToLowerInvariant();
+
+                if (IGNORES_DIR.Contains(areaName))
+                    continue;
+
                 // check if the dir is a valid area
                 string configfile = Path.Combine(dir, "area.config");
                 if (!File.Exists(configfile))
@@ -70,8 +76,6 @@ namespace Kiss.Web.Area
                 // load area config
                 XmlDocument xml = new XmlDocument();
                 xml.Load(configfile);
-
-                string areaName = Path.GetFileName(dir).ToLowerInvariant();
 
                 SiteConfig config = SiteConfig.GetConfig(xml.DocumentElement);
                 config.VP = "/" + areaName;
