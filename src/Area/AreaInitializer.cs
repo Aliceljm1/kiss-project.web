@@ -19,7 +19,7 @@ namespace Kiss.Web.Area
         internal static readonly Dictionary<string, SiteConfig> Areas = new Dictionary<string, SiteConfig>();
         private static readonly ILogger logger = LogManager.GetLogger<AreaInitializer>();
         private CacheDependency _fileDependency;
-        private static readonly List<string> IGNORES_DIR = new List<string>() { "app_data", "bin" };
+        private static readonly List<string> IGNORES_DIR = new List<string>() { "app_data", "bin", "app_browser", "app_code", "app_globalresources", "app_localresources", "app_themes", "app_webreferences" };
 
         #region IPluginInitializer Members
 
