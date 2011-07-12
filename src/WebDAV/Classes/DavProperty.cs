@@ -19,7 +19,9 @@ namespace Kiss.Web.WebDAV.Classes
 		/// <summary>
 		/// WebDav Property.
 		/// </summary>
-		public DavProperty() { }
+		public DavProperty() {
+			Namespace = "DAV:";
+		}
 
 		/// <summary>
 		/// WebDav Property.

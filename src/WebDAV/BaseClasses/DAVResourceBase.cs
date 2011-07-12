@@ -234,8 +234,13 @@ namespace Kiss.Web.WebDAV.BaseClasses
 				}
 				else if (this.CustomProperties[_propertyName] != null)
 					validProperties.Add(_property);
-				else
-					invalidProperties.Add(_property);
+                //else if (_propertyName == "save-profile-form-location")
+                //{
+                //    _property.Value = @"";
+                //    validProperties.Add(_property);
+                //}
+                else
+                    invalidProperties.Add(_property);
 			}
 		}
 

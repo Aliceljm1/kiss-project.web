@@ -174,95 +174,90 @@ namespace Kiss.Web.WebDAV
 
             if (!IsWebDAVRequest) return;
 
-            // Since we are processing all wildcards... 
-            // The web project will not load if we intercept its request.
-            // Therefore... if the User-Agent is the studio... do nothing
-            if (application.Request.Headers["User-Agent"] != null && !application.Request.Headers["User-Agent"].StartsWith("Microsoft-Visual-Studio.NET"))
+            //Check to see if the request needs to be authenticated
+            if ((application.Context.User == null || !application.Context.User.Identity.IsAuthenticated) && ModuleAuthentication != Authentication.None)
             {
-                //Check to see if the request needs to be authenticated
-                if (this.ModuleAuthentication != Authentication.None)
+                AuthenticationArgs _authArgs = new AuthenticationArgs(application.Request.Url, "", this.ModuleAuthentication);
+                AuthorizationArgs _authorizationArgs = new AuthorizationArgs(_authArgs);
+
+                //Fire the event
+                this.OnAuthenticateRequest(_authArgs);
+
+                if (_authArgs.ProcessAuthorization)
                 {
-                    AuthenticationArgs _authArgs = new AuthenticationArgs(application.Request.Url, "", this.ModuleAuthentication);
-                    AuthorizationArgs _authorizationArgs = new AuthorizationArgs(_authArgs);
+                    application.Context.Items["WebDAVModule_AuthArgs"] = _authArgs;
 
-                    //Fire the event
-                    this.OnAuthenticateRequest(_authArgs);
-
-                    if (_authArgs.ProcessAuthorization)
+                    string _authStr = application.Request.Headers["Authorization"];
+                    switch (this.ModuleAuthentication)
                     {
-                        application.Context.Items["WebDAVModule_AuthArgs"] = _authArgs;
+                        case Authentication.Basic:
+                            //By default the request is not authorized
+                            _requestAuthorized = false;
+                            if (!string.IsNullOrEmpty(_authStr) && _authStr.StartsWith("Basic"))
+                            {
+                                byte[] _decodedBytes = Convert.FromBase64String(_authStr.Substring(6));
+                                string[] _authInfo = System.Text.Encoding.ASCII.GetString(_decodedBytes).Split(':');
 
-                        string _authStr = application.Request.Headers["Authorization"];
-                        switch (this.ModuleAuthentication)
-                        {
-                            case Authentication.Basic:
-                                //By default the request is not authorized
-                                _requestAuthorized = false;
-                                if (!string.IsNullOrEmpty(_authStr) && _authStr.StartsWith("Basic"))
+                                BasicAuthorizationArgs _basicAuthArgs = new BasicAuthorizationArgs(_authInfo[0], _authInfo[1], _authArgs.Realm);
+
+                                //Set the authorization username
+                                _authorizationArgs.UserName = _basicAuthArgs.UserName;
+
+                                //Fire the event
+                                this.OnBasicAuthorization(_basicAuthArgs);
+
+                                if (_basicAuthArgs.Authorized)
                                 {
-                                    byte[] _decodedBytes = Convert.FromBase64String(_authStr.Substring(6));
-                                    string[] _authInfo = System.Text.Encoding.ASCII.GetString(_decodedBytes).Split(':');
-
-                                    BasicAuthorizationArgs _basicAuthArgs = new BasicAuthorizationArgs(_authInfo[0], _authInfo[1], _authArgs.Realm);
-
-                                    //Set the authorization username
-                                    _authorizationArgs.UserName = _basicAuthArgs.UserName;
-
-                                    //Fire the event
-                                    this.OnBasicAuthorization(_basicAuthArgs);
-
-                                    if (_basicAuthArgs.Authorized)
-                                    {
-                                        _requestAuthorized = true;
-                                        application.Context.User = new GenericPrincipal(new GenericIdentity(_basicAuthArgs.UserName, "Basic"), null);
-                                    }
-
-                                    _authorizationArgs.RequestAuthorized = _requestAuthorized;
-
-                                    //Fire the event
-                                    this.OnAuthorizationComplete(_authorizationArgs);
+                                    _requestAuthorized = true;
+                                    application.Context.User = new GenericPrincipal(new GenericIdentity(_basicAuthArgs.UserName, "Basic"), null);
                                 }
-                                break;
 
-                            case Authentication.Digest:
-                                //By default the request is not authorized
-                                _requestAuthorized = false;
-                                if (!string.IsNullOrEmpty(_authStr) && _authStr.StartsWith("Digest"))
+                                _authorizationArgs.RequestAuthorized = _requestAuthorized;
+
+                                //Fire the event
+                                this.OnAuthorizationComplete(_authorizationArgs);
+                            }
+                            break;
+
+                        case Authentication.Digest:
+                            //By default the request is not authorized
+                            _requestAuthorized = false;
+                            if (!string.IsNullOrEmpty(_authStr) && _authStr.StartsWith("Digest"))
+                            {
+                                _authStr = _authStr.Substring(7);
+
+                                SortedList<string, string> _authItems = new SortedList<string, string>();
+                                foreach (string _authItem in _authStr.Split(','))
                                 {
-                                    _authStr = _authStr.Substring(7);
+                                    string[] _authItemArray = _authItem.Split('=');
+                                    string _authKey = _authItemArray[0].Trim(new char[] { ' ', '\"' });
+                                    string _authValue = _authItemArray[1].Trim(new char[] { ' ', '\"' });
 
-                                    SortedList<string, string> _authItems = new SortedList<string, string>();
-                                    foreach (string _authItem in _authStr.Split(','))
-                                    {
-                                        string[] _authItemArray = _authItem.Split('=');
-                                        string _authKey = _authItemArray[0].Trim(new char[] { ' ', '\"' });
-                                        string _authValue = _authItemArray[1].Trim(new char[] { ' ', '\"' });
+                                    _authItems[_authKey] = _authValue;
+                                }
 
-                                        _authItems[_authKey] = _authValue;
-                                    }
+                                DigestAuthorizationArgs _digestAuthArgs = new DigestAuthorizationArgs(_authItems["username"], _authItems["realm"]);
 
-                                    DigestAuthorizationArgs _digestAuthArgs = new DigestAuthorizationArgs(_authItems["username"], _authItems["realm"]);
+                                //Set the authorization username
+                                _authorizationArgs.UserName = _digestAuthArgs.UserName;
 
-                                    //Set the authorization username
-                                    _authorizationArgs.UserName = _digestAuthArgs.UserName;
+                                //Fire the event
+                                this.OnDigestAuthorization(_digestAuthArgs);
 
-                                    //Fire the event
-                                    this.OnDigestAuthorization(_digestAuthArgs);
+                                //Validate password
+                                string _userInfo = String.Format("{0}:{1}:{2}", _authItems["username"], _authArgs.Realm, _digestAuthArgs.Password);
+                                string _hashedUserInfo = GetMD5HashBinHex(_userInfo);
 
-                                    //Validate password
-                                    string _userInfo = String.Format("{0}:{1}:{2}", _authItems["username"], _authArgs.Realm, _digestAuthArgs.Password);
-                                    string _hashedUserInfo = GetMD5HashBinHex(_userInfo);
+                                string _uriInfo = String.Format("{0}:{1}", application.Request.HttpMethod, _authItems["uri"]);
+                                string _hashedUriInfo = GetMD5HashBinHex(_uriInfo);
 
-                                    string _uriInfo = String.Format("{0}:{1}", application.Request.HttpMethod, _authItems["uri"]);
-                                    string _hashedUriInfo = GetMD5HashBinHex(_uriInfo);
-
-                                    string _nonceInfo = null;
-                                    if (_authItems.ContainsKey("qop"))
-                                    {
-                                        _nonceInfo = String.Format
-                                                        (
-                                                            "{0}:{1}:{2}:{3}:{4}:{5}",
-                                                            new object[] { 
+                                string _nonceInfo = null;
+                                if (_authItems.ContainsKey("qop"))
+                                {
+                                    _nonceInfo = String.Format
+                                                    (
+                                                        "{0}:{1}:{2}:{3}:{4}:{5}",
+                                                        new object[] { 
 																_hashedUserInfo, 
 																_authItems["nonce"], 
 																_authItems["nc"], 
@@ -270,55 +265,54 @@ namespace Kiss.Web.WebDAV
 																_authItems["qop"], 
 																_hashedUriInfo 
 															}
-                                                        );
-                                    }
-                                    else
-                                    {
-                                        _nonceInfo = String.Format
-                                                        (
-                                                            "{0}:{1}:{2}",
-                                                            _hashedUserInfo,
-                                                            _authItems["nonce"],
-                                                            _hashedUriInfo
-                                                        );
-                                    }
-
-                                    string _hashedNonceInfo = GetMD5HashBinHex(_nonceInfo);
-
-                                    bool _staleNonce = !this.IsValidNonce(_authItems["nonce"]);
-                                    application.Context.Items["WebDAVModule_DigestStaleNonce"] = _staleNonce;
-
-                                    if (_authItems["response"] == _hashedNonceInfo && !_staleNonce)
-                                    {
-                                        _requestAuthorized = true;
-                                        application.Context.User = new GenericPrincipal(new GenericIdentity(_digestAuthArgs.UserName, "Digest"), null);
-                                    }
-
-                                    _authorizationArgs.RequestAuthorized = _requestAuthorized;
-
-                                    //Fire the event
-                                    this.OnAuthorizationComplete(_authorizationArgs);
+                                                    );
                                 }
-                                break;
-                        }
+                                else
+                                {
+                                    _nonceInfo = String.Format
+                                                    (
+                                                        "{0}:{1}:{2}",
+                                                        _hashedUserInfo,
+                                                        _authItems["nonce"],
+                                                        _hashedUriInfo
+                                                    );
+                                }
+
+                                string _hashedNonceInfo = GetMD5HashBinHex(_nonceInfo);
+
+                                bool _staleNonce = !this.IsValidNonce(_authItems["nonce"]);
+                                application.Context.Items["WebDAVModule_DigestStaleNonce"] = _staleNonce;
+
+                                if (_authItems["response"] == _hashedNonceInfo && !_staleNonce)
+                                {
+                                    _requestAuthorized = true;
+                                    application.Context.User = new GenericPrincipal(new GenericIdentity(_digestAuthArgs.UserName, "Digest"), null);
+                                }
+
+                                _authorizationArgs.RequestAuthorized = _requestAuthorized;
+
+                                //Fire the event
+                                this.OnAuthorizationComplete(_authorizationArgs);
+                            }
+                            break;
                     }
                 }
+            }
+            
+            if (!_requestAuthorized)
+                DenyAccess(application);
+            else
+            {
+                WebDavProcessor.ProcessRequest(application);
 
-                if (!_requestAuthorized)
-                    DenyAccess(application);
-                else
-                {
-                    WebDavProcessor.ProcessRequest(application);
-
-                    //Fire the event
-                    this.OnRequestProcessed();
-                }
+                //Fire the event
+                this.OnRequestProcessed();
             }
         }
 
         void context_EndRequest(object sender, EventArgs e)
         {
-            if (!this.IsWebDAVRequest) return;
+            if (!this.IsWebDAVRequest) return;  
 
             HttpApplication _httpApp = (HttpApplication)sender;
             if (_httpApp.Response.StatusCode == 403)
@@ -357,6 +351,16 @@ namespace Kiss.Web.WebDAV
                             break;
                     }
                 }
+            }
+
+            try
+            {
+                _httpApp.Response.End();
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+                //Do nothing... this is expected
+
             }
         }
 
@@ -424,7 +428,7 @@ namespace Kiss.Web.WebDAV
 
         public void Init(ServiceLocator sl, ref PluginSetting setting)
         {
-            EventBroker broker = EventBroker.Instance;
+            EventBroker broker = EventBroker.Instance;            
             broker.AuthenticateRequest += context_AuthenticateRequest;
             broker.EndRequest += context_EndRequest;
             broker.BeginRequest += context_BeginRequest;
