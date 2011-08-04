@@ -146,6 +146,42 @@ namespace Kiss.Web.Controls
             base.OnInit(e);
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            ISite old_site = CurrentSite;
+
+            // temp change current site
+            JContext.Current.Site = _root ? SiteConfig.Instance : CurrentSite;
+
+            base.OnLoad(e);
+
+            JContext.Current.Site = old_site;
+        }
+
+        protected override void OnPreRender(EventArgs e)
+        {
+            ISite old_site = CurrentSite;
+
+            // temp change current site
+            JContext.Current.Site = _root ? SiteConfig.Instance : CurrentSite;
+
+            base.OnPreRender(e);
+
+            JContext.Current.Site = old_site;
+        }
+
+        protected override void Render(HtmlTextWriter writer)
+        {
+            ISite old_site = CurrentSite;
+
+            // temp change current site
+            JContext.Current.Site = _root ? SiteConfig.Instance : CurrentSite;
+
+            base.Render(writer);
+
+            JContext.Current.Site = old_site;
+        }
+
         /// <summary>
         /// Only allows <see cref="Content"/> controls to be added.
         /// </summary>
@@ -167,6 +203,11 @@ namespace Kiss.Web.Controls
 
         private void LoadMasterPage(string masterpagefile)
         {
+            ISite old_site = CurrentSite;
+
+            // temp change current site
+            JContext.Current.Site = _root ? SiteConfig.Instance : CurrentSite;
+
             Control masterPage = Page.LoadControl(masterpagefile);
 
             bool isRootMaster = false;
@@ -220,6 +261,8 @@ namespace Kiss.Web.Controls
 
             Controls.Add(masterPage);
             MoveContentsIntoRegions();
+
+            JContext.Current.Site = old_site;
         }
 
         private void FindRecur(IEnumerable ctrls)

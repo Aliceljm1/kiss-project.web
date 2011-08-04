@@ -63,6 +63,16 @@
                 $this.trigger('gtable.row_selected', [$this.getSelectedRowIds()]);
             });
         }
+        else {
+            columnCheckboxes.click(function () {
+                if (this.checked)
+                    $(this).parents('tr:first').addClass('selected');
+                else
+                    $(this).parents('tr:first').removeClass('selected');
+
+                $this.trigger('gtable.row_selected', [$this.getSelectedRowIds()]);
+            });
+        }
 
         // sort
         var init_sort = function () {

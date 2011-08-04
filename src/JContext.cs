@@ -696,6 +696,10 @@ namespace Kiss.Web
 
                 return _site;
             }
+            internal set
+            {
+                _site = value;
+            }
         }
 
         public IHost Host { get { return ServiceLocator.Instance.Resolve<IHost>(); } }

@@ -5,7 +5,7 @@ using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
-    public class Include : Control
+    public class Include : Control, IContextAwaredControl
     {
         public string Js { get; set; }
         public string Css { get; set; }
@@ -93,8 +93,11 @@ namespace Kiss.Web.Controls
                 }
                 else
                     proxy.RegisterJsResource(writer,
-                        string.Format("Kiss.Web.jQuery.{0}.js", js));
+                        string.Format("Kiss.Web.jQuery.{0}.js", js));                
             }
         }
+
+        private ISite _site;
+        public ISite CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
     }
 }
