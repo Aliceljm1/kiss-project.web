@@ -181,10 +181,15 @@ namespace Kiss.Web.Mvc
         /// <returns></returns>
         public bool hasMenu(string menu)
         {
+            return hasMenu(jc.Site.SiteKey, menu);
+        }
+
+        public bool hasMenu(string siteKey, string menu)
+        {
             if (jc.User == null)
                 return true;
 
-            return jc.User.HasPermission(string.Concat("menu:", jc.Site.SiteKey, "_", menu));
+            return jc.User.HasPermission(string.Concat("menu:", siteKey, "_", menu));
         }
 
         protected string ContentType { get { return httpContext.Items["_ContentType_"] as string ?? httpContext.Response.ContentType; } set { httpContext.Items["_ContentType_"] = value; httpContext.Response.ContentType = value; } }
