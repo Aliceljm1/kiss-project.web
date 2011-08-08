@@ -17,8 +17,6 @@ namespace Kiss.Web.Controls
             if (StringUtil.IsNullOrEmpty(Css))
                 return;
 
-            JContext jc = JContext.Current;
-
             ClientScriptProxy proxy = ClientScriptProxy.Current;
 
             foreach (string css in StringUtil.Split(Css, ",", true, true))
@@ -35,7 +33,7 @@ namespace Kiss.Web.Controls
                     if (css.StartsWith("~"))
                         proxy.RegisterCss(ServerUtil.ResolveUrl(css));
                     else
-                        proxy.RegisterCss(jc.CombinUrl(css));
+                        proxy.RegisterCss(StringUtil.CombinUrl(CurrentSite.VirtualPath, css));
                 }
                 else
                     proxy.RegisterCssResource(string.Format("Kiss.Web.jQuery.{0}.css", css));
@@ -47,8 +45,6 @@ namespace Kiss.Web.Controls
             base.Render(writer);
 
             if (StringUtil.IsNullOrEmpty(Js)) return;
-
-            JContext jc = JContext.Current;
 
             ClientScriptProxy proxy = ClientScriptProxy.Current;
 
@@ -80,7 +76,7 @@ namespace Kiss.Web.Controls
                             if (vp.StartsWith("~"))
                                 proxy.RegisterJs(writer, StringUtil.CombinUrl(ServerUtil.ResolveUrl(vp), relativePath));
                             else
-                                proxy.RegisterJs(writer, jc.CombinUrl(StringUtil.CombinUrl(vp, relativePath)));
+                                proxy.RegisterJs(writer, StringUtil.CombinUrl(CurrentSite.VirtualPath, StringUtil.CombinUrl(vp, relativePath)));
                         }
                     }
                     else
@@ -88,12 +84,12 @@ namespace Kiss.Web.Controls
                         if (js.StartsWith("~"))
                             proxy.RegisterJs(writer, ServerUtil.ResolveUrl(js));
                         else
-                            proxy.RegisterJs(writer, jc.CombinUrl(js));
+                            proxy.RegisterJs(writer, StringUtil.CombinUrl(CurrentSite.VirtualPath, js));
                     }
                 }
                 else
                     proxy.RegisterJsResource(writer,
-                        string.Format("Kiss.Web.jQuery.{0}.js", js));                
+                        string.Format("Kiss.Web.jQuery.{0}.js", js));
             }
         }
 
