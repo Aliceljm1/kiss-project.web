@@ -109,6 +109,62 @@
 
         init_sort();
 
+        // column resize
+        //get number of columns
+        var numberOfColumns = $this.first().find('thead TR TH.resizable').size();
+        if (numberOfColumns > 0) {
+
+            var resetTableSizes = function (change, columnIndex) {
+                //calculate new width       
+                var myWidth = $this.first().find(' TR TH.resizable').get(columnIndex).offsetWidth;
+                var newWidth = (myWidth + change);
+
+                // resize th
+                var th = $this.first().find('thead TR TH.resizable').eq(columnIndex);
+                th.css('width', newWidth);
+
+                var ix = $this.first().find('thead TR TH').index(th);
+
+                $this.find(' TR').each(function () {
+                    $(this).find('TD').eq(ix).css('width', newWidth);
+                });
+                resetSliderPositions();
+            };
+
+            var resetSliderPositions = function () {
+                var h = $this.first().height();
+                //put all sliders on the correct position
+                $this.first().find('thead TR TH.resizable').each(function (index) {
+                    var th = $(this);
+                    var newSliderPosition = th.offset().left + th.outerWidth();
+                    $this.first().parent().find('.draghandle:eq(' + index + ')').css({ left: newSliderPosition, height: h });
+                });
+            }
+
+            for (var i = 0; i < numberOfColumns; i++) {
+                $('<div class="draghandle"></div>').insertBefore($this.first()).data('ix', i).draggable({
+                    axis: "x",
+                    start: function () {
+                        $(this).toggleClass("dragged");
+                        //set the height of the draghandle to the current height of the table, to get the vertical ruler
+                        $(this).css({ height: $this.last().height() + 'px' });
+                    },
+                    stop: function (event, ui) {
+                        $(this).toggleClass("dragged");
+                        var oldPos = ($(this).data("draggable").originalPosition.left);
+                        var newPos = ui.position.left;
+                        var index = $(this).data("ix");
+                        resetTableSizes(newPos - oldPos, index);
+                    }
+                });
+            };
+
+            resetSliderPositions();
+
+            $(window).bind('resize', function () {
+                resetSliderPositions();
+            });
+        }
         return $this;
     };
 

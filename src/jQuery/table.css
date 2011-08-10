@@ -19,3 +19,7 @@
 /* jquery.treeTable.collapsible
  * ------------------------------------------------------------------------- */
 .treeTable tr td .expander { background-position: left center; background-repeat: no-repeat; cursor: pointer; padding: 0; zoom: 1; /* IE7 Hack */ }
+
+.draghandle.dragged { border-left: 1px solid #aaa; }
+.draghandle { position: absolute; z-index: 5; width: 5px; cursor: e-resize; }
+TH.resizable { border-right: 1px solid #ccc; }
