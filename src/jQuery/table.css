@@ -7,8 +7,11 @@
 .gtable tr.footer { background: none !important; }
 .gtable tr.footer:hover td { background: none !important; }
 
-.gtable thead tr .sortable { background-repeat: no-repeat; background-position: center right; cursor: pointer; }
-.gtable thead tr .asc, .gtable thead tr .desc { background-color: #8dbdd8; }
+.gtable thead tr .sortable { cursor: pointer; }
+.gtable thead tr .sortable div { position: relative; }
+.gtable thead tr .sortable span { right: 0; position: absolute; width: 16px; height: 16px; background-image: url(/_res.aspx?r=alF1ZXJ5LlVJLnRoZW1lcy5zbW9vdGhuZXNzLmltYWdlcy51aS1pY29uc18yMjIyMjJfMjU2eDI0MC5wbmc=&t=&z=image/png&su=1); background-position: -128px 0; }
+.gtable thead tr .sortable span.asc { background-position: 0 -16px; }
+.gtable thead tr .sortable span.desc { background-position: -64px -16px; }
 
 /* jQuery TreeTable Core 2.0 stylesheet
  *

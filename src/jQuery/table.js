@@ -85,25 +85,73 @@
                 });
             }
 
-            if (!$.query) return;
+            if(!settings.inline_sort && !$.query) return;
 
             var asc = true;
-            var sort = jQuery.query.get('sort');
-            if (sort && typeof sort == 'string') {
-                asc = (sort.indexOf('-') == -1);
-                if (!asc) sort = sort.substr(1);
-                if (sort) $("thead [id='" + sort + "']", $this).addClass(asc ? 'asc' : 'desc');
+
+            if( $.query ){
+                var sort = jQuery.query.get('sort');
+                if (sort && typeof sort == 'string') {
+                    asc = (sort.indexOf('-') == -1);
+                    if (!asc) sort = sort.substr(1);
+                    if (sort) $("thead [id='" + sort + "'] span", $this).addClass(asc ? 'asc' : 'desc');
+                }
             }
 
-            $('thead .sortable', $this).click(function () {
-                var column = $(this).attr('id');
-                if (asc) column = '-' + column;
-                var path = window.location.pathname;
-                var index = path.indexOf('.');
-                if (index != -1)
-                    path = '1' + path.substr(index);
+            $('thead .sortable', $this).each(function(){
+                var th = $(this),                
+                thIndex = th.index(),
+                inverse = true;
 
-                window.location = path + jQuery.query.set('sort', column);
+                th.html('<div>'+th.html()+'<span></span></div>');
+
+                var compare = th.attr('data_type') || 'string';
+
+                $(this).click(function () {
+                    if(settings.inline_sort){
+                        $this.last().find('td').filter(function(){
+                            return $(this).index() === thIndex;
+                        }).sortElements(function(a, b){
+                            var c;
+                            if($(a).attr('data_sort')){
+                                var d_a = $(a).attr('data_sort'), d_b = $(b).attr('data_sort');
+                                if( compare == 'date')
+                                    c = new Date(d_a) > new Date(d_b);
+                                else if( compare == 'num')
+                                    c = parseFloat(d_a) > parseFloat(d_b);
+                                else 
+                                    c = d_a > d_b;
+                            }
+                            else
+                                c = $.text([a]) > $.text([b]);
+                            return c ?
+                                inverse ? -1 : 1
+                                : inverse ? 1 : -1;
+                        }, function(){
+                            return this.parentNode; 
+                        });
+
+                        inverse = !inverse;
+
+                        $('thead .sortable span', $this).removeClass('desc').removeClass('asc');
+
+                        if( inverse ){
+                            $(this).find('span').addClass('asc');
+                        }else{
+                            $(this).find('span').addClass('desc');
+                        }
+                    }
+                    else{
+                        var column = $(this).attr('id');
+                        if (asc) column = '-' + column;
+                        var path = window.location.pathname;
+                        var index = path.indexOf('.');
+                        if (index != -1)
+                            path = '1' + path.substr(index);
+
+                        window.location = path + jQuery.query.set('sort', column);
+                    }
+                });
             });
         };
 
@@ -173,7 +221,8 @@
         selectTip: '全选',
         unselectTip: '全不选',
         clickToSelect: true,
-        sortablecolumns: null
+        sortablecolumns: null,
+        inline_sort:false,
     };
 
     $.fn.getSelectedRowIds = function () {
@@ -202,6 +251,52 @@ String.prototype.startWith = function (str) {
         return false;
     return true;
 };
+
+jQuery.fn.sortElements = (function(){
+    
+    var sort = [].sort;
+    
+    return function(comparator, getSortable) {
+        
+        getSortable = getSortable || function(){return this;};
+        
+        var placements = this.map(function(){
+            
+            var sortElement = getSortable.call(this),
+                parentNode = sortElement.parentNode,
+                
+                // Since the element itself will change position, we have
+                // to have some way of storing it's original position in
+                // the DOM. The easiest way is to have a 'flag' node:
+                nextSibling = parentNode.insertBefore(
+                    document.createTextNode(''),
+                    sortElement.nextSibling
+                );
+            
+            return function() {
+                
+                if (parentNode === this) {
+                    throw new Error(
+                        "You can't sort elements if any one is a descendant of another."
+                    );
+                }
+                
+                // Insert before flag:
+                parentNode.insertBefore(this, nextSibling);
+                // Remove flag:
+                parentNode.removeChild(nextSibling);
+                
+            };
+            
+        });
+       
+        return sort.call(this, comparator).each(function(i){
+            placements[i].call(getSortable.call(this));
+        });
+        
+    };
+    
+})();
 
 (function ($) {
     $.fn.edit = function (opts) {
