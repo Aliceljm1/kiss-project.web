@@ -87,16 +87,7 @@
 
             if (!settings.inline_sort && !$.query) return;
 
-            var asc = true;
-
-            if ($.query) {
-                var sort = jQuery.query.get('sort');
-                if (sort && typeof sort == 'string') {
-                    asc = (sort.indexOf('-') == -1);
-                    if (!asc) sort = sort.substr(1);
-                    if (sort) $("thead [id='" + sort + "'] span", $this).addClass(asc ? 'asc' : 'desc');
-                }
-            }
+            var asc = true;            
 
             $('thead .sortable', $this).each(function () {
                 var th = $(this),
@@ -153,6 +144,15 @@
                     }
                 });
             });
+
+            if ($.query) {
+                var sort = jQuery.query.get('sort');
+                if (sort && typeof sort == 'string') {
+                    asc = (sort.indexOf('-') == -1);
+                    if (!asc) sort = sort.substr(1);
+                    if (sort) $("thead [id='" + sort + "'] span", $this).addClass(asc ? 'asc' : 'desc');
+                }
+            }
         };
 
         init_sort();

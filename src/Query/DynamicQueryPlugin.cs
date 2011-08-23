@@ -111,7 +111,12 @@ namespace Kiss.Web.Query
                 q.AllowedOrderbyColumns.AddRange(StringUtil.CommaDelimitedListToStringArray(qc.AllowedOrderbyColumns));
 
             if (StringUtil.HasText(qc.Orderby))
-                q.AddOrderby(qc.Orderby.TrimStart('-'), !qc.Orderby.StartsWith("-"));
+            {
+                foreach (string oderby in StringUtil.CommaDelimitedListToStringArray(qc.Orderby))
+                {
+                    q.AddOrderby(oderby.TrimStart('-'), !oderby.StartsWith("-"));
+                }
+            }
 
             q.SetSerializerData(qc.GetSerializerData());
 
