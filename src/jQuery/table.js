@@ -233,11 +233,41 @@
         return ids;
     };
     $.fn.removeRow = function (rowId) {
+        var redirect = function () {
+            if ($('tbody tr', t).length == 0) {
+                var path = window.location.pathname;
+                var file = '';
+                var pre = '';
+                var ix_splash = path.lastIndexOf('/');
+                if (ix_splash == -1)
+                    file = path;
+                else {
+                    pre = path.substr(0, ix_splash + 1);
+                    file = path.substr(ix_splash + 1);
+                }
+
+                var page = '';
+                var extension = '';
+                var ix_dot = file.lastIndexOf('.');
+                if (ix_dot == -1)
+                    page = file;
+                else {
+                    page = file.substr(0, ix_dot + 1);
+                    extension = file.substr(ix_dot + 1);
+                }
+
+                window.location = pre + Math.max(1, parseInt(page, 10) - 1) + extension + window.location.search;
+            }
+            else {
+                window.location.reload();
+            }
+        };
+
         var t = this;
         if (rowId.constructor.toString().indexOf("Array") == -1)
-            $('tbody tr[id=' + decodeURIComponent(rowId) + ']', t).fadeOut(100, function () { $(this).remove(); });
+            $('tbody tr[id=' + decodeURIComponent(rowId) + ']', t).fadeOut(100, function () { $(this).remove(); redirect(); });
         else {
-            $.each(rowId, function (i, v) { $('tbody tr[id=' + decodeURIComponent(v) + ']', t).fadeOut(100, function () { $(this).remove(); }); });
+            $.each(rowId, function (i, v) { $('tbody tr[id=' + decodeURIComponent(v) + ']', t).fadeOut(100, function () { $(this).remove(); redirect(); }); });
         }
     };
 })(jQuery);

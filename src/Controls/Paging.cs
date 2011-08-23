@@ -238,7 +238,6 @@ namespace Kiss.Web.Controls
             return string.Format("<a href='{2}' {1}>{0}</a>", appendopts[0],
                 StringUtil.HasText(appendopts[1]) ? string.Format("class='{0}'", appendopts[1]) : string.Empty,
                FormatUrl(page_id));
-
         }
 
         private string _virtualPath;
