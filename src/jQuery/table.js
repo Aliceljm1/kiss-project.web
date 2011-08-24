@@ -87,7 +87,7 @@
 
             if (!settings.inline_sort && !$.query) return;
 
-            var asc = true;            
+            var asc = true;
 
             $('thead .sortable', $this).each(function () {
                 var th = $(this),
@@ -252,8 +252,8 @@
                 if (ix_dot == -1)
                     page = file;
                 else {
-                    page = file.substr(0, ix_dot + 1);
-                    extension = file.substr(ix_dot + 1);
+                    page = file.substr(0, ix_dot);
+                    extension = file.substr(ix_dot);
                 }
 
                 window.location = pre + Math.max(1, parseInt(page, 10) - 1) + extension + window.location.search;
@@ -267,7 +267,7 @@
         if (rowId.constructor.toString().indexOf("Array") == -1)
             $('tbody tr[id=' + decodeURIComponent(rowId) + ']', t).fadeOut(100, function () { $(this).remove(); redirect(); });
         else {
-            $.each(rowId, function (i, v) { $('tbody tr[id=' + decodeURIComponent(v) + ']', t).fadeOut(100, function () { $(this).remove(); redirect(); }); });
+            $.each(rowId, function (i, v) { $('tbody tr[id=' + decodeURIComponent(v) + ']', t).fadeOut(100, function () { $(this).remove(); if (i == rowId.length - 1) redirect(); }); });
         }
     };
 })(jQuery);
