@@ -393,7 +393,7 @@ namespace Kiss.Web.UrlMapping
             if (urlRequested.EndsWith("/"))
                 urlRequested += "default.aspx";
 
-            return urlRequested.Trim('/');
+            return HttpUtility.UrlDecode(urlRequested.Trim('/'));
         }
 
         private bool CheckExtension(string url)
