@@ -885,11 +885,15 @@
 					return false;
 				}
 				else {
-					if (fv <= min || fv >= max) {
+					if (fv < min ) {
 						ele.addClass('ui-state-error').focus();
-						updateTips(_getTitle(ele) + '必须大于' + min + ',小于' + max + '！');
+						updateTips(_getTitle(ele) + '必须大于等于' + min + '！');
 						return false;
-					}
+					} else if( fv > max ){
+                        ele.addClass('ui-state-error').focus();
+						updateTips(_getTitle(ele) + '必须小于等于' + max + '！');
+						return false;
+                    }
 				}
 				return true;
 			}

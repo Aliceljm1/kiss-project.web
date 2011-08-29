@@ -377,7 +377,7 @@ namespace Kiss.Web.UrlMapping
             return GetUrlRequested(rawUrl);
         }
 
-        private string GetUrlRequested(string url)
+        internal static string GetUrlRequested(string url)
         {
             string virtualPath = JContext.Current.Site.VirtualPath;
             string urlRequested = string.Empty;
@@ -483,10 +483,12 @@ namespace Kiss.Web.UrlMapping
 
             if (matched != null)
             {
-                jc.Navigation.Set(matched);
-                OnUrlMatched();
-                newPath = matched.Redirection;
-                return true;
+                if (jc.Navigation.Set(matched, urlRequested))
+                {
+                    OnUrlMatched();
+                    newPath = matched.Redirection;
+                    return true;
+                }
             }
 
             newPath = string.Empty;

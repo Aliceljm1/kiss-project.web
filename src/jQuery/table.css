@@ -1,6 +1,6 @@
 ﻿.gtable { font-size: 12px; margin: 0px; width: 100%; text-align: left; border-collapse: collapse; border-bottom: none; background-color: #FFF; }
 .gtable th { white-space: nowrap; font-size: 13px; font-weight: normal; padding: 6px 8px; background: #EFEFEF; border-top: 1px solid #FFF; color: #333; text-align: left; }
-.gtable td { padding: 8px; background: none; border-top: 1px solid #CCC; color: #666; border-bottom: none !important; vertical-align: middle; word-break:break-all; }
+.gtable td { padding: 8px; background: none; border-top: 1px solid #CCC; color: #666; border-bottom: none !important; vertical-align: middle; word-break:break-all; word-wrap:break-word; }
 .gtable tr.odd td { background-color: #E8EDFF; }
 .gtable tr.hover td { background-color: #D0DAFD; }
 .gtable tr.selected td { background-color: #FFF9DE; }

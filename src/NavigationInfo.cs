@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Kiss.Utils;
 using Kiss.Web.UrlMapping;
@@ -216,13 +217,90 @@ namespace Kiss.Web
             }
         }
 
-        public NavigationInfo Set(UrlMapping.UrlMappingItem item)
+        public bool Set(UrlMapping.UrlMappingItem item, string requesturl)
         {
-            OK = true;
             Url = item;
 
-            Index = item.Index;
-            SubIndex = item.SubIndex;
+            if (item.Index == null || item.SubIndex == null)
+            {
+                Dictionary<int, NavigationItem> menuItems = UrlMapping.UrlMappingModule.Instance.Provider.MenuItems;
+
+                if (item.Index == null)
+                {
+                    double max = 0;
+                    int maxi = 0, maxj = 0;
+                    foreach (int i in menuItems.Keys)
+                    {
+                        if (menuItems[i].Children != null)
+                        {
+                            foreach (int j in menuItems[i].Children.Keys)
+                            {
+                                NavigationItem ni = menuItems[i].Children[j];
+
+                                double d = StringUtil.Similarity(requesturl, ni.Url);
+                                if (d > max)
+                                {
+                                    max = d;
+
+                                    maxi = i;
+                                    maxj = j;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            double d = StringUtil.Similarity(requesturl, menuItems[i].Url);
+                            if (d > max)
+                            {
+                                max = d;
+
+                                maxi = i;
+                                maxj = -1;
+                            }
+                        }
+                    }
+
+                    if (max > 0)
+                    {
+                        Index = maxi;
+                        SubIndex = maxj;
+                    }
+                    else
+                        return false;
+                }
+                else
+                {
+                    Index = item.Index.Value;
+
+                    if (item.SubIndex == null)
+                    {
+                        int i = 0;
+                        double max = 0;
+                        int maxi = 0;
+                        foreach (NavigationItem ni in UrlMapping.UrlMappingModule.Instance.Provider.MenuItems[item.Index.Value].Children.Values)
+                        {
+                            double d = StringUtil.Similarity(requesturl, ni.Url);
+                            if (d > max)
+                            {
+                                max = d;
+                                maxi = i;
+                            }
+
+                            i++;
+                        }
+
+                        if (max > 0)
+                            SubIndex = maxi;
+                        else
+                            return false;
+                    }
+                }
+            }
+            else
+            {
+                Index = item.Index.Value;
+                SubIndex = item.SubIndex.Value;
+            }
             Title = item.Title;
             Desc = item.Desc;
             Name = item.Name;
@@ -232,7 +310,9 @@ namespace Kiss.Web
                 SetExtendedAttribute(key, Url[key]);
             }
 
-            return this;
+            OK = true;
+
+            return true;
         }
 
         public override string ToString()

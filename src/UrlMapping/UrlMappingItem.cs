@@ -48,9 +48,9 @@ namespace Kiss.Web.UrlMapping
 
         public string UrlTemplate { get; set; }
 
-        public int Index { get; set; }
+        public int? Index { get; set; }
 
-        public int SubIndex { get; set; }
+        public int? SubIndex { get; set; }
 
         /// <summary>
         /// 标识自己在菜单中的index

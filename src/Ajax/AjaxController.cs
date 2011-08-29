@@ -82,7 +82,10 @@ namespace Kiss.Web.Ajax
 
                     if (mapping != null)
                     {
-                        jc.Navigation = new NavigationInfo().Set(mapping);
+                        NavigationInfo navi = new NavigationInfo();
+                        navi.Set(mapping, UrlMappingModule.GetUrlRequested(context.Request.UrlReferrer.AbsolutePath));
+
+                        jc.Navigation = navi;
 
                         // fire url matched event
                         module.OnUrlMatched();

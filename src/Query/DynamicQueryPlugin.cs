@@ -178,7 +178,14 @@ namespace Kiss.Web.Query
 
             DateTime dt;
 
-            return DateTime.TryParse(str, out dt);
+            bool valid = DateTime.TryParse(str, out dt);
+
+            if (valid)
+            {
+                valid = dt < DateTime.MaxValue && dt > DateTime.MinValue;
+            }
+
+            return valid;
         }
 
         public int toInt(string str)

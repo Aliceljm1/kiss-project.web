@@ -151,7 +151,7 @@ namespace Kiss.Web.UrlMapping
 
             // remember the refresh time
             _latestRefresh = DateTime.Now;
-        }                
+        }
 
         #region IDisposable Members
 
@@ -271,8 +271,17 @@ namespace Kiss.Web.UrlMapping
                 item[attr.Name] = attr.Value;
             }
 
-            item.Index = index;
-            item.SubIndex = subIndex;
+
+            if (XmlUtil.GetStringAttribute(node, "index", string.Empty) == "?")
+                item.Index = null;
+            else
+                item.Index = index;
+
+            if (XmlUtil.GetStringAttribute(node, "subindex", string.Empty) == "?")
+                item.SubIndex = null;
+            else
+                item.SubIndex = subIndex;
+
             item.Title = XmlUtil.GetStringAttribute(node, "title", menuItem.Title);
             item.Desc = XmlUtil.GetStringAttribute(node, "desc", menuItem.Desc);
 
