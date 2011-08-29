@@ -385,12 +385,12 @@ namespace Kiss.Web
             return clone;
         }
 
-        public Url SetQueryParameter ( string key, int value )
+        public Url UpdateQuery ( string key, int value )
         {
-            return SetQueryParameter ( key, value.ToString ( ) );
+            return UpdateQuery ( key, value.ToString ( ) );
         }
 
-        public Url SetQueryParameter ( string key, string value )
+        public Url UpdateQuery ( string key, string value )
         {
             if ( query == null )
                 return AppendQuery ( key, value );
@@ -424,16 +424,16 @@ namespace Kiss.Web
             return AppendQuery ( key, value );
         }
 
-        public Url SetQueryParameter ( string keyValue )
+        public Url UpdateQuery ( string keyValue )
         {
             if ( query == null )
                 return AppendQuery ( keyValue );
 
             int eqIndex = keyValue.IndexOf ( '=' );
             if ( eqIndex >= 0 )
-                return SetQueryParameter ( keyValue.Substring ( 0, eqIndex ), keyValue.Substring ( eqIndex + 1 ) );
+                return UpdateQuery ( keyValue.Substring ( 0, eqIndex ), keyValue.Substring ( eqIndex + 1 ) );
             else
-                return SetQueryParameter ( keyValue, string.Empty );
+                return UpdateQuery ( keyValue, string.Empty );
         }
 
         public Url SetScheme ( string scheme )
@@ -534,7 +534,7 @@ namespace Kiss.Web
         {
             Url u = new Url ( this );
             foreach ( string key in queryString.AllKeys )
-                u = u.SetQueryParameter ( key, queryString[ key ] );
+                u = u.UpdateQuery ( key, queryString[ key ] );
             return u;
         }
 
@@ -542,7 +542,7 @@ namespace Kiss.Web
         {
             Url u = new Url ( this );
             foreach ( KeyValuePair<string,string> pair in queryString )
-                u = u.SetQueryParameter ( pair.Key, pair.Value );
+                u = u.UpdateQuery ( pair.Key, pair.Value );
             return u;
         }
 

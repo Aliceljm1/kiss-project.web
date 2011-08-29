@@ -136,12 +136,12 @@ namespace Kiss.Web.UrlMapping
             {
                 if (m.Value.Length == 2)
                 {
-                    s = s.Replace(m.Value, @"(?<_pre_>[/\-?a-zA-Z0-9_\.\u00a4-\uffe5+]*)");
+                    s = s.Replace(m.Value, @"(?<_pre_>[/\-~?a-zA-Z0-9_\.\u00a4-\uffe5+]*)");
                 }
                 else
                 {
                     string tokenName = m.Value.Substring(1, m.Value.Length - 2);
-                    s = s.Replace(m.Value, string.Format(@"(?<{0}>[\-?a-zA-Z0-9_\.\u00a4-\uffe5+]*)", tokenName));
+                    s = s.Replace(m.Value, string.Format(@"(?<{0}>[\-~?a-zA-Z0-9_\.\u00a4-\uffe5+]*)", tokenName));
                 }
             }
 

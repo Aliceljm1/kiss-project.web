@@ -97,7 +97,7 @@ namespace Kiss.Web.Controls
         /// <summary>
         /// This event is triggered after the content of a remote tab has been loaded.
         /// </summary>
-        public string onLoad { get; set; }
+        public string on_load { get; set; }
 
         /// <summary>
         /// This event is triggered when a tab is shown.
@@ -185,8 +185,8 @@ namespace Kiss.Web.Controls
             if (StringUtil.HasText(onSelect))
                 Js.AppendFormat(",select:{0}", onSelect);
 
-            if (StringUtil.HasText(onLoad))
-                Js.AppendFormat(",load:{0}", onLoad);
+            if (StringUtil.HasText(on_load))
+                Js.AppendFormat(",load:{0}", on_load);
 
             if (StringUtil.HasText(onShow))
                 Js.AppendFormat(",show:{0}", onShow);
