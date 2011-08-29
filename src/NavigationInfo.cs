@@ -277,7 +277,7 @@ namespace Kiss.Web
                         int i = 0;
                         double max = 0;
                         int maxi = 0;
-                        foreach (NavigationItem ni in UrlMapping.UrlMappingModule.Instance.Provider.MenuItems[item.Index.Value].Children.Values)
+                        foreach (NavigationItem ni in menuItems[item.Index.Value].Children.Values)
                         {
                             double d = StringUtil.Similarity(requesturl, ni.Url);
                             if (d > max)
