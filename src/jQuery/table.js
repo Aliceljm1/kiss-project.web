@@ -222,7 +222,7 @@
         unselectTip: '全不选',
         clickToSelect: true,
         sortablecolumns: null,
-        inline_sort: false
+        inline_sort: false        
     };
 
     $.fn.getSelectedRowIds = function () {
@@ -235,28 +235,7 @@
     $.fn.removeRow = function (rowId) {
         var redirect = function () {
             if ($('tbody tr', t).length == 0) {
-                var path = window.location.pathname;
-                var file = '';
-                var pre = '';
-                var ix_splash = path.lastIndexOf('/');
-                if (ix_splash == -1)
-                    file = path;
-                else {
-                    pre = path.substr(0, ix_splash + 1);
-                    file = path.substr(ix_splash + 1);
-                }
-
-                var page = '';
-                var extension = '';
-                var ix_dot = file.lastIndexOf('.');
-                if (ix_dot == -1)
-                    page = file;
-                else {
-                    page = file.substr(0, ix_dot);
-                    extension = file.substr(ix_dot);
-                }
-
-                window.location = pre + Math.max(1, parseInt(page, 10) - 1) + extension + window.location.search;
+                $.paging.goto('prev');
             }
             else {
                 window.location.reload();
@@ -445,5 +424,71 @@ jQuery.fn.sortElements = (function () {
         onDialogOpen: null,
         dblclick: true,
         sticky: true
+    };
+})(jQuery);
+
+
+/*
+分页js
+1，支持键盘的分页
+2，支持跳转到指定页码的api
+*/
+(function ($) {
+
+    $.paging = {
+        keyword: function () {
+            var focusInInput = false;
+
+            var navigation = function (event) {
+                if (window.event) event = window.event;
+
+                if (!focusInInput) {
+                    switch (event.keyCode ? event.keyCode : event.which ? event.which : null) {
+                        case 0x25:
+                            $.paging.goto('prev');
+                            break;
+                        case 0x27:
+                            $.paging.goto('next');
+                            break;
+                    }
+                }
+            };
+
+            $(':text,textarea,:file').live('focus', function () { focusInInput = true; }).live('blur', function () { focusInInput = false; });
+
+            document.onkeydown = navigation;
+        },
+        goto: function (p) {
+            var path = window.location.pathname;
+            var file = '';
+            var pre = '';
+            var ix_splash = path.lastIndexOf('/');
+            if (ix_splash == -1)
+                file = path;
+            else {
+                pre = path.substr(0, ix_splash + 1);
+                file = path.substr(ix_splash + 1);
+            }
+
+            var page = '';
+            var extension = '';
+            var ix_dot = file.lastIndexOf('.');
+            if (ix_dot == -1)
+                page = file;
+            else {
+                page = file.substr(0, ix_dot);
+                extension = file.substr(ix_dot);
+            }
+
+            var pi;
+            if (!isNaN(parseInt(p, 10)))
+                pi = parseInt(p, 10);
+            else if (p == 'prev')
+                pi = Math.max(1, parseInt(page) - 1);
+            else if (p == 'next')
+                pi = Math.min(1, parseInt(page) + 1);
+
+            window.location = pre + pi + extension + window.location.search;
+        }
     };
 })(jQuery);

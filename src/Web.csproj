@@ -246,7 +246,6 @@
     <EmbeddedResource Include="jQuery\form.css" />
     <EmbeddedResource Include="jQuery\form.js" />
     <EmbeddedResource Include="jQuery\json.js" />
-    <EmbeddedResource Include="jQuery\pagenavi.js" />
     <EmbeddedResource Include="jQuery\qs.js" />
     <EmbeddedResource Include="jQuery\swfobject.js" />
     <EmbeddedResource Include="jQuery\table.css" />

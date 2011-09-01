@@ -900,7 +900,8 @@
 
 			return true;
 		};
-		var checkRegexp = function (o) {			
+		var checkRegexp = function (o) {    
+            if ( o.val() == null || $.trim(o.val().toString()) == '') return true;			
 			var reg = o.attr('reg');
 			if (!reg)
 				return true;
@@ -913,10 +914,10 @@
 			return true;
 		};
 		var checkClasses = function (o) {			
+            if ( o.val() == null || $.trim(o.val().toString()) == '') return true;
 			var reg = null;
 			var cls = o.attr('class');
-			if (!cls) return true;
-            if ( o.val() == null || $.trim(o.val().toString()) == '') return true;
+			if (!cls) return true;            
 			$.each(cls.split(' '), function (i, v) {
 				if (!v) return true;
 				var r = $.fn.gform.commonregs[v];
@@ -933,6 +934,7 @@
 			return true;
 		};
 		var checkFunction = function (ele) {
+            if ( ele.val() == null || $.trim(ele.val().toString()) == '') return true; 
 			var func = ele.attr('func');
 			if (!func)
 				return true;
@@ -981,7 +983,7 @@
 		submitFunc: null,
 		autoAddRedStar: true,
 		focus_first_input:true,
-		enter_to_submit:true
+		enter_to_submit:false
 	};
 
 	$.fn.gform.commonregs = {

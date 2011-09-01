@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.UI;
@@ -15,11 +18,6 @@ namespace Kiss.Web.Controls
     public class Paging : Control
     {
         #region fields / props
-
-        /// <summary>
-        /// 页面扩展名（用于生成链接）
-        /// </summary>
-        public string Extension { get; set; }
 
         /// <summary>
         /// 查询条件
@@ -115,24 +113,14 @@ namespace Kiss.Web.Controls
         public string DataKey { get; set; }
 
         /// <summary>
-        /// 使用自定义的样式
-        /// </summary>
-        public bool UseCustomStyle { get; set; }
-
-        /// <summary>
-        /// 概要模板
+        /// 模板
         /// </summary>
         [
         Browsable(false),
         DefaultValue(null),
         PersistenceMode(PersistenceMode.InnerProperty)
         ]
-        public ITemplate SummaryTemplate { get; set; }
-
-        /// <summary>
-        /// 支持键盘分页
-        /// </summary>
-        public bool SupportKeyboard { get; set; }
+        public ITemplate Template { get; set; }
 
         #endregion
 
@@ -143,16 +131,11 @@ namespace Kiss.Web.Controls
             base.OnLoad(e);
 
             _isAjaxRequest = JContext.Current.IsAjaxRequest;
-
-            if (!UseCustomStyle && !_isAjaxRequest)
-                ClientScriptProxy.Current.RegisterCssBlock(".pagination { float: right; margin: 10px 10px 10px 0; } .pagination a { border: 1px solid #AAAAEE; color: #1155BB; text-decoration: none; } .pagination a:hover { background-color: transparent; text-decoration: underline; } .pagination a, .pagination span { display: block; float: left; margin-bottom: 5px; margin-right: 5px; padding: 0.3em 0.5em; } .pagination .current { background: #2266BB none repeat scroll 0 0; border: 1px solid #AAAAEE; color: #FFFFFF; } .pagination span.prev, .pagination span.next { background: #FFFFFF none repeat scroll 0 0; border-color: #999999; color: #999999; } ", "pagingcss");
         }
 
         protected override void Render(HtmlTextWriter writer)
         {
             base.Render(writer);
-
-            ClientScriptProxy.Current.RegisterJsResource(writer, "Kiss.Web.jQuery.pagenavi.js");
 
             if (QueryCondition == null)
                 QueryCondition = JContext.Current.GetViewData(DataKey ?? "q") as QueryCondition;
@@ -164,68 +147,147 @@ namespace Kiss.Web.Controls
 
                 DrawLinks(writer);
             }
-
-            ClientScriptProxy.Current.RegisterJsBlock(writer, "paging.keyboard", "$(function(){$('.pagination').pageNavi();});", true, true);
         }
 
         private void DrawLinks(HtmlTextWriter writer)
         {
-            StringBuilder txt = new StringBuilder();
-            int[] interval = getInterval;
-            var np = numPages;
-            if (np < 2)
-                return;
-
-            if (StringUtil.HasText(PrevText) && (QueryCondition.PageIndex > 0 || AlwaysShowPrev))
-                txt.Append(appendItem(QueryCondition.PageIndex - 1, new string[] { PrevText, "prev" }));
-
-            if (interval[0] > 0 && NumEdge > 0)
+            if (Template != null)
             {
-                var end = Math.Min(NumEdge, interval[0]);
-                for (int i = 0; i < end; i++)
+                ArrayList datasource = new ArrayList();
+
+                StringBuilder txt = new StringBuilder();
+                int[] interval = getInterval;
+                var np = numPages;
+                if (np < 2)
+                    return;
+
+                if (QueryCondition.PageIndex > 0 || AlwaysShowPrev)
+                    datasource.Add(new { pageindex = QueryCondition.PageIndex - 1, type = "prev", href = FormatUrl(QueryCondition.PageIndex - 1) });
+
+                if (interval[0] > 0 && NumEdge > 0)
+                {
+                    var end = Math.Min(NumEdge, interval[0]);
+                    for (int i = 0; i < end; i++)
+                    {
+                        datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i) });
+                    }
+                    if (NumEdge < interval[0])
+                        datasource.Add(new { type = "ellipsis" });
+                }
+
+                for (int i = interval[0]; i < interval[1]; i++)
+                {
+                    datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i) });
+                }
+
+                if (interval[1] < np && NumEdge > 0)
+                {
+                    if (np - NumEdge > interval[1])
+                    {
+                        datasource.Add(new { type = "ellipsis" });
+                    }
+
+                    var begin = Math.Max(np - NumEdge, interval[1]);
+                    for (int i = begin; i < np; i++)
+                    {
+                        datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i) });
+                    }
+                }
+
+                if (QueryCondition.PageIndex < np - 1 || AlwaysShowNext)
+                    datasource.Add(new { pageindex = QueryCondition.PageIndex + 1, type = "next", href = FormatUrl(QueryCondition.PageIndex + 1) });
+
+                Control ctrl = new Control() { };
+
+                Template.InstantiateIn(ctrl);
+
+                string content = string.Empty;
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (HtmlTextWriter htmlWriter = new HtmlTextWriter(new StreamWriter(ms)))
+                    {
+                        ctrl.RenderControl(htmlWriter);
+                        htmlWriter.Flush();
+                    }
+
+                    using (StreamReader rdr = new StreamReader(ms))
+                    {
+                        rdr.BaseStream.Position = 0;
+                        content = rdr.ReadToEnd();
+                    }
+                }
+
+                try
+                {
+                    ITemplateEngine te = ServiceLocator.Instance.Resolve<ITemplateEngine>();
+
+                    using (StringWriter sw = new StringWriter())
+                    {
+                        Dictionary<string, object> di = new Dictionary<string, object>(JContext.Current.ViewData);
+                        di["pagings"] = datasource;
+
+                        te.Process(di, string.Empty, sw, content);
+
+                        writer.Write(sw.GetStringBuilder().ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogManager.GetLogger<Paging>().Error(ex.Message);
+                    ExceptionUtil.WriteException(ex);
+                }
+            }
+            else
+            {
+                StringBuilder txt = new StringBuilder();
+                int[] interval = getInterval;
+                var np = numPages;
+                if (np < 2)
+                    return;
+
+                if (StringUtil.HasText(PrevText) && (QueryCondition.PageIndex > 0 || AlwaysShowPrev))
+                    txt.Append(appendItem(QueryCondition.PageIndex - 1, new string[] { PrevText, "prev" }));
+
+                if (interval[0] > 0 && NumEdge > 0)
+                {
+                    var end = Math.Min(NumEdge, interval[0]);
+                    for (int i = 0; i < end; i++)
+                    {
+                        txt.Append(appendItem(i, null));
+                    }
+                    if (NumEdge < interval[0])
+                        txt.Append("<span>...</span>");
+                }
+
+                for (int i = interval[0]; i < interval[1]; i++)
                 {
                     txt.Append(appendItem(i, null));
                 }
-                if (NumEdge < interval[0])
-                    txt.Append("<span>...</span>");
-            }
 
-            for (int i = interval[0]; i < interval[1]; i++)
-            {
-                txt.Append(appendItem(i, null));
-            }
-
-            if (interval[1] < np && NumEdge > 0)
-            {
-                if (np - NumEdge > interval[1])
+                if (interval[1] < np && NumEdge > 0)
                 {
-                    txt.Append("<span>...</span>");
+                    if (np - NumEdge > interval[1])
+                    {
+                        txt.Append("<span>...</span>");
+                    }
+
+                    var begin = Math.Max(np - NumEdge, interval[1]);
+                    for (int i = begin; i < np; i++)
+                    {
+                        txt.Append(appendItem(i, null));
+                    }
                 }
 
-                var begin = Math.Max(np - NumEdge, interval[1]);
-                for (int i = begin; i < np; i++)
-                {
-                    txt.Append(appendItem(i, null));
-                }
-            }
+                if (StringUtil.HasText(NextText) && (QueryCondition.PageIndex < np - 1 || AlwaysShowNext))
+                    txt.Append(appendItem(QueryCondition.PageIndex + 1, new string[] { NextText, "next" }));
 
-            if (StringUtil.HasText(NextText) && (QueryCondition.PageIndex < np - 1 || AlwaysShowNext))
-                txt.Append(appendItem(QueryCondition.PageIndex + 1, new string[] { NextText, "next" }));
-
-            if (!UseCustomStyle)
                 writer.Write("<div class='pagination'>");
 
-            if (SummaryTemplate != null)
-            {
-                Control t = new Control();
-                SummaryTemplate.InstantiateIn(t);
-                t.RenderControl(writer);
-            }
+                writer.Write(txt.ToString());
 
-            writer.Write(txt.ToString());
-
-            if (!UseCustomStyle)
                 writer.Write("</div>");
+            }
         }
 
         public string appendItem(int page_id, string[] appendopts)
@@ -238,17 +300,6 @@ namespace Kiss.Web.Controls
             return string.Format("<a href='{2}' {1}>{0}</a>", appendopts[0],
                 StringUtil.HasText(appendopts[1]) ? string.Format("class='{0}'", appendopts[1]) : string.Empty,
                FormatUrl(page_id));
-        }
-
-        private string _virtualPath;
-        protected string VirtualPath
-        {
-            get
-            {
-                if (_virtualPath == null)
-                    _virtualPath = JContext.Current.Site.VirtualPath;
-                return _virtualPath;
-            }
         }
 
         private string FormatUrl(int page_id)
@@ -264,21 +315,15 @@ namespace Kiss.Web.Controls
             }
             else
             {
-                if (StringUtil.HasText(Extension) && !Context.Request.Url.AbsolutePath.EndsWith(Extension))
-                    return string.Format("{0}/{1}{2}", Context.Request.Url.AbsolutePath, page_id + 1, Extension);
+                Web.Url url = new Url(HttpContext.Current.Request.Url.PathAndQuery);
 
-                //string url = StringUtil.CombinUrl( VirtualPath, HttpContext.Current.Request.Url.PathAndQuery );
+                int i = url.Path.LastIndexOf("/");
 
-                string url = HttpContext.Current.Request.Url.PathAndQuery;
-
-                int i = url.LastIndexOf("/");
-
-                int j = url.LastIndexOf("?");
                 return string.Format("{0}{1}{2}{3}",
-                    url.Substring(0, i + 1),
+                    url.Path.Substring(0, i + 1),
                     page_id + 1,
-                    Extension,
-                    (j == -1) ? string.Empty : url.Substring(j)
+                    url.Extension,
+                    string.IsNullOrEmpty(url.Query) ? string.Empty : "?" + url.Query
                   );
             }
         }
