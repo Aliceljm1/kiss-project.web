@@ -10,7 +10,7 @@ namespace Kiss.Web.Controls
         {
             JContext jc = JContext.Current;
             if (jc.User != null)
-                isSiteAdmin = JContext.Current.User.HasPermission("site.control_panel");
+                isSiteAdmin = jc.User.HasPermission("site.control_panel");
         }
 
         private bool isSiteAdmin = true;

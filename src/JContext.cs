@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Security.Principal;
 using System.Threading;
 using System.Web;
 using Kiss.Security;
@@ -479,7 +480,7 @@ namespace Kiss.Web
             get
             {
                 if (_isdesignMode == null || !_isdesignMode.HasValue)
-                    _isdesignMode = QueryString["edit"] != null && User.HasPermission("menu:widget_home");
+                    _isdesignMode = QueryString["edit"] != null && (User == null || User.HasPermission("menu:widget_home"));
                 return _isdesignMode.Value;
             }
         }
