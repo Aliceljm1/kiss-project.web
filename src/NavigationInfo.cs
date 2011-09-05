@@ -231,13 +231,14 @@ namespace Kiss.Web
                     int maxi = 0, maxj = 0;
                     foreach (int i in menuItems.Keys)
                     {
-                        if (menuItems[i].Children != null)
+                        double d = 0;
+                        if (menuItems[i].Children != null && menuItems[i].Children.Count > 0)
                         {
                             foreach (int j in menuItems[i].Children.Keys)
                             {
                                 NavigationItem ni = menuItems[i].Children[j];
 
-                                double d = StringUtil.Similarity(requesturl, ni.Url);
+                                d = StringUtil.Similarity(requesturl, ni.Url);
                                 if (d > max)
                                 {
                                     max = d;
@@ -247,16 +248,14 @@ namespace Kiss.Web
                                 }
                             }
                         }
-                        else
-                        {
-                            double d = StringUtil.Similarity(requesturl, menuItems[i].Url);
-                            if (d > max)
-                            {
-                                max = d;
 
-                                maxi = i;
-                                maxj = -1;
-                            }
+                        d = StringUtil.Similarity(requesturl, menuItems[i].Url);
+                        if (d > max)
+                        {
+                            max = d;
+
+                            maxi = i;
+                            maxj = -1;
                         }
                     }
 
