@@ -42,7 +42,7 @@ namespace Kiss.Web
         {
             base.LoadCondidtion();
 
-            Keyword = string.IsNullOrEmpty(jc.QueryText) ? string.Empty : jc.QueryText.Replace("'", "''");
+            Keyword = string.IsNullOrEmpty(jc.QueryText) ? string.Empty : jc.QueryText.Replace("'", "''").Replace("%", "");
 
             PageIndex = jc.PageIndex;
 
@@ -66,7 +66,7 @@ namespace Kiss.Web
                     else
                         val = jc.QueryString[key];
 
-                    val = string.IsNullOrEmpty(val) ? string.Empty : val.Replace("'", "''");
+                    val = string.IsNullOrEmpty(val) ? string.Empty : val.Replace("'", "''").Replace("%", "");
 
                     base[key] = val;
                 }
