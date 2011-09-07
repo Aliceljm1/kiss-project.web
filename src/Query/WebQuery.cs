@@ -42,7 +42,7 @@ namespace Kiss.Web
         {
             base.LoadCondidtion();
 
-            Keyword = StringUtil.GetSafeQuery(jc.QueryText);
+            Keyword = string.IsNullOrEmpty(jc.QueryText) ? string.Empty : jc.QueryText.Replace("'", "''");
 
             PageIndex = jc.PageIndex;
 
@@ -66,7 +66,7 @@ namespace Kiss.Web
                     else
                         val = jc.QueryString[key];
 
-                    val = StringUtil.GetSafeQuery(val);
+                    val = string.IsNullOrEmpty(val) ? string.Empty : val.Replace("'", "''");
 
                     base[key] = val;
                 }
