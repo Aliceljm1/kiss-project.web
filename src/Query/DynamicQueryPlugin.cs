@@ -96,7 +96,14 @@ namespace Kiss.Web.Query
                     q.EnableFireEventMulti = true;
             }
             else
-                qc = GetById(jc.Site, q.Id);
+            {
+                qc = GetById(jc.Site, q.Id + "." + e.Method);
+
+                if (qc == null)
+                    qc = GetById(jc.Site, q.Id);
+                else
+                    q.EnableFireEventMulti = true;
+            }
 
             if (qc == null)
                 return;
