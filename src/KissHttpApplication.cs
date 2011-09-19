@@ -75,6 +75,8 @@ namespace Kiss.Web
                 if (!context.Response.IsRequestBeingRedirected)
                     context.Response.AddHeader("X-Powered-By", "TXTEK.COM");
             }
+
+            context.Items["_PAGE_ID_"] = StringUtil.UniqueId();
         }
 
         private static void StopAppDomainRestart()

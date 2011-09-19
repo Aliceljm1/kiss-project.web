@@ -111,9 +111,9 @@ namespace Kiss.Web.Resources
                     content = File.ReadAllText(physicalPath, Encoding.UTF8);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                logger.Error("file: " + virtualPath + " is not found");
+                logger.Error("file: {0} is not found. {1}", virtualPath, ExceptionUtil.WriteException(ex));
             }
 
             return content;
