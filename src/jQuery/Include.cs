@@ -68,6 +68,9 @@ namespace Kiss.Web.Controls
 
                         string path = ServerUtil.MapPath(vp);
 
+                        if (!Directory.Exists(Path.GetDirectoryName(path)))
+                            continue;
+
                         foreach (var item in Directory.GetFiles(Path.GetDirectoryName(path), js.Substring(index + 1), SearchOption.AllDirectories))
                         {
                             string relativePath = item.ToLower().Replace(path.ToLower(), string.Empty);
