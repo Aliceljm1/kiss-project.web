@@ -42,11 +42,9 @@ namespace Kiss.Web
         {
             base.LoadCondidtion();
 
-            Keyword = string.IsNullOrEmpty(jc.QueryText) ? string.Empty : jc.QueryText.Replace("'", "''").Replace("%", "");
+            PageIndex = jc.Params["page"].ToInt(1) - 1;
 
-            PageIndex = jc.PageIndex;
-
-            string orderby = jc.QueryString["sort"];
+            string orderby = jc.Params["sort"];
 
             foreach (string str in StringUtil.Split(orderby, "+", true, true))
             {
@@ -61,14 +59,11 @@ namespace Kiss.Web
                 string val = base[key];
                 if (string.IsNullOrEmpty(val))// get from context
                 {
-                    if (jc.IsPost)
-                        val = jc.Context.Request.Form[key];
-                    else
-                        val = jc.QueryString[key];
+                    val = jc.Params[key];
 
                     val = string.IsNullOrEmpty(val) ? string.Empty : val.Replace("'", "''").Replace("%", "");
 
-                    base[key] = val;
+                    base[key] = val.Trim();
                 }
 
                 return val;

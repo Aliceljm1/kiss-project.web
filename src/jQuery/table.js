@@ -85,7 +85,7 @@
                 });
             }
 
-            if (!settings.inline_sort && !$.query) return;
+            if (settings.sort == 'default' && !$.query) return;
 
             var asc = true;
 
@@ -99,7 +99,7 @@
                 var compare = th.attr('data_type') || 'string';
 
                 $(this).click(function () {
-                    if (settings.inline_sort) {
+                    if (settings.sort == 'inline') {
                         $this.last().find('td').filter(function () {
                             return $(this).index() === thIndex;
                         }).sortElements(function (a, b) {
@@ -132,7 +132,7 @@
                             $(this).find('span').addClass('desc');
                         }
                     }
-                    else {
+                    else if (settings.sort == 'default') {
                         var column = $(this).attr('id');
                         if (asc) column = '-' + column;
                         var path = window.location.pathname;
@@ -141,17 +141,33 @@
                             path = '1' + path.substr(index);
 
                         window.location = path + jQuery.query.set('sort', column);
+                    } else if (settings.sort == 'ajax') {
+                        var column = $(this).attr('id');
+                        if (asc) column = '-' + column;
+
+                        var form = $this.parents('form:first');
+                        if ($('input[name=sort]', form).length == 0)
+                            form.append('<input type="hidden" name="sort"/>');
+
+                        $('input[name=sort]', form).val(column);
+                        $('input[name=page]', form).val(1);
+
+                        form.submit();
                     }
                 });
             });
 
-            if ($.query) {
-                var sort = jQuery.query.get('sort');
-                if (sort && typeof sort == 'string') {
-                    asc = (sort.indexOf('-') == -1);
-                    if (!asc) sort = sort.substr(1);
-                    if (sort) $("thead [id='" + sort + "'] span", $this).addClass(asc ? 'asc' : 'desc');
-                }
+            var sort = '';
+            if (settings.sort == 'ajax') {
+                var form = $this.parents('form:first');
+                sort = $('input[name=sort]', form).val();
+            }else if ($.query)
+                sort = jQuery.query.get('sort');
+
+            if (sort && typeof sort == 'string') {
+                asc = (sort.indexOf('-') == -1);
+                if (!asc) sort = sort.substr(1);
+                if (sort) $("thead [id='" + sort + "'] span", $this).addClass(asc ? 'asc' : 'desc');
             }
         };
 
@@ -222,7 +238,7 @@
         unselectTip: '全不选',
         clickToSelect: true,
         sortablecolumns: null,
-        inline_sort: false        
+        sort: 'default'
     };
 
     $.fn.getSelectedRowIds = function () {
@@ -490,28 +506,30 @@ jQuery.fn.sortElements = (function () {
 
             window.location = pre + pi + extension + window.location.search;
         },
-        ajax:function(){
-            $('.pagination a').click(function(){
+        ajax: function () {
+            var form = $('.pagination').parents('form:first');
+            if (form.length == 0) return;
+
+            $('.pagination a').click(function () {
                 var p = 1;
                 var ts = $(this);
-                if(ts.hasClass('next'))
+                if (ts.hasClass('next'))
                     p = parseInt($('.pagination .current').text()) + 1;
-                else if(ts.hasClass('prev'))
-                    p = parseInt($('.pagination .current').text()) -1;
+                else if (ts.hasClass('prev'))
+                    p = parseInt($('.pagination .current').text()) - 1;
                 else
-                    p = parseInt(ts.text());
+                    p = parseInt(ts.text());    
+                    
+                var cp = $('input[name=page]', form);
+                if (cp.length == 0)
+                    form.append('<input type="hidden" name="page"/>');                          
 
-                var form = $('.pagination').parents('form:first');
-                if(form.length==1){
-                    var cp = $('input[name=page]', form);
-                    if(cp.length==0)
-                        form.append('<input type="hidden" name="page"/>');
+                $('input[name=page]', form).val(p);
 
-                    $('input[name=page]', form).val(p-1);
+                form.submit();
 
-                    form.submit();
-                }
-            });
+                return false;
+            });            
         }
     };
 })(jQuery);

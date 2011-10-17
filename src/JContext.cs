@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Security.Principal;
 using System.Threading;
 using System.Web;
 using Kiss.Security;
@@ -22,6 +21,7 @@ namespace Kiss.Web
         //Generally expect 10 or less items
         private HybridDictionary _items = new HybridDictionary();
         private NameValueCollection _queryString = null;
+        private NameValueCollection _form = null;
 
         private HttpContext _httpContext = null;
         private DateTime requestStartTime = DateTime.Now;
@@ -51,6 +51,8 @@ namespace Kiss.Web
         private JContext(HttpContext context, bool includeQS)
         {
             this._httpContext = context;
+
+            this._form = new NameValueCollection(context.Request.Form);
 
             if (includeQS)
                 Initialize(new NameValueCollection(context.Request.QueryString), context.Request.RawUrl);
@@ -106,6 +108,25 @@ namespace Kiss.Web
         public NameValueCollection QueryString
         {
             get { return _queryString; }
+        }
+
+
+        public NameValueCollection Form
+        {
+            get
+            {
+                return _form;
+            }
+        }
+
+        public NameValueCollection Params
+        {
+            get
+            {
+                NameValueCollection p = new NameValueCollection(QueryString);
+                p.Add(Form);
+                return p;
+            }
         }
 
         public HttpContext Context
@@ -202,38 +223,7 @@ namespace Kiss.Web
 
         #region Common QueryString Properties
 
-        int pageIndex = -2;
-
-        string orderBy = null;
         string returnUrl = null;
-
-        private string queryText;
-        public string QueryText
-        {
-            get
-            {
-                if (queryText == null)
-                {
-                    queryText = QueryString["q"];
-                    if (StringUtil.IsNullOrEmpty(queryText))
-                        queryText = null;
-                }
-                return queryText;
-            }
-            set { queryText = value; }
-        }
-
-        public string OrderBy
-        {
-            get
-            {
-                if (orderBy == null)
-                    orderBy = QueryString["o"];
-
-                return orderBy;
-            }
-            set { orderBy = value; }
-        }
 
         public string ReturnUrl
         {
@@ -247,6 +237,7 @@ namespace Kiss.Web
             set { returnUrl = value; }
         }
 
+        int pageIndex = -2;
         public int PageIndex
         {
             get
@@ -264,7 +255,6 @@ namespace Kiss.Web
             }
             set { pageIndex = value; }
         }
-
 
         #endregion
 
