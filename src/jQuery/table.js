@@ -489,6 +489,29 @@ jQuery.fn.sortElements = (function () {
                 pi = Math.min(1, parseInt(page) + 1);
 
             window.location = pre + pi + extension + window.location.search;
+        },
+        ajax:function(){
+            $('.pagination a').click(function(){
+                var p = 1;
+                var ts = $(this);
+                if(ts.hasClass('next'))
+                    p = parseInt($('.pagination .current').text()) + 1;
+                else if(ts.hasClass('prev'))
+                    p = parseInt($('.pagination .current').text()) -1;
+                else
+                    p = parseInt(ts.text());
+
+                var form = $('.pagination').parents('form:first');
+                if(form.length==1){
+                    var cp = $('input[name=page]', form);
+                    if(cp.length==0)
+                        form.append('<input type="hidden" name="page"/>');
+
+                    $('input[name=page]', form).val(p-1);
+
+                    form.submit();
+                }
+            });
         }
     };
 })(jQuery);
