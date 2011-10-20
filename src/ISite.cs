@@ -39,9 +39,6 @@ namespace Kiss.Web
 
         DictSchema GetSchema(string type, string name);
 
-        string UserKey { get; }
-        string RoleKey { get; }
-
         string SiteKey { get; }
 
         /// <summary>
