@@ -125,7 +125,10 @@ namespace Kiss.Web.Query
                 }
             }
 
-            q.SetSerializerData(qc.GetSerializerData());
+            foreach (string key in qc.Keys)
+            {
+                q[key] = qc[key];
+            }
 
             using (StringWriter writer = new StringWriter())
             {
