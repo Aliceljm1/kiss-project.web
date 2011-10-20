@@ -9,18 +9,7 @@ namespace Kiss.Web
     /// </summary>
     public class WebQuery : QueryCondition
     {
-        private JContext _jc;
-        public JContext jc
-        {
-            get
-            {
-                if (_jc == null)
-                    _jc = JContext.Current;
-                return _jc;
-            }
-        }
-
-        public NameValueCollection qc { get { return jc.QueryString; } }
+        private NameValueCollection param;
 
         #region ctor
 
@@ -42,9 +31,11 @@ namespace Kiss.Web
         {
             base.LoadCondidtion();
 
-            PageIndex = jc.Params["page"].ToInt(1) - 1;
+            param = JContext.Current.Params;
 
-            string orderby = jc.Params["sort"];
+            PageIndex = param["page"].ToInt(1) - 1;
+
+            string orderby = param["sort"];
 
             foreach (string str in StringUtil.Split(orderby, "+", true, true))
             {
@@ -57,9 +48,9 @@ namespace Kiss.Web
             get
             {
                 string val = base[key];
-                if (string.IsNullOrEmpty(val))// get from context
+                if (string.IsNullOrEmpty(val) && param != null)// get from context
                 {
-                    val = jc.Params[key];
+                    val = param[key];
 
                     val = string.IsNullOrEmpty(val) ? string.Empty : val.Replace("'", "''").Replace("%", "");
 
