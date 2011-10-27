@@ -351,9 +351,9 @@ namespace Kiss.Web.WebDAV.BaseClasses
                 if (HttpApplication == null)
                     throw new ArgumentNullException("HttpApplication", InternalFunctions.GetResourceString("ArgumentNullException", "HttpApplication"));
 
-                logger.Debug("DavMethodBase - RelativeRequestPath: " + this.HttpApplication.Request.FilePath);
+                logger.Debug("DavMethodBase - RelativeRequestPath: " + HttpApplication.Request.FilePath);
 
-                return new Url(HttpApplication.Request.FilePath).Path;
+                return HttpApplication.Request.FilePath;
             }
         }
 
