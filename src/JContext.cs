@@ -659,6 +659,9 @@ namespace Kiss.Web
             if (baseurl.StartsWith("~"))
                 return ServerUtil.ResolveUrl(baseurl);
 
+            if (baseurl.StartsWith("."))
+                return StringUtil.CombinUrl(Site.VirtualPath, baseurl.Substring(1)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
+
             return StringUtil.CombinUrl(Site.VirtualPath, baseurl);
         }
 

@@ -96,6 +96,6 @@ namespace Kiss.Web
         public static Url url(string url)
         {
             return new Url(url);
-        }
+        }        
     }
 }
