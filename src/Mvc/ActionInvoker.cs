@@ -142,9 +142,25 @@ namespace Kiss.Web.Mvc
 
                 foreach (var item in paras)
                 {
-                    string v = nv[item.Name];
+                    if (item.ParameterType.IsSubclassOf(typeof(Array)))
+                    {
+                        string v = nv[item.Name] ?? nv[item.Name + "[]"];
 
-                    p.Add(TypeConvertUtil.ConvertTo(v, item.ParameterType));
+                        string[] strs = StringUtil.CommaDelimitedListToStringArray(v);
+                        Array array = Array.CreateInstance(item.ParameterType.GetElementType(), strs.Length);
+                        for (int i = 0; i < strs.Length; i++)
+                        {
+                            array.SetValue(TypeConvertUtil.ConvertTo(strs[i], item.ParameterType.GetElementType()), i);
+                        }
+
+                        p.Add(array);
+                    }
+                    else
+                    {
+                        string v = nv[item.Name];
+
+                        p.Add(TypeConvertUtil.ConvertTo(v, item.ParameterType));
+                    }
                 }
 
                 ret = mi.Invoke(obj, p.ToArray());

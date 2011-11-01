@@ -109,6 +109,10 @@
     </Compile>
     <Compile Include="IHost.cs" />
     <Compile Include="ISite.cs" />
+    <Compile Include="Mvc\ViewResult\FileContentResult.cs" />
+    <Compile Include="Mvc\ViewResult\FilePathResult.cs" />
+    <Compile Include="Mvc\ViewResult\FileResult.cs" />
+    <Compile Include="Mvc\ViewResult\FileStreamResult.cs" />
     <Compile Include="Query\DynamicQueryInitializer.cs" />
     <Compile Include="Query\DynamicQueryPlugin.cs" />
     <Compile Include="Site.cs" />
@@ -139,7 +143,6 @@
     <Compile Include="Mvc\MvcInitializer.cs" />
     <Compile Include="Mvc\MvcModule.cs" />
     <Compile Include="Mvc\ViewResult\RedirectResult.cs" />
-    <Compile Include="Mvc\ViewResult\SendFileResult.cs" />
     <Compile Include="Mvc\ViewResult\ViewResult.cs" />
     <Compile Include="Controls\MasterFileAwaredControl.cs" />
     <Compile Include="JContext.cs" />
