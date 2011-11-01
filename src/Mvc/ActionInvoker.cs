@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Reflection;
 using System.Threading;
 using Kiss.Security;
@@ -73,10 +74,7 @@ namespace Kiss.Web.Mvc
 
                     if (!e.PreventDefault)
                     {
-                        if (mi.GetParameters().Length == 1)
-                            ret = mi.Invoke(jc.Controller, new object[] { jc.Context.Request.Form });
-                        else
-                            ret = mi.Invoke(jc.Controller, null);
+                        ret = execute(jc.Controller, mi, jc.Form);
                     }
 
                     if (ret != null && !jc.RenderContent)
@@ -86,13 +84,28 @@ namespace Kiss.Web.Mvc
                 {
                     if (!e.PreventDefault)
                     {
-                        ret = mi.Invoke(jc.Controller, null);
+                        ret = execute(jc.Controller, mi, jc.QueryString);
                     }
 
-                    if (ret != null && ret is ActionResult)
+                    if (ret != null)
                     {
-                        ActionResult actionResult = ret as ActionResult;
-                        actionResult.ExecuteResult(jc);
+                        if (ret is ActionResult)
+                        {
+                            ActionResult actionResult = ret as ActionResult;
+                            actionResult.ExecuteResult(jc);
+                        }
+                        else
+                        {
+                            jc.RenderContent = false;
+
+                            int cacheMinutes = 0;
+                            object[] attrs = mi.GetCustomAttributes(typeof(HttpGetAttribute), false);
+                            if (attrs.Length == 1)
+                            {
+                                cacheMinutes = (attrs[0] as HttpGetAttribute).CacheMinutes;
+                            }
+                            ResponseUtil.OutputJson(jc.Context.Response, ret, cacheMinutes);
+                        }
                     }
                 }
 
@@ -111,6 +124,32 @@ namespace Kiss.Web.Mvc
             }
 
             return true;
+        }
+
+        private static object execute(object obj, MethodInfo mi, NameValueCollection nv)
+        {
+            object ret;
+
+            ParameterInfo[] paras = mi.GetParameters();
+
+            if (paras.Length == 1 && paras[0].ParameterType == typeof(NameValueCollection))
+                ret = mi.Invoke(obj, new object[] { nv });
+            else if (paras.Length == 0)
+                ret = mi.Invoke(obj, null);
+            else
+            {
+                List<object> p = new List<object>();
+
+                foreach (var item in paras)
+                {
+                    string v = nv[item.Name];
+
+                    p.Add(TypeConvertUtil.ConvertTo(v, item.ParameterType));
+                }
+
+                ret = mi.Invoke(obj, p.ToArray());
+            }
+            return ret;
         }
 
         private MethodInfo getActionMethod(JContext jc)
@@ -149,14 +188,13 @@ namespace Kiss.Web.Mvc
                 foreach (MethodInfo m in methods)
                 {
                     bool hasPostAttr = m.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
+                    bool hasGetAttr = m.GetCustomAttributes(typeof(HttpGetAttribute), false).Length == 1;
                     bool hasAjaxAttr = m.GetCustomAttributes(typeof(Ajax.AjaxMethodAttribute), true).Length > 0;
 
                     if (!m.ContainsGenericParameters &&
                         m.Name.Equals(jc.Navigation.Action, StringComparison.InvariantCultureIgnoreCase) &&
                          !hasAjaxAttr &&
-                        ((jc.IsPost && hasPostAttr) || !hasPostAttr) &&
-                        ((jc.IsPost && m.GetParameters().Length <= 1) || (!jc.IsPost && m.GetParameters().Length == 0))
-                        )
+                        ((jc.IsPost && hasPostAttr) || (!jc.IsPost && hasGetAttr) || (!hasPostAttr && !hasGetAttr)))
                     {
                         mi = m;
                         mis[action] = mi;

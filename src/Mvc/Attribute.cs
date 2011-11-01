@@ -22,4 +22,21 @@ namespace Kiss.Web.Mvc
     public sealed class HttpPostAttribute : Attribute
     {
     }
+
+    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HttpGetAttribute : Attribute
+    {
+        readonly int cacheMinutes;
+
+        public HttpGetAttribute()
+        {
+        }
+
+        public HttpGetAttribute(int cacheMinutes)
+        {
+            this.cacheMinutes = cacheMinutes;
+        }
+
+        public int CacheMinutes { get { return cacheMinutes; } }
+    }
 }
