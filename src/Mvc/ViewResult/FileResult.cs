@@ -45,8 +45,6 @@ namespace Kiss.Web.Mvc
             }
 
             HttpResponse response = jc.Context.Response;
-            jc.Context.Items["_ContentType_"] = ContentType;
-            
             response.ContentType = ContentType;
 
             if (!String.IsNullOrEmpty(FileDownloadName))
@@ -61,6 +59,8 @@ namespace Kiss.Web.Mvc
             }
 
             WriteFile(response);
+
+            response.End();
         }
 
         protected abstract void WriteFile(HttpResponse response);
