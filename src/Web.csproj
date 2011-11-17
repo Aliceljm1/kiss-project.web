@@ -313,37 +313,6 @@
   <ItemGroup>
     <EmbeddedResource Include="jQuery\UI\addon.timepicker.js" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-bg_flat_15_cd0a0a_40x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-bg_glass_100_e4f1fb_1x400.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-bg_glass_50_3baae3_1x400.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-bg_glass_80_d7ebf9_1x400.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-bg_highlight-hard_100_f2f5f7_1x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-bg_highlight-hard_70_000000_1x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-bg_highlight-soft_100_deedf7_1x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-bg_highlight-soft_25_ffef8f_1x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-icons_2694e8_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-icons_2e83ff_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-icons_3d80b3_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-icons_72a7cf_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\images\ui-icons_ffffff_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\cupertino\style.css" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-bg_flat_0_eeeeee_40x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-bg_flat_55_ffffff_40x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-bg_highlight-soft_100_f6f6f6_1x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-bg_highlight-soft_25_0073ea_1x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-bg_highlight-soft_50_dddddd_1x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-icons_0073ea_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-icons_454545_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-icons_666666_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-icons_ff0084_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\images\ui-icons_ffffff_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\flick\style.css" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

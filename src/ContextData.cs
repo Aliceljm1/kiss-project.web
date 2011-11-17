@@ -96,6 +96,11 @@ namespace Kiss.Web
         public static Url url(string url)
         {
             return new Url(url);
-        }        
+        }
+
+        public static Url updateQuery(string k, string v)
+        {
+            return new Url(HttpContext.Current.Request.Url.PathAndQuery).UpdateQuery(k, v);
+        }
     }
 }

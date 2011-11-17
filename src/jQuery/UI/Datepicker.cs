@@ -21,17 +21,19 @@ namespace Kiss.Web.Controls
         /// </summary>
         public string DateFormat { get; set; }
 
+        private bool changeMonth = true;
         /// <summary>
         /// Allows you to change the month by selecting from a drop-down list. 
         /// You can enable this feature by setting the attribute to true.
         /// </summary>
-        public bool ChangeMonth { get; set; }
+        public bool ChangeMonth { get { return changeMonth; } set { changeMonth = value; } }
 
+        private bool changeYear = true;
         /// <summary>
         /// Allows you to change the year by selecting from a drop-down list. 
         /// You can enable this feature by setting the attribute to true.
         /// </summary>
-        public bool ChangeYear { get; set; }
+        public bool ChangeYear { get { return changeYear; } set { changeYear = value; } }
 
         /// <summary>
         /// Have the datepicker appear automatically when the field receives focus ('focus'), 
@@ -118,7 +120,7 @@ namespace Kiss.Web.Controls
         /// The function receives the selected date(s) as text and the datepicker instance as parameters. 
         /// this refers to the associated input field.
         /// </summary>
-        public string onSelect { get; set; }        
+        public string onSelect { get; set; }
 
         protected override void AppendJsIncludes()
         {
