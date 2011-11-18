@@ -105,6 +105,9 @@ namespace Kiss.Web.Mvc
 
             public static string GetHeaderValue(string fileName)
             {
+                if (HttpContext.Current.Request.Browser.Browser.IndexOf("ie", StringComparison.InvariantCultureIgnoreCase) != -1)
+                    fileName = HttpUtility.UrlEncode(fileName);
+
                 try
                 {
                     // first, try using the .NET built-in generator
