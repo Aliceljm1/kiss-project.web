@@ -221,6 +221,8 @@ namespace Kiss.Web
         {
             Url = item;
 
+            string url;
+
             if (item.Index == null || item.SubIndex == null)
             {
                 Dictionary<int, NavigationItem> menuItems = UrlMapping.UrlMappingModule.Instance.Provider.MenuItems;
@@ -238,7 +240,10 @@ namespace Kiss.Web
                             {
                                 NavigationItem ni = menuItems[i].Children[j];
 
-                                d = StringUtil.Similarity(requesturl, ni.Url);
+                                url = ni.Url.TrimStart('/');
+                                if (string.IsNullOrEmpty(url))
+                                    continue;
+                                d = StringUtil.Similarity(requesturl, url);
                                 if (d > max)
                                 {
                                     max = d;
@@ -249,7 +254,10 @@ namespace Kiss.Web
                             }
                         }
 
-                        d = StringUtil.Similarity(requesturl, menuItems[i].Url);
+                        url = menuItems[i].Url.TrimStart('/');
+                        if (string.IsNullOrEmpty(url))
+                            continue;
+                        d = StringUtil.Similarity(requesturl, url);
                         if (d > max)
                         {
                             max = d;
@@ -278,6 +286,9 @@ namespace Kiss.Web
                         int maxi = 0;
                         foreach (NavigationItem ni in menuItems[item.Index.Value].Children.Values)
                         {
+                            url = ni.Url.TrimStart('/');
+                            if (string.IsNullOrEmpty(url))
+                                continue;
                             double d = StringUtil.Similarity(requesturl, ni.Url);
                             if (d > max)
                             {
