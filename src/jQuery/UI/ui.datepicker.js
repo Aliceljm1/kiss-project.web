@@ -1842,7 +1842,7 @@ jQuery(function ($) {
         firstDay: 1,
         isRTL: false,
         showMonthAfterYear: true,
-        yearSuffix: '年'
+        yearSuffix: ''
     };
     $.datepicker.setDefaults($.datepicker.regional['zh-CN']);
 });

@@ -30,7 +30,7 @@
                 $sc.css(closedPos);
             }
             $sc.removeClass("opened").height(closedHeight);
-            $.cookie("cp_open", null);
+            $.cookie("cp_open", null, { 'path': path });
         }
     };
 
