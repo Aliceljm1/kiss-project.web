@@ -802,17 +802,14 @@
         var handleException = function(result) {
             var exc = result.__AjaxException;
             if (exc.action == "JSMethod") {
-                result = null;
                 eval(exc.parameter + "()");
             }
             else if (exc.action == "JSEval") {
-                result = null;
                 eval(exc.parameter);
             }
             else if (exc.action == "returnValue") {
-                result = eval(exc.parameter);
+                return exc.parameter;
             }
-            return result;
         };
 
 		var onSuccess = function (data, status) {
@@ -832,7 +829,7 @@
             if (r != null && r.__AjaxException) {
                 r = handleException(r);
             }
-			if (opts.onSuccess && $.isFunction(opts.onSuccess)){                
+			if ( r != undefined && opts.onSuccess && $.isFunction(opts.onSuccess)){                
 				opts.onSuccess.apply($this, [r, status]);
             }
 		};

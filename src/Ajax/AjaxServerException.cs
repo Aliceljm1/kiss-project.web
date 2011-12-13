@@ -4,7 +4,8 @@
     {
         public AjaxServerExceptionAction Action { get; set; }
 
-        public string Parameter { get; set; }
+        private string parameter;
+        public string Parameter { get { return parameter; } set { parameter = value.Replace("\r\n", "\\r\\n"); } }
 
         public object ToJson()
         {

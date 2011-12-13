@@ -13,9 +13,8 @@ function handleException(result) {
 		eval(exc.parameter);
 	}
 	else if (exc.action == "returnValue") {
-		result = eval(exc.parameter);
+		return exc.parameter;
 	}
-	return result;
 }
 
 function AjaxManager() { }
@@ -41,7 +40,7 @@ AjaxManager.prototype = {
 			success: function (e) {
 				result = handleException(e);		
 				
-				if (callbackMethod) {
+				if (callbackMethod && result != undefined) {
 					callbackMethod(result);
 				}
 			},
@@ -50,7 +49,7 @@ AjaxManager.prototype = {
 				if(!result) {
 					result = e.responseText;
 				}
-				if (callbackMethod) {
+				if (callbackMethod && result != undefined) {
 					callbackMethod(result);
 				}
 			}
