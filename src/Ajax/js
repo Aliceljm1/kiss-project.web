@@ -5,7 +5,7 @@ function handleException(result) {
 
 	var exc = result.__AjaxException;
 	if (exc.action == "JSMethod") {
-		result = null;
+		result = null;		
 		eval(exc.parameter + "()");
 	}
 	else if (exc.action == "JSEval") {

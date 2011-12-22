@@ -199,7 +199,7 @@ namespace Kiss.Web.Mvc
             if (!jc.RenderContent)
             {
                 ResponseUtil.OutputJson(httpContext.Response,
-                    new AjaxServerException() { Action = AjaxServerExceptionAction.JSEval, Parameter = string.Format("alert('{0}');", ex.Message) }.ToJson());
+                    new AjaxServerException() { Action = AjaxServerExceptionAction.JSEval, Parameter = string.Format("alert('{0}');", ex.Message.Replace("'", @"\""")) }.ToJson());
             }
             else
             {
