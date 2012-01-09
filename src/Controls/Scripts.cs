@@ -39,6 +39,7 @@ namespace Kiss.Web.Controls
         {
             List<string> urls = new List<string>();
             List<string> blocks = new List<string>();
+            List<string> combineUrls = new List<string>();
 
             Queue queue = Context.Items[ScriptKey] as Queue;
 
@@ -51,18 +52,27 @@ namespace Kiss.Web.Controls
 
                     if (si.IsScriptBlock)
                         blocks.Add(si.Script);
+                    else if (si.IsCombine)
+                        combineUrls.Add(si.Script);
                     else
                         urls.Add(si.Script);
                 }
             }
 
-            if (urls.Count > 0)
+            // no combined url
+            foreach (var url in urls)
+            {
+                writer.Write("<script src='{0}' type='text/javascript'></script>", url);
+            }
+
+            // combined 
+            if (combineUrls.Count > 0)
             {
                 int ps = StringUtil.ToInt(CurrentSite["combinJs_ps"], 10);
                 if (ps <= 0)
                     ps = 10;
 
-                for (int i = 0; i < (int)Math.Ceiling(urls.Count * 1.0 / ps); i++)
+                for (int i = 0; i < (int)Math.Ceiling(combineUrls.Count * 1.0 / ps); i++)
                 {
                     List<string> list = new List<string>();
 
@@ -70,9 +80,9 @@ namespace Kiss.Web.Controls
                     {
                         int index = i * ps + j;
 
-                        list.Add(urls[index]);
+                        list.Add(combineUrls[index]);
 
-                        if (index == urls.Count - 1)
+                        if (index == combineUrls.Count - 1)
                             break;
                     }
 
@@ -84,6 +94,7 @@ namespace Kiss.Web.Controls
 
             }
 
+            // script blocks
             if (blocks.Count > 0)
             {
                 writer.Write("<script type='text/javascript'>{0}</script>", StringUtil.CollectionToDelimitedString(blocks, " ", string.Empty));
@@ -94,9 +105,9 @@ namespace Kiss.Web.Controls
         /// 添加脚本链接
         /// </summary>
         /// <param name="url"></param>
-        public static void AddRes(string url)
+        public static void AddRes(string url, bool isCombine)
         {
-            AddScript(url, false, HttpContext.Current);
+            AddScript(url, false, isCombine, HttpContext.Current);
         }
 
         /// <summary>
@@ -105,10 +116,10 @@ namespace Kiss.Web.Controls
         /// <param name="script"></param>
         public static void AddBlock(string script)
         {
-            AddScript(script, true, HttpContext.Current);
+            AddScript(script, true, false, HttpContext.Current);
         }
 
-        private static void AddScript(string script, bool isblock, HttpContext context)
+        private static void AddScript(string script, bool isblock, bool isCombine, HttpContext context)
         {
             Queue scriptQueue = context.Items[ScriptKey] as Queue;
             if (scriptQueue == null)
@@ -117,18 +128,20 @@ namespace Kiss.Web.Controls
                 context.Items[ScriptKey] = scriptQueue;
             }
 
-            scriptQueue.Enqueue(new ScriptQueueItem(script, isblock));
+            scriptQueue.Enqueue(new ScriptQueueItem(script, isblock, isCombine));
         }
 
         internal class ScriptQueueItem
         {
+            public bool IsCombine { get; set; }
             public bool IsScriptBlock { get; set; }
             public string Script { get; set; }
 
-            public ScriptQueueItem(string script, bool isblock)
+            public ScriptQueueItem(string script, bool isblock, bool isCombine)
             {
                 Script = script;
                 IsScriptBlock = isblock;
+                IsCombine = isCombine;
             }
         }
     }

@@ -50,10 +50,14 @@ namespace Kiss.Web
             if (JContext.Current.IsAjaxRequest)
                 return;
 
-            RegisterJsResource(writer,
-                typeof(ClientScriptProxy),
-                "Kiss.Web.jQuery.js",
-                true);
+            string url = Resources.Utility.GetResourceUrl(GetType(), "Kiss.Web.jQuery.js", true);
+
+            if (IsScriptRended(url))
+                return;
+
+            SetScriptRended(url);
+
+            writer.Write("<script src='{0}' type='text/javascript'></script>", url);
         }
 
         public void RegisterJsResource(HtmlTextWriter writer, string resourceName)
@@ -97,10 +101,7 @@ namespace Kiss.Web
 
             SetScriptRended(url);
 
-            if (!noCombine && JContext.Current.Site.CombineJs)
-                Scripts.AddRes(url);
-            else
-                writer.Write("<script src='{0}' type='text/javascript'></script>", url);
+            Scripts.AddRes(url, !noCombine && JContext.Current.Site.CombineJs);
         }
 
         public void RegisterJsBlock(HtmlTextWriter writer, string key, string script, bool addScriptTags)
