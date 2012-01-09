@@ -58,15 +58,22 @@ namespace Kiss.Web.Controls
 
             if (urls.Count > 0)
             {
-                int ps = (int)Math.Ceiling(urls.Count * 1.0 / 6);
+                int ps = StringUtil.ToInt(CurrentSite["combinJs_ps"], 10);
+                if (ps <= 0)
+                    ps = 10;
 
-                for (int i = 0; i < ps; i++)
+                for (int i = 0; i < (int)Math.Ceiling(urls.Count * 1.0 / ps); i++)
                 {
                     List<string> list = new List<string>();
 
-                    for (int j = 0; j < 6; j++)
+                    for (int j = 0; j < ps; j++)
                     {
-                        list.Add(urls[i * 6 + j]);
+                        int index = i * ps + j;
+
+                        list.Add(urls[index]);
+
+                        if (index == urls.Count - 1)
+                            break;
                     }
 
                     writer.Write(string.Format("<script src='{0}' type='text/javascript'></script>",
