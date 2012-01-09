@@ -8,8 +8,8 @@ namespace Kiss.Web
     public interface ISite
     {
         string VirtualPath { get; }
-        bool CombinJs { get; }
-        bool CombinCss { get; }
+        bool CombineJs { get; }
+        bool CombineCss { get; }
         /// <summary>
         /// 默认主题
         /// </summary>

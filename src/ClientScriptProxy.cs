@@ -75,9 +75,9 @@ namespace Kiss.Web
             RegisterJsResource(writer, assemblyName, resourceName, false);
         }
 
-        public void RegisterJsResource(HtmlTextWriter writer, Type type, string resourceName, bool noCombin)
+        public void RegisterJsResource(HtmlTextWriter writer, Type type, string resourceName, bool noCombine)
         {
-            RegisterJsResource(writer, type.Assembly.GetName().Name, resourceName, noCombin);
+            RegisterJsResource(writer, type.Assembly.GetName().Name, resourceName, noCombine);
         }
 
         public void RegisterJsResource(HtmlTextWriter writer, string assemblyName, string resourceName, bool noCombin)
@@ -90,14 +90,14 @@ namespace Kiss.Web
             RegisterJs(writer, url, false);
         }
 
-        public void RegisterJs(HtmlTextWriter writer, string url, bool noCombin)
+        public void RegisterJs(HtmlTextWriter writer, string url, bool noCombine)
         {
             if (IsScriptRended(url))
                 return;
 
             SetScriptRended(url);
 
-            if (!noCombin && JContext.Current.Site.CombinJs)
+            if (!noCombine && JContext.Current.Site.CombineJs)
                 Scripts.AddRes(url);
             else
                 writer.Write("<script src='{0}' type='text/javascript'></script>", url);
@@ -120,7 +120,7 @@ namespace Kiss.Web
 
             if (addScriptTags)
             {
-                if (!noCombin && JContext.Current.Site.CombinJs)
+                if (!noCombin && JContext.Current.Site.CombineJs)
                 {
                     Scripts.AddBlock(script);
                     return;
@@ -146,7 +146,7 @@ namespace Kiss.Web
 
             ISite site = JContext.Current.Site;
 
-            if (!site.CombinCss)
+            if (!site.CombineCss)
             {
                 if (url.Contains("?"))
                     url += ("&v=" + site.CssVersion);

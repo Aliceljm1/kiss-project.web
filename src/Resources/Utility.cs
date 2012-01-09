@@ -82,7 +82,7 @@ namespace Kiss.Web.Resources
 
             url += ("&z=" + contentType);
 
-            if (StringUtil.HasText(version) && site != null && !site.CombinCss)
+            if (StringUtil.HasText(version) && site != null && !site.CombineCss)
                 url += ("&v=" + version);
 
             if (shorturl)

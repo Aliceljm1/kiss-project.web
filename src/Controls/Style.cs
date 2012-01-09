@@ -101,7 +101,7 @@ namespace Kiss.Web.Controls
             string href = Href;
             if (!string.IsNullOrEmpty(href))
             {
-                if (!CurrentSite.CombinCss)
+                if (!CurrentSite.CombineCss)
                 {
                     if (href.Contains("?"))
                         href += ("&v=" + CurrentSite.CssVersion);

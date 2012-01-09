@@ -40,7 +40,7 @@ namespace Kiss.Web
         public string ThemeRoot { get; private set; }
 
         [ConfigProp("combinCss", ConfigPropAttribute.DataType.Boolean, DefaultValue = false, Desc = "合并样式")]
-        public bool CombinCss { get; private set; }
+        public bool CombineCss { get; private set; }
 
         [ConfigProp("cssversion", ConfigPropAttribute.DataType.String, DefaultValue = "1", Desc = "样式版本")]
         public string CssVersion { get; private set; }
@@ -52,7 +52,7 @@ namespace Kiss.Web
         public string JsVersion { get; private set; }
 
         [ConfigProp("combinJs", ConfigPropAttribute.DataType.Boolean, DefaultValue = false, Desc = "合并js")]
-        public bool CombinJs { get; private set; }
+        public bool CombineJs { get; private set; }
 
         [ConfigProp("jsHost", ConfigPropAttribute.DataType.String, Desc = "js根url")]
         public string JsHost { get; private set; }

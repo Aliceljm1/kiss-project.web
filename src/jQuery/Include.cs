@@ -9,6 +9,7 @@ namespace Kiss.Web.Controls
     {
         public string Js { get; set; }
         public string Css { get; set; }
+        public bool NoCombine { get; set; }
 
         protected override void OnLoad(EventArgs e)
         {
@@ -77,22 +78,23 @@ namespace Kiss.Web.Controls
                             relativePath = relativePath.Replace(Path.DirectorySeparatorChar, '/');
 
                             if (vp.StartsWith("~"))
-                                proxy.RegisterJs(writer, StringUtil.CombinUrl(ServerUtil.ResolveUrl(vp), relativePath));
+                                proxy.RegisterJs(writer, StringUtil.CombinUrl(ServerUtil.ResolveUrl(vp), relativePath), NoCombine);
                             else
-                                proxy.RegisterJs(writer, StringUtil.CombinUrl(CurrentSite.VirtualPath, StringUtil.CombinUrl(vp, relativePath)));
+                                proxy.RegisterJs(writer, StringUtil.CombinUrl(CurrentSite.VirtualPath, StringUtil.CombinUrl(vp, relativePath)), NoCombine);
                         }
                     }
                     else
                     {
                         if (js.StartsWith("~"))
-                            proxy.RegisterJs(writer, ServerUtil.ResolveUrl(js));
+                            proxy.RegisterJs(writer, ServerUtil.ResolveUrl(js), NoCombine);
                         else
-                            proxy.RegisterJs(writer, StringUtil.CombinUrl(CurrentSite.VirtualPath, js));
+                            proxy.RegisterJs(writer, StringUtil.CombinUrl(CurrentSite.VirtualPath, js), NoCombine);
                     }
                 }
                 else
                     proxy.RegisterJsResource(writer,
-                        string.Format("Kiss.Web.jQuery.{0}.js", js));
+                        GetType(),
+                        string.Format("Kiss.Web.jQuery.{0}.js", js), NoCombine);
             }
         }
 

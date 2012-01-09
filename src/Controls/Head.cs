@@ -123,9 +123,9 @@ namespace Kiss.Web.Controls
             {
                 if (si.Position != position) continue;
 
-                if (!si.Site.CombinCss || !si.ForceCombin)
+                if (!si.Site.CombineCss || !si.ForceCombin)
                     writer.WriteLine(si.StyleTag);
-                else if (si.Site.CombinCss)
+                else if (si.Site.CombineCss)
                 {
                     string url = si.Url;
                     int index = url.LastIndexOf("/");
@@ -148,7 +148,7 @@ namespace Kiss.Web.Controls
 
             foreach (ISite s in di.Keys)
             {
-                if (!s.CombinCss)
+                if (!s.CombineCss)
                     continue;
 
                 foreach (string path in di[s].Keys)
