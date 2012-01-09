@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Text;
 using System.Threading;
 using System.Web;
 using Kiss.Security;
@@ -698,6 +699,112 @@ namespace Kiss.Web
 
         #endregion
 
+        #region lazy include
+        public void include(string res)
+        {
+            include(res, string.Empty);
+        }
+
+        public void include(string res, string callback)
+        {
+            Dictionary<string, List<string>> includes;
+            if (!ViewData.ContainsKey("_lazy_include_"))
+            {
+                includes = new Dictionary<string, List<string>>();
+                ViewData["_lazy_include_"] = includes;
+            }
+            else
+            {
+                includes = ViewData["_lazy_include_"] as Dictionary<string, List<string>>;
+            }
+
+            if (includes.ContainsKey(res))
+                includes[res].Add(callback);
+            else
+                includes[res] = new List<string>() { callback };
+        }
+
+        public string render_lazy_include()
+        {
+            if (!ViewData.ContainsKey("_lazy_include_"))
+                return string.Empty;
+
+            ClientScriptProxy csp = ClientScriptProxy.Current;
+
+            Dictionary<string, List<string>> includes = JContext.Current.ViewData["_lazy_include_"] as Dictionary<string, List<string>>;
+
+            List<string> cssfiles = new List<string>();
+            Dictionary<string, string> jsfiles = new Dictionary<string, string>();
+            List<string> scripts = new List<string>();
+
+            bool is_css = false;
+
+            foreach (var item in includes.Keys)
+            {
+                string url = item;
+                if (!item.Contains("/"))
+                {
+                    url = Resources.Utility.GetResourceUrl(item, true);
+
+                    is_css = item.Contains(".css");
+                }
+                else
+                {
+                    is_css = url.Contains(".css");
+                }
+
+                if (csp.IsScriptRended(url))
+                {
+                    scripts.AddRange(includes[item]);
+                    continue;
+                }
+
+                csp.SetScriptRended(url);
+
+                if (is_css)
+                    cssfiles.Add(url);
+                else
+                    jsfiles.Add(url, includes[item].Join(";"));
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            if (cssfiles.Count > 0 || jsfiles.Count > 0)
+                sb.AppendFormat("<script src='{0}' type='text/javascript'></script>", Resources.Utility.GetResourceUrl("Kiss.Web.jQuery.lazyinclude.js,Kiss.Web", true));
+
+            sb.Append("<script type='text/javascript'>");
+
+            sb.Append("$(function(){");
+
+            sb.Append(scripts.Join(";"));
+
+            sb.Append("lazy_include({");
+            sb.AppendFormat("cssFiles:[{0}],", StringUtil.CollectionToDelimitedString(cssfiles, StringUtil.Comma, "'"));
+            sb.Append("jsFiles:[");
+
+            var i = 0;
+            foreach (var item in jsfiles.Keys)
+            {
+                if (i != 0)
+                    sb.Append(",");
+
+                i++;
+
+                sb.Append("{url:'" + item + "', cb: function(){" + jsfiles[item] + "} }");
+            }
+
+            sb.Append("]");
+
+            sb.Append("});");
+            sb.Append("});");
+
+            sb.Append("</script>");
+
+            return sb.ToString();
+        }
+
+        #endregion
+
         #region utils
 
         public string UrlEncode(string str)
@@ -734,7 +841,7 @@ namespace Kiss.Web
 
                 return StringUtil.CombinUrl(site.VirtualPath, baseurl);
             }
-        }
+        }        
 
         #endregion
     }

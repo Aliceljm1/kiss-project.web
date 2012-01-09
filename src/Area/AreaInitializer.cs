@@ -107,11 +107,17 @@ namespace Kiss.Web.Area
 
                     foreach (var item in Directory.GetFiles(bindir, "*.dll", SearchOption.TopDirectoryOnly))
                     {
+                        try
+                        {
 #if MONO
-                        assemblies.Add(Assembly.Load(File.ReadAllBytes(item)));
+                            assemblies.Add(Assembly.Load(File.ReadAllBytes(item)));
 #else
-                        assemblies.Add(AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(item)));
+                            assemblies.Add(AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(item)));
 #endif
+                        }
+                        catch (BadImageFormatException)
+                        {
+                        }
                     }
 
                     Dictionary<string, Type> types = new Dictionary<string, Type>();

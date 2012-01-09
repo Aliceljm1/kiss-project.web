@@ -185,7 +185,7 @@ namespace Kiss.Web.Controls
             {
                 // manuall add scripts control
                 lock (masterPage.Controls.SyncRoot)
-                {
+                {                    
                     masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Scripts());
                 }
 

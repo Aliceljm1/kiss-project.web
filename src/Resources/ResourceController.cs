@@ -54,7 +54,17 @@ namespace Kiss.Web.Resources
             // *** Values are base64 encoded
             string assemblyName = request.QueryString["t"] ?? string.Empty;
             if (!string.IsNullOrEmpty(assemblyName))
-                assemblyName = Encoding.ASCII.GetString(Convert.FromBase64String(assemblyName));
+            {
+                try
+                {
+                    assemblyName = Encoding.ASCII.GetString(Convert.FromBase64String(assemblyName));
+                }
+                catch (FormatException)
+                {
+                    SendErrorResponse(response, "Invalid Resource");
+                    return;
+                }
+            }
 
             string resource = request.QueryString["r"];
             if (string.IsNullOrEmpty(resource))
@@ -62,7 +72,16 @@ namespace Kiss.Web.Resources
                 SendErrorResponse(response, "Invalid Resource");
                 return;
             }
-            resource = Encoding.ASCII.GetString(Convert.FromBase64String(resource));
+
+            try
+            {
+                resource = Encoding.ASCII.GetString(Convert.FromBase64String(resource));
+            }
+            catch (FormatException)
+            {
+                SendErrorResponse(response, "Invalid Resource");
+                return;
+            }
 
             if (shorturl)
             {

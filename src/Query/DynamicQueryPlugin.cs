@@ -86,24 +86,23 @@ namespace Kiss.Web.Query
             JContext jc = JContext.Current;
 
             Qc qc = null;
-            if (string.IsNullOrEmpty(q.Id))
-            {
-                qc = GetById(jc.Site, string.Concat(jc.Navigation.Id, ".", jc.Navigation.Action, ".", e.Method));
 
-                if (qc == null)
-                    qc = GetById(jc.Site, string.Concat(jc.Navigation.Id, ".", jc.Navigation.Action));
-                else
-                    q.EnableFireEventMulti = true;
-            }
+            string qId = q.Id;
+            if (string.IsNullOrEmpty(qId))
+                qId = jc.Navigation.ToString();
+
+            qc = GetById(jc.Site, string.Format("{0}.{1}.{2}", q.Id, e.Method, e.DbProviderName));
+
+            if (qc == null)
+                qc = GetById(jc.Site, string.Format("{0}.{1}", q.Id, e.Method));
+
+            if (qc == null)
+                qc = GetById(jc.Site, string.Format("{0}.{1}", q.Id, e.DbProviderName));
+
+            if (qc == null)
+                qc = GetById(jc.Site, qId);
             else
-            {
-                qc = GetById(jc.Site, q.Id + "." + e.Method);
-
-                if (qc == null)
-                    qc = GetById(jc.Site, q.Id);
-                else
-                    q.EnableFireEventMulti = true;
-            }
+                q.EnableFireEventMulti = true;
 
             if (qc == null)
                 return;

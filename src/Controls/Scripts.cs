@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.UI;
 using Kiss.Utils;
+using System;
 
 namespace Kiss.Web.Controls
 {
@@ -24,6 +25,8 @@ namespace Kiss.Web.Controls
         protected override void Render(HtmlTextWriter writer)
         {
             RenderScripts(writer);
+
+            writer.Write("$!jc.render_lazy_include()");
 
             base.Render(writer);
         }
@@ -55,11 +58,23 @@ namespace Kiss.Web.Controls
 
             if (urls.Count > 0)
             {
-                writer.Write(
-                    string.Format("<script src='{0}' type='text/javascript'></script>",
+                int ps = (int)Math.Ceiling(urls.Count * 1.0 / 6);
+
+                for (int i = 0; i < ps; i++)
+                {
+                    List<string> list = new List<string>();
+
+                    for (int j = 0; j < 6; j++)
+                    {
+                        list.Add(urls[i * 6 + j]);
+                    }
+
+                    writer.Write(string.Format("<script src='{0}' type='text/javascript'></script>",
                         Utility.FormatJsUrl(SiteConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
-                                                            ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(urls)),
+                                                            ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(list)),
                                                             CurrentSite.JsVersion))));
+                }
+
             }
 
             if (blocks.Count > 0)

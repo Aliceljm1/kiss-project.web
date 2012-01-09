@@ -56,11 +56,6 @@ namespace Kiss.Web
                 true);
         }
 
-        public static string FormatjQueryBlock(string script)
-        {
-            return "jQuery(function(){" + script + "});";
-        }
-
         public void RegisterJsResource(HtmlTextWriter writer, string resourceName)
         {
             RegisterJsResource(writer, GetType(), resourceName, false);
@@ -220,14 +215,14 @@ namespace Kiss.Web
 
         #region help
 
-        private bool IsScriptRended(string key)
+        public bool IsScriptRended(string key)
         {
             bool? b = HttpContext.Current.Items["client_" + key] as bool?;
 
             return b != null && b.Value;
         }
 
-        private void SetScriptRended(string key)
+        public void SetScriptRended(string key)
         {
             HttpContext.Current.Items["client_" + key] = true;
         }
