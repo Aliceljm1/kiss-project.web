@@ -749,7 +749,9 @@ namespace Kiss.Web
 
                     foreach (var str in StringUtil.Split(item, ";", true, true))
                     {
-                        string href = Resources.Utility.GetResourceUrl(str, true);
+                        string href = str;
+                        if (!item.Contains("/"))
+                            href = Resources.Utility.GetResourceUrl(str, true);
 
                         if (csp.IsScriptRended(href))
                             continue;
