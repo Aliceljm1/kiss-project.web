@@ -34,11 +34,15 @@ var LazyInclude = {
         function loadScript(files) {
             var urls = files && typeof (files) == "string" ? [files] : files;
 
+            $.ajaxSetup({ cache: true });
+
             for (var i = 0; i < urls.length; i++) {
                 if (!hasFile("script", urls[i].url)) {
                     $.getScript(urls[i].url, urls[i].cb);
                 }
             }
+
+            $.ajaxSetup({ cache: false });
         }
 
         function includeFile(options) {

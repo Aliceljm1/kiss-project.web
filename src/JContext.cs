@@ -742,7 +742,36 @@ namespace Kiss.Web
             foreach (var item in includes.Keys)
             {
                 string url = item;
-                if (!item.Contains("/"))
+
+                if (item.Contains(";"))
+                {
+                    List<string> hrefs = new List<string>();
+
+                    foreach (var str in StringUtil.Split(item, ";", true, true))
+                    {
+                        string href = Resources.Utility.GetResourceUrl(str, true);
+
+                        if (csp.IsScriptRended(href))
+                            continue;
+
+                        csp.SetScriptRended(href);
+
+                        hrefs.Add(href);
+                    }
+
+                    is_css = item.Contains(".css");
+
+                    // comine url
+                    if (is_css)
+                        url = Utility.FormatCssUrl(Site, string.Format("_resc.aspx?f={0}&t=text/css&v={1}",
+                                                                ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
+                                                                Site.CssVersion));
+                    else
+                        url = Utility.FormatJsUrl(Kiss.Web.SiteConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
+                                                            ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
+                                                            Site.JsVersion));
+                }
+                else if (!item.Contains("/"))
                 {
                     url = Resources.Utility.GetResourceUrl(item, true);
 
@@ -841,7 +870,7 @@ namespace Kiss.Web
 
                 return StringUtil.CombinUrl(site.VirtualPath, baseurl);
             }
-        }        
+        }
 
         #endregion
     }
