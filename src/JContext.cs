@@ -809,24 +809,27 @@ namespace Kiss.Web
 
             sb.Append(scripts.Join(";"));
 
-            sb.Append("lazy_include({");
-            sb.AppendFormat("cssFiles:[{0}],", StringUtil.CollectionToDelimitedString(cssfiles, StringUtil.Comma, "'"));
-            sb.Append("jsFiles:[");
-
-            var i = 0;
-            foreach (var item in jsfiles.Keys)
+            if (cssfiles.Count > 0 || jsfiles.Count > 0)
             {
-                if (i != 0)
-                    sb.Append(",");
+                sb.Append("lazy_include({");
+                sb.AppendFormat("cssFiles:[{0}],", StringUtil.CollectionToDelimitedString(cssfiles, StringUtil.Comma, "'"));
+                sb.Append("jsFiles:[");
 
-                i++;
+                var i = 0;
+                foreach (var item in jsfiles.Keys)
+                {
+                    if (i != 0)
+                        sb.Append(",");
 
-                sb.Append("{url:'" + item + "', cb: function(){" + jsfiles[item] + "} }");
+                    i++;
+
+                    sb.Append("{url:'" + item + "', cb: function(){" + jsfiles[item] + "} }");
+                }
+
+                sb.Append("]");
+
+                sb.Append("});");
             }
-
-            sb.Append("]");
-
-            sb.Append("});");
             sb.Append("});");
 
             sb.Append("</script>");
