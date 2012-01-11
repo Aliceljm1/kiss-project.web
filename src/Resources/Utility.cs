@@ -15,6 +15,19 @@ namespace Kiss.Web.Resources
             return GetResourceUrl(type, resourceName, resourceName.StartsWith(PRENAMESPACE));
         }
 
+        public static string GetResourceUrl(string resourceFullName)
+        {
+            if (StringUtil.IsNullOrEmpty(resourceFullName))
+                return string.Empty;
+
+            string[] strs = StringUtil.Split(resourceFullName, StringUtil.Comma, true, true);
+
+            if (strs.Length != 2)
+                return string.Empty;
+
+            return GetResourceUrl(strs[1], strs[0]);
+        }
+
         public static string GetResourceUrl(string resourceFullName, bool shorturl)
         {
             if (StringUtil.IsNullOrEmpty(resourceFullName))

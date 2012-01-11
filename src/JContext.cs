@@ -753,19 +753,19 @@ namespace Kiss.Web
                     {
                         string href = str;
                         if (!item.Contains("/"))
-                            href = Resources.Utility.GetResourceUrl(str, true);
+                            href = Resources.Utility.GetResourceUrl(str);
 
                         if (csp.IsScriptRended(href))
                             continue;
 
                         csp.SetScriptRended(href);
 
-                        hrefs.Add(href);
-
                         if (is_css && !Site.CombineCss)
-                            cssfiles.Add(url);
+                            cssfiles.Add(href);
                         else if (!is_css && !Site.CombineJs)
-                            jsfiles.Add(url, includes[item].Join(";"));
+                            jsfiles.Add(href, includes[item].Join(";"));
+                        else
+                            hrefs.Add(href);
                     }
 
                     // comine url
@@ -778,11 +778,11 @@ namespace Kiss.Web
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
                                                             Site.JsVersion));
                     else
-                        break;
+                        continue;
                 }
                 else if (!item.Contains("/"))
                 {
-                    url = Resources.Utility.GetResourceUrl(item, true);
+                    url = Resources.Utility.GetResourceUrl(item);
 
                     is_css = item.Contains(".css");
                 }

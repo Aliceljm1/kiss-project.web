@@ -180,15 +180,17 @@ namespace Kiss.Web
 
         public void RegisterCssResource(string assemblyName, string resourceName, string baseUrl)
         {
-            if (IsScriptRended(resourceName))
+            string url = Resources.Utility.GetResourceUrl(assemblyName, resourceName);
+
+            if (IsScriptRended(url))
                 return;
 
-            SetScriptRended(resourceName);
+            SetScriptRended(url);
 
             if (string.IsNullOrEmpty(baseUrl))
-                Head.AddStyle(Resources.Utility.GetResourceUrl(assemblyName, resourceName));
+                Head.AddStyle(url);
             else
-                Head.AddStyle(StringUtil.CombinUrl(baseUrl, Resources.Utility.GetResourceUrl(assemblyName, resourceName)));
+                Head.AddStyle(StringUtil.CombinUrl(baseUrl, url));
         }
 
         public void RegisterCssBlock(string css, string key)
