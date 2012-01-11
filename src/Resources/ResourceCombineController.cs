@@ -36,19 +36,24 @@ namespace Kiss.Web.Resources
                 string[] fileNames = files.Split(new char[] { ',' },
                     StringSplitOptions.RemoveEmptyEntries);
 
-                StringBuilder sb = new StringBuilder();
-                foreach (string fileName in fileNames)
+                byte[] buffer;
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    string str = GetFileContent(httpContext, fileName.Trim());
-                    if (string.IsNullOrEmpty(str))
-                        continue;
+                    foreach (string fileName in fileNames)
+                    {
+                        byte[] bytes = GetFileContent(httpContext, fileName.Trim());
+                        if (bytes == null || bytes.Length == 0)
+                            continue;
 
-                    sb.AppendLine(str);
+                        ms.Write(bytes, 0, bytes.Length);
+                    }
+
+                    if (ms.Length == 0) return;
+
+                    buffer = ms.ToArray();
                 }
 
-                if (sb.Length == 0) return;
-
-                byte[] buffer = Encoding.UTF8.GetBytes(sb.ToString());
+                if (buffer == null) return;
 
                 // Cache the combined response so that it can be directly written
                 // in subsequent calls 
@@ -62,9 +67,9 @@ namespace Kiss.Web.Resources
             }
         }
 
-        private string GetFileContent(HttpContext context, string virtualPath)
+        private byte[] GetFileContent(HttpContext context, string virtualPath)
         {
-            string content = string.Empty;
+            byte[] content = null;
 
             try
             {
@@ -101,14 +106,13 @@ namespace Kiss.Web.Resources
                 {
                     using (WebClient client = new WebClient())
                     {
-                        client.Encoding = Encoding.UTF8;
-                        content = client.DownloadString(virtualPath);
+                        content = client.DownloadData(virtualPath);
                     }
                 }
                 else
                 {
                     string physicalPath = context.Server.MapPath(virtualPath);
-                    content = File.ReadAllText(physicalPath, Encoding.UTF8);
+                    content = File.ReadAllBytes(physicalPath);
                 }
             }
             catch (Exception ex)
@@ -116,7 +120,16 @@ namespace Kiss.Web.Resources
                 logger.Error("file: {0} is not found. {1}", virtualPath, ExceptionUtil.WriteException(ex));
             }
 
-            return content;
+            // remove bom byte
+            if (content.Length <= 3 || !(content[0] == 0xEF && content[1] == 0xBB && content[2] == 0xBF))
+                return content;
+
+            using (var ms = new MemoryStream())
+            {
+                ms.Write(content, 3, content.Length - 3);
+
+                return ms.ToArray();
+            }
         }
 
         private bool WriteFromCache(HttpContext context, string setName, string version, string contentType)

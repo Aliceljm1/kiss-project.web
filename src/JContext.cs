@@ -745,6 +745,8 @@ namespace Kiss.Web
 
                 if (item.Contains(";"))
                 {
+                    is_css = item.Contains(".css");
+
                     List<string> hrefs = new List<string>();
 
                     foreach (var str in StringUtil.Split(item, ";", true, true))
@@ -759,19 +761,24 @@ namespace Kiss.Web
                         csp.SetScriptRended(href);
 
                         hrefs.Add(href);
+
+                        if (is_css && !Site.CombineCss)
+                            cssfiles.Add(url);
+                        else if (!is_css && !Site.CombineJs)
+                            jsfiles.Add(url, includes[item].Join(";"));
                     }
 
-                    is_css = item.Contains(".css");
-
                     // comine url
-                    if (is_css)
+                    if (is_css && Site.CombineCss)
                         url = Utility.FormatCssUrl(Site, string.Format("_resc.aspx?f={0}&t=text/css&v={1}",
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
                                                                 Site.CssVersion));
-                    else
+                    else if (!is_css && Site.CombineJs)
                         url = Utility.FormatJsUrl(Kiss.Web.SiteConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
                                                             Site.JsVersion));
+                    else
+                        break;
                 }
                 else if (!item.Contains("/"))
                 {
