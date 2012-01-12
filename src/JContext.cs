@@ -746,24 +746,30 @@ namespace Kiss.Web
                 if (item.Contains(";"))
                 {
                     is_css = item.Contains(".css");
+                    bool scripts_added = false;
 
                     List<string> hrefs = new List<string>();
 
-                    foreach (var str in StringUtil.Split(item, ";", true, true))
+                    string[] strs = StringUtil.Split(item, ";", true, true);
+                    for (int i = 0; i < strs.Length; i++)
                     {
-                        string href = str;
+                        string href = strs[i];
                         if (!item.Contains("/"))
-                            href = Resources.Utility.GetResourceUrl(str);
+                            href = Resources.Utility.GetResourceUrl(href);
 
                         if (csp.IsScriptRended(href))
+                        {
+                            if (!is_css && !scripts_added) { scripts_added = true; scripts.AddRange(includes[item]); }
+
                             continue;
+                        }
 
                         csp.SetScriptRended(href);
 
                         if (is_css && !Site.CombineCss)
                             cssfiles.Add(href);
                         else if (!is_css && !Site.CombineJs)
-                            jsfiles.Add(href, includes[item].Join(";"));
+                            jsfiles.Add(href, (i == strs.Length - 1 && !scripts_added) ? includes[item].Join(";") : string.Empty);
                         else
                             hrefs.Add(href);
                     }
@@ -818,7 +824,7 @@ namespace Kiss.Web
 
             if (cssfiles.Count > 0 || jsfiles.Count > 0)
             {
-                sb.Append("lazy_include({");
+                sb.Append(";lazy_include({");
                 sb.AppendFormat("cssFiles:[{0}],", StringUtil.CollectionToDelimitedString(cssfiles, StringUtil.Comma, "'"));
                 sb.Append("jsFiles:[");
 
