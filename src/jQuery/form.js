@@ -990,9 +990,9 @@
 			$('select', f).addClass('ui-widget-content');
 			$(':text,:password,textarea', f).addClass('ui-widget-content ui-corner-all')
 				.bind('focus', function(){$(this).addClass('focus');})
-				.bind('blur', function(){$(this).removeClass('focus');})                        
-				.filter('.clearable')
+				.bind('blur', function(){$(this).removeClass('focus');})				
 				.each(function(){
+					if(!$(this).data('clearable')) return true;
 					$(this).bind('focus', function(){$(this).parent().addClass('focus');})
 						.bind('blur', function(){$(this).parent().removeClass('focus');})
 						.bind('change keyup', function(){ 
@@ -1012,7 +1012,11 @@
 							else
 								ele.text('');
 
-							ele.focus().trigger('change');})
+                            if(ele.data('valueselector'))
+                                $(ele.data('valueselector')).val('');
+
+							ele.trigger('change');
+						})
 						.hover(function(){$(this).removeClass('ui-state-disabled');},function(){$(this).addClass('ui-state-disabled');});
 
 					$(this).trigger('change');

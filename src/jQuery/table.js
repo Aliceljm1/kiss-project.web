@@ -97,8 +97,8 @@
                 th.html('<div>' + th.html() + '<span></span></div>');
 
                 // 修复宽度缩小问题
-                if (this.css('width'))
-                    this.find('div').css('width', this.css('width'));
+                if (th.attr('width'))
+                    th.find('div').css('width', th.attr('width'));
 
                 var compare = th.attr('data_type') || 'string';
 

@@ -746,7 +746,6 @@ namespace Kiss.Web
                 if (item.Contains(";"))
                 {
                     is_css = item.Contains(".css");
-                    bool scripts_added = false;
 
                     List<string> hrefs = new List<string>();
 
@@ -754,13 +753,11 @@ namespace Kiss.Web
                     for (int i = 0; i < strs.Length; i++)
                     {
                         string href = strs[i];
-                        if (!item.Contains("/"))
+                        if (!href.Contains("/"))
                             href = Resources.Utility.GetResourceUrl(href);
 
                         if (csp.IsScriptRended(href))
                         {
-                            if (!is_css && !scripts_added) { scripts_added = true; scripts.AddRange(includes[item]); }
-
                             continue;
                         }
 
@@ -769,10 +766,27 @@ namespace Kiss.Web
                         if (is_css && !Site.CombineCss)
                             cssfiles.Add(href);
                         else if (!is_css && !Site.CombineJs)
-                            jsfiles.Add(href, (i == strs.Length - 1 && !scripts_added) ? includes[item].Join(";") : string.Empty);
+                            jsfiles.Add(href, string.Empty);
                         else
                             hrefs.Add(href);
                     }
+
+                    bool scripts_added = false;
+                    for (int i = strs.Length - 1; i >= 0; i--)
+                    {
+                        string href = strs[i];
+                        if (!href.Contains("/"))
+                            href = Resources.Utility.GetResourceUrl(href);
+
+                        if (jsfiles.ContainsKey(href))
+                        {
+                            jsfiles[href] = includes[item].Join(";");
+                            scripts_added = true;
+                            break;
+                        }
+                    }
+                    if (!scripts_added && !is_css)
+                        scripts.AddRange(includes[item]);
 
                     // comine url
                     if (is_css && Site.CombineCss)
@@ -820,11 +834,9 @@ namespace Kiss.Web
 
             sb.Append("$(function(){");
 
-            sb.Append(scripts.Join(";"));
-
             if (cssfiles.Count > 0 || jsfiles.Count > 0)
             {
-                sb.Append(";lazy_include({");
+                sb.Append("lazy_include({");
                 sb.AppendFormat("cssFiles:[{0}],", StringUtil.CollectionToDelimitedString(cssfiles, StringUtil.Comma, "'"));
                 sb.Append("jsFiles:[");
 
@@ -843,6 +855,9 @@ namespace Kiss.Web
 
                 sb.Append("});");
             }
+
+            sb.Append(scripts.Join(";"));
+
             sb.Append("});");
 
             sb.Append("</script>");
