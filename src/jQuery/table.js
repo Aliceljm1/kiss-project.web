@@ -96,6 +96,10 @@
 
                 th.html('<div>' + th.html() + '<span></span></div>');
 
+                // 修复宽度缩小问题
+                if (this.css('width'))
+                    this.find('div').css('width', this.css('width'));
+
                 var compare = th.attr('data_type') || 'string';
 
                 $(this).click(function () {
@@ -161,7 +165,7 @@
             if (settings.sort == 'ajax') {
                 var form = $this.parents('form:first');
                 sort = $('input[name=sort]', form).val();
-            }else if ($.query)
+            } else if ($.query)
                 sort = jQuery.query.get('sort');
 
             if (sort && typeof sort == 'string') {
@@ -507,9 +511,9 @@ jQuery.fn.sortElements = (function () {
             window.location = pre + pi + extension + window.location.search;
         },
         ajax: function () {
-            $('.pagination').each(function(i,v){
+            $('.pagination').each(function (i, v) {
                 var $this = $(v);
-                if(!$this.hasClass('ajax')){
+                if (!$this.hasClass('ajax')) {
                     $this.addClass('ajax');
 
                     var form = $this.parents('form:first');
@@ -523,20 +527,20 @@ jQuery.fn.sortElements = (function () {
                         else if (ts.hasClass('prev'))
                             p = parseInt(ts.parents('.pagination:first').find('.current').text()) - 1;
                         else
-                            p = parseInt(ts.text());    
-                    
+                            p = parseInt(ts.text());
+
                         var cp = $('input[name=page]', form);
                         if (cp.length == 0)
-                            form.append('<input type="hidden" name="page"/>');                          
+                            form.append('<input type="hidden" name="page"/>');
 
                         $('input[name=page]', form).val(p);
 
                         form.submit();
 
                         return false;
-                    });  
+                    });
                 }
-            });                      
+            });
         }
     };
 })(jQuery);

@@ -988,8 +988,36 @@
 		var bind = function () {
 			var f = $this;
 			$('select', f).addClass('ui-widget-content');
-			$(':text,:password,textarea', f).addClass('ui-widget-content ui-corner-all');
+			$(':text,:password,textarea', f).addClass('ui-widget-content ui-corner-all')
+				.bind('focus', function(){$(this).addClass('focus');})
+				.bind('blur', function(){$(this).removeClass('focus');})                        
+				.filter('.clearable')
+				.each(function(){
+					$(this).bind('focus', function(){$(this).parent().addClass('focus');})
+						.bind('blur', function(){$(this).parent().removeClass('focus');})
+						.bind('change keyup', function(){ 
+							if( (this.nodeName == 'INPUT' && $(this).val() ) || (this.nodeName == "TEXTAREA" && $(this).text())) 
+								$(this).next().css('visibility','visible');
+							else
+								$(this).next().css('visibility','hidden');
+						})
+						.wrap('<div style="float:left;" class="clearContainer ui-widget-content ui-corner-all"></div>')
+						.parent()
+						.append('<div style="visibility:hidden" class="clearlink ui-state-disabled"><span title="清空" class="ui-icon ui-icon-circle-close"></span></div>')
+						.find('.clearlink')
+						.bind('click', function(){
+							var ele = $(this).prev();
+							if(ele[0].nodeName == 'INPUT') 
+								ele.val('');
+							else
+								ele.text('');
 
+							ele.focus().trigger('change');})
+						.hover(function(){$(this).removeClass('ui-state-disabled');},function(){$(this).addClass('ui-state-disabled');});
+
+					$(this).trigger('change');
+				});
+				
 			// default value
 			$('select[selected]', f).each(function (i, v) {
 				if( $(v).attr('multiple')=='multiple')
@@ -1018,12 +1046,7 @@
 				$('input:enabled', f).bind('keypress', function (e) {
 					if (e.keyCode == 13) f.submit();
 				});
-			}
-
-			$('.buttons :first,.submit', f).bind('click', function () {
-				f.submit();
-				return false;
-			});
+			}			
 
 			if (opts.autoAddRedStar) {
 				var inputs = $('input:enabled,textarea:enabled', f).filter(function () {
@@ -1084,21 +1107,7 @@
 		};
 
 		var updateTips = function (t) {
-			var tip;
-			if ($.isFunction($().message))
-				tip = $().message(t, gform.form);
-			else
-				tip = _tip.html(t);
-			if (t) {
-				if ($.isFunction(tip.effect))
-					tip.effect("highlight", {}, 3000);
-				else if (tip.length > 0)
-					tip.show();
-				else
-					alert(t);
-			}
-			else
-				tip.hide();
+			if (t) window.alert(t);
 		};
 
 		var handleException = function(result) {
@@ -1107,7 +1116,7 @@
 				eval(exc.parameter + "()");
 			}
 			else if (exc.action == "JSEval") {
-	            eval(exc.parameter);                
+				eval(exc.parameter);                
 			}
 			else if (exc.action == "returnValue") {
 				return exc.parameter;
