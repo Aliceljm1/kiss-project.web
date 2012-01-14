@@ -1012,8 +1012,11 @@
 							else
 								ele.text('');
 
-                            if(ele.data('valueselector'))
-                                $(ele.data('valueselector')).val('');
+							if(ele.data('clearcallback')){
+							    var func = eval(ele.data('clearcallback'));
+				                if (func && jQuery.isFunction(func))
+					                func.apply(null, [ele]);
+							    }
 
 							ele.trigger('change');
 						})
