@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Web;
 using System.Web.UI;
 using Kiss.Utils;
+using System.Reflection;
 
 namespace Kiss.Web.Controls
 {
@@ -60,6 +61,8 @@ namespace Kiss.Web.Controls
                 writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />");
 
             RenderTitle(CurrentSite, writer);
+
+            writer.WriteLineNoTabs(string.Format(@"<meta name=""generator"" content=""KISS Projects v{0}"" />", Assembly.GetExecutingAssembly().GetName().Version.ToString()));
 
             RenderMetaTags(writer);
             RenderLinkTags(writer);
