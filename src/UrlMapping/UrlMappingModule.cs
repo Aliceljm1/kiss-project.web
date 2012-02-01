@@ -45,6 +45,7 @@ namespace Kiss.Web.UrlMapping
 
         private const string kCONTEXTITEMS_RAWURLKEY = "__UrlMappingModule_RawUrl__";
         private const string kCONTEXTITEMS_ADDEDQSKEY = "__UrlMappingModule_AddedQS__";
+        internal const string kCONTEXTITEMS_MASTERPAGEKEY = "__UrlMappingModule_MasterPage__";
 
         private NoMatchAction _noMatchAction;
         private string _noMatchRedirectPage;
@@ -136,31 +137,26 @@ namespace Kiss.Web.UrlMapping
                 Page page = app.Context.Handler as Page;
                 if (page != null)
                 {
-                    if (HttpContext.Current.Items[kCONTEXTITEMS_RAWURLKEY] != null)
+                    HttpContext context = HttpContext.Current;
+                    object o = context.Items[kCONTEXTITEMS_RAWURLKEY];
+                    if (o != null)
                     {
-                        page.PreRender += new EventHandler(page_PreRender);
+                        string rawPath = o.ToString();
+
+                        string qs = string.Empty;
+
+                        if (rawPath.Contains("?"))
+                        {
+                            int index = rawPath.IndexOf("?");
+                            qs = _qsBehavior == IncomingQueryStringBehavior.Ingore ? string.Empty : rawPath.Substring(index + 1);
+                            rawPath = rawPath.Remove(index);
+                        }
+
+                        context.Items[kCONTEXTITEMS_MASTERPAGEKEY] = context.Request["kissMasterFile"];
+
+                        context.RewritePath(rawPath, string.Empty, qs, false);
                     }
                 }
-            }
-        }
-
-        void page_PreRender(object sender, EventArgs e)
-        {
-            object o = HttpContext.Current.Items[kCONTEXTITEMS_RAWURLKEY];
-            if (o != null)
-            {
-                string rawPath = o.ToString();
-
-                string qs = string.Empty;
-
-                if (rawPath.Contains("?"))
-                {
-                    int index = rawPath.IndexOf("?");
-                    qs = _qsBehavior == IncomingQueryStringBehavior.Ingore ? string.Empty : rawPath.Substring(index + 1);
-                    rawPath = rawPath.Remove(index);
-                }
-
-                HttpContext.Current.RewritePath(rawPath, string.Empty, qs, false);
             }
         }
 

@@ -20,20 +20,11 @@ namespace Kiss.Web.Controls
 
         protected override void OnPreInit(EventArgs e)
         {
-            string masterFile = Request.QueryString["kissMasterFile"];
+            string masterFile = Context.Items[UrlMapping.UrlMappingModule.kCONTEXTITEMS_MASTERPAGEKEY] as string;
 
             if (StringUtil.HasText(masterFile))
             {
                 hasMasterFile = true;
-
-                // reflect to readonly
-                PropertyInfo isreadonly = typeof(NameValueCollection).GetProperty("IsReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
-                // make collection editable
-                isreadonly.SetValue(Request.QueryString, false, null);
-                // remove
-                Request.QueryString.Remove("kissMasterFile");
-                // make collection readonly again
-                isreadonly.SetValue(Request.QueryString, true, null);
 
                 if (JContext.Current.RenderContent)
                 {
