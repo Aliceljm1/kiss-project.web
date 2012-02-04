@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Specialized;
-using System.Reflection;
+using System.Web.SessionState;
 using System.Web.UI;
 using Kiss.Utils;
 
@@ -9,7 +8,7 @@ namespace Kiss.Web.Controls
     /// <summary>
     /// use this page to render master file directly
     /// </summary>
-    public class MasterPage : Page
+    public class MasterPage : Page, IRequiresSessionState
     {
         /// <summary>
         /// 是否启用模板引擎渲染

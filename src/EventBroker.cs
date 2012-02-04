@@ -38,6 +38,7 @@ namespace Kiss.Web
             app.PostMapRequestHandler += app_PostMapRequestHandler;
             app.AcquireRequestState += app_AcquireRequestState;
             app.PostAcquireRequestState += app_PostAcquireRequestStateHandler;
+            app.PreRequestHandlerExecute += app_PreRequestHandlerExecute;
             app.Error += app_Error;
 
             app.ReleaseRequestState += app_ReleaseRequestState;
@@ -76,6 +77,7 @@ namespace Kiss.Web
         public EventHandler<EventArgs> PostMapRequestHandler;
         public EventHandler<EventArgs> AcquireRequestState;
         public EventHandler<EventArgs> PostAcquireRequestState;
+        public EventHandler<EventArgs> PreRequestHandlerExecute;
         public EventHandler<EventArgs> Error;
         public EventHandler<EventArgs> EndRequest;
         public EventHandler<EventArgs> ReleaseRequestState;
@@ -116,6 +118,12 @@ namespace Kiss.Web
         {
             if (PostAcquireRequestState != null)
                 PostAcquireRequestState(sender, e);
+        }
+
+        void app_PreRequestHandlerExecute(object sender, EventArgs e)
+        {
+            if (PreRequestHandlerExecute != null)
+                PreRequestHandlerExecute(sender, e);
         }
 
         protected void app_Error(object sender, EventArgs e)

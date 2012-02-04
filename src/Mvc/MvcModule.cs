@@ -40,8 +40,9 @@ namespace Kiss.Web.Mvc
         public virtual void Start()
         {
             invoker = new ActionInvoker();
-
-            EventBroker.Instance.PostAcquireRequestState += Invoke;
+            
+            //EventBroker.Instance.PostAcquireRequestState += Invoke;
+            EventBroker.Instance.PreRequestHandlerExecute += Invoke;
         }
     }
 }
