@@ -51,8 +51,10 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ajax\AjaxClass.cs" />
@@ -67,6 +69,356 @@
     <Compile Include="Area\AreaInitializer.cs" />
     <Compile Include="Area\AreaUrlMappingProvider.cs" />
     <Compile Include="Area\Host.cs" />
+    <Compile Include="Auth\Configuration\AssociationTypeCollection.cs" />
+    <Compile Include="Auth\Configuration\AssociationTypeElement.cs" />
+    <Compile Include="Auth\Configuration\DotNetOpenAuthSection.cs" />
+    <Compile Include="Auth\Configuration\HostNameElement.cs" />
+    <Compile Include="Auth\Configuration\HostNameOrRegexCollection.cs" />
+    <Compile Include="Auth\Configuration\MessagingElement.cs" />
+    <Compile Include="Auth\Configuration\OpenIdElement.cs" />
+    <Compile Include="Auth\Configuration\OpenIdProviderElement.cs" />
+    <Compile Include="Auth\Configuration\OpenIdProviderSecuritySettingsElement.cs" />
+    <Compile Include="Auth\Configuration\OpenIdRelyingPartyElement.cs" />
+    <Compile Include="Auth\Configuration\OpenIdRelyingPartySecuritySettingsElement.cs" />
+    <Compile Include="Auth\Configuration\TrustedProviderConfigurationCollection.cs" />
+    <Compile Include="Auth\Configuration\TrustedProviderEndpointConfigurationElement.cs" />
+    <Compile Include="Auth\Configuration\TypeConfigurationCollection.cs" />
+    <Compile Include="Auth\Configuration\TypeConfigurationElement.cs" />
+    <Compile Include="Auth\Configuration\UntrustedWebRequestElement.cs" />
+    <Compile Include="Auth\Configuration\XriResolverElement.cs" />
+    <Compile Include="Auth\Logger.cs" />
+    <Compile Include="Auth\Messaging\Bindings\ExpiredMessageException.cs" />
+    <Compile Include="Auth\Messaging\Bindings\IExpiringProtocolMessage.cs" />
+    <Compile Include="Auth\Messaging\Bindings\INonceStore.cs" />
+    <Compile Include="Auth\Messaging\Bindings\InvalidSignatureException.cs" />
+    <Compile Include="Auth\Messaging\Bindings\IReplayProtectedProtocolMessage.cs" />
+    <Compile Include="Auth\Messaging\Bindings\NonceMemoryStore.cs" />
+    <Compile Include="Auth\Messaging\Bindings\ReplayedMessageException.cs" />
+    <Compile Include="Auth\Messaging\Bindings\StandardExpirationBindingElement.cs" />
+    <Compile Include="Auth\Messaging\Bindings\StandardReplayProtectionBindingElement.cs" />
+    <Compile Include="Auth\Messaging\CachedDirectWebResponse.cs" />
+    <Compile Include="Auth\Messaging\Channel.cs" />
+    <Compile Include="Auth\Messaging\ChannelContract.cs" />
+    <Compile Include="Auth\Messaging\ChannelEventArgs.cs" />
+    <Compile Include="Auth\Messaging\DirectWebRequestOptions.cs" />
+    <Compile Include="Auth\Messaging\EmptyDictionary.cs" />
+    <Compile Include="Auth\Messaging\EmptyEnumerator.cs" />
+    <Compile Include="Auth\Messaging\EmptyList.cs" />
+    <Compile Include="Auth\Messaging\EnumerableCache.cs" />
+    <Compile Include="Auth\Messaging\ErrorUtilities.cs" />
+    <Compile Include="Auth\Messaging\HostErrorException.cs" />
+    <Compile Include="Auth\Messaging\HttpDeliveryMethods.cs" />
+    <Compile Include="Auth\Messaging\HttpRequestInfo.cs" />
+    <Compile Include="Auth\Messaging\IChannelBindingElement.cs" />
+    <Compile Include="Auth\Messaging\IDirectedProtocolMessage.cs" />
+    <Compile Include="Auth\Messaging\IDirectResponseProtocolMessage.cs" />
+    <Compile Include="Auth\Messaging\IDirectWebRequestHandler.cs" />
+    <Compile Include="Auth\Messaging\IExtensionMessage.cs" />
+    <Compile Include="Auth\Messaging\IHttpDirectResponse.cs" />
+    <Compile Include="Auth\Messaging\IMessage.cs" />
+    <Compile Include="Auth\Messaging\IMessageFactory.cs" />
+    <Compile Include="Auth\Messaging\IMessageOriginalPayload.cs" />
+    <Compile Include="Auth\Messaging\IMessageWithBinaryData.cs" />
+    <Compile Include="Auth\Messaging\IMessageWithEvents.cs" />
+    <Compile Include="Auth\Messaging\IncomingWebResponse.cs" />
+    <Compile Include="Auth\Messaging\IncomingWebResponseContract.cs" />
+    <Compile Include="Auth\Messaging\InternalErrorException.cs" />
+    <Compile Include="Auth\Messaging\IProtocolMessage.cs" />
+    <Compile Include="Auth\Messaging\IProtocolMessageWithExtensions.cs" />
+    <Compile Include="Auth\Messaging\ITamperResistantProtocolMessage.cs" />
+    <Compile Include="Auth\Messaging\KeyedCollectionDelegate.cs" />
+    <Compile Include="Auth\Messaging\MessagePartAttribute.cs" />
+    <Compile Include="Auth\Messaging\MessageProtections.cs" />
+    <Compile Include="Auth\Messaging\MessageReceivingEndpoint.cs" />
+    <Compile Include="Auth\Messaging\MessageSerializer.cs" />
+    <Compile Include="Auth\Messaging\MessageTransport.cs" />
+    <Compile Include="Auth\Messaging\MessagingStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MessagingStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Auth\Messaging\MessagingUtilities.cs" />
+    <Compile Include="Auth\Messaging\MultipartPostPart.cs" />
+    <Compile Include="Auth\Messaging\NetworkDirectWebResponse.cs" />
+    <Compile Include="Auth\Messaging\OutgoingWebResponse.cs" />
+    <Compile Include="Auth\Messaging\ProtocolException.cs" />
+    <Compile Include="Auth\Messaging\Reflection\IMessagePartEncoder.cs" />
+    <Compile Include="Auth\Messaging\Reflection\IMessagePartNullEncoder.cs" />
+    <Compile Include="Auth\Messaging\Reflection\IMessagePartOriginalEncoder.cs" />
+    <Compile Include="Auth\Messaging\Reflection\MessageDescription.cs" />
+    <Compile Include="Auth\Messaging\Reflection\MessageDescriptionCollection.cs" />
+    <Compile Include="Auth\Messaging\Reflection\MessageDictionary.cs" />
+    <Compile Include="Auth\Messaging\Reflection\MessagePart.cs" />
+    <Compile Include="Auth\Messaging\Reflection\ValueMapping.cs" />
+    <Compile Include="Auth\Messaging\StandardWebRequestHandler.cs" />
+    <Compile Include="Auth\Messaging\UnprotectedMessageException.cs" />
+    <Compile Include="Auth\Messaging\UntrustedWebRequestHandler.cs" />
+    <Compile Include="Auth\OpenId\Association.cs" />
+    <Compile Include="Auth\OpenId\AssociationContract.cs" />
+    <Compile Include="Auth\OpenId\AssociationMemoryStore.cs" />
+    <Compile Include="Auth\OpenId\Associations.cs" />
+    <Compile Include="Auth\OpenId\Behaviors\AXFetchAsSregTransform.cs" />
+    <Compile Include="Auth\OpenId\Behaviors\BehaviorStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BehaviorStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Auth\OpenId\Behaviors\GsaIcamProfile.cs" />
+    <Compile Include="Auth\OpenId\Behaviors\PpidGeneration.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\BackwardCompatibilityBindingElement.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\ExtensionsBindingElement.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\IOpenIdExtensionFactory.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\ITamperResistantOpenIdMessage.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\KeyValueFormEncoding.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\OpenIdChannel.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\OpenIdMessageFactory.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\OriginalStringUriEncoder.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\RelyingPartySecurityOptions.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\ReturnToNonceBindingElement.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\ReturnToSignatureBindingElement.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\SigningBindingElement.cs" />
+    <Compile Include="Auth\OpenId\ChannelElements\SkipSecurityBindingElement.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellmanUtilities.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\DHKeyGeneration.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\DHParameters.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\DiffieHellman.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\DiffieHellmanManaged.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\mono\BigInteger.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\mono\ConfidenceFactor.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\mono\NextPrimeFinder.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\mono\PrimalityTests.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\mono\PrimeGeneratorBase.cs" />
+    <Compile Include="Auth\OpenId\DiffieHellman\mono\SequentialSearchPrimeGeneratorBase.cs" />
+    <Compile Include="Auth\OpenId\Extensions\AliasManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\AttributeRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\AttributeValues.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\AXAttributeFormats.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\AXUtilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\Constants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\FetchRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\FetchResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\StoreRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\StoreResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\AttributeExchange\WellKnownAttributes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ExtensionArgumentsManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ExtensionBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ExtensionsInteropHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\IClientScriptExtensionResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\OAuth\AuthorizationApprovedResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\OAuth\AuthorizationDeclinedResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\OAuth\AuthorizationRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\OAuth\Constants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\OpenIdExtensionFactoryAggregator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ProviderAuthenticationPolicy\AuthenticationPolicies.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ProviderAuthenticationPolicy\Constants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ProviderAuthenticationPolicy\DateTimeEncoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ProviderAuthenticationPolicy\NistAssuranceLevel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ProviderAuthenticationPolicy\PapeUtilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ProviderAuthenticationPolicy\PolicyRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ProviderAuthenticationPolicy\PolicyResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\ProviderAuthenticationPolicy\TimespanSecondsEncoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\SimpleRegistration\ClaimsRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\SimpleRegistration\ClaimsResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\SimpleRegistration\Constants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\SimpleRegistration\DemandLevel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\SimpleRegistration\Gender.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\StandardOpenIdExtensionFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\UI\UIConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\UI\UIModes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\UI\UIRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\Extensions\UI\UIUtilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Auth\OpenId\HmacShaAssociation.cs" />
+    <Compile Include="Auth\OpenId\HostMetaDiscoveryService.cs" />
+    <Compile Include="Auth\OpenId\IAssociationStore.cs" />
+    <Compile Include="Auth\OpenId\Identifier.cs" />
+    <Compile Include="Auth\OpenId\IdentifierContract.cs" />
+    <Compile Include="Auth\OpenId\IdentifierDiscoveryResult.cs" />
+    <Compile Include="Auth\OpenId\IIdentifierDiscoveryService.cs" />
+    <Compile Include="Auth\OpenId\Interop\AuthenticationResponseShim.cs" />
+    <Compile Include="Auth\OpenId\Interop\ClaimsResponseShim.cs" />
+    <Compile Include="Auth\OpenId\Interop\OpenIdRelyingPartyShim.cs" />
+    <Compile Include="Auth\OpenId\Messages\AssociateDiffieHellmanRequest.cs" />
+    <Compile Include="Auth\OpenId\Messages\AssociateDiffieHellmanResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\AssociateRequest.cs" />
+    <Compile Include="Auth\OpenId\Messages\AssociateSuccessfulResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\AssociateSuccessfulResponseContract.cs" />
+    <Compile Include="Auth\OpenId\Messages\AssociateUnencryptedRequest.cs" />
+    <Compile Include="Auth\OpenId\Messages\AssociateUnencryptedResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\AssociateUnsuccessfulResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\CheckAuthenticationRequest.cs" />
+    <Compile Include="Auth\OpenId\Messages\CheckAuthenticationResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\CheckIdRequest.cs" />
+    <Compile Include="Auth\OpenId\Messages\DirectErrorResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\DirectResponseBase.cs" />
+    <Compile Include="Auth\OpenId\Messages\IErrorMessage.cs" />
+    <Compile Include="Auth\OpenId\Messages\IndirectErrorResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\IndirectResponseBase.cs" />
+    <Compile Include="Auth\OpenId\Messages\IndirectSignedResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\IOpenIdMessageExtension.cs" />
+    <Compile Include="Auth\OpenId\Messages\NegativeAssertionResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\PositiveAssertionResponse.cs" />
+    <Compile Include="Auth\OpenId\Messages\RequestBase.cs" />
+    <Compile Include="Auth\OpenId\Messages\SignedResponseRequest.cs" />
+    <Compile Include="Auth\OpenId\NoDiscoveryIdentifier.cs" />
+    <Compile Include="Auth\OpenId\OpenIdStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OpenIdStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Auth\OpenId\OpenIdUtilities.cs" />
+    <Compile Include="Auth\OpenId\OpenIdXrdsHelper.cs" />
+    <Compile Include="Auth\OpenId\Protocol.cs" />
+    <Compile Include="Auth\OpenId\ProviderEndpointDescription.cs" />
+    <Compile Include="Auth\OpenId\Provider\AnonymousRequest.cs" />
+    <Compile Include="Auth\OpenId\Provider\AnonymousRequestEventArgs.cs" />
+    <Compile Include="Auth\OpenId\Provider\AuthenticationChallengeEventArgs.cs" />
+    <Compile Include="Auth\OpenId\Provider\AuthenticationRequest.cs" />
+    <Compile Include="Auth\OpenId\Provider\AutoResponsiveRequest.cs" />
+    <Compile Include="Auth\OpenId\Provider\HostProcessedRequest.cs" />
+    <Compile Include="Auth\OpenId\Provider\IAnonymousRequest.cs" />
+    <Compile Include="Auth\OpenId\Provider\IAuthenticationRequest.cs" />
+    <Compile Include="Auth\OpenId\Provider\IDirectedIdentityIdentifierProvider.cs" />
+    <Compile Include="Auth\OpenId\Provider\IErrorReporting.cs" />
+    <Compile Include="Auth\OpenId\Provider\IHostProcessedRequest.cs" />
+    <Compile Include="Auth\OpenId\Provider\IProviderApplicationStore.cs" />
+    <Compile Include="Auth\OpenId\Provider\IProviderBehavior.cs" />
+    <Compile Include="Auth\OpenId\Provider\IRequest.cs" />
+    <Compile Include="Auth\OpenId\Provider\OpenIdProvider.cs" />
+    <Compile Include="Auth\OpenId\Provider\PrivatePersonalIdentifierProviderBase.cs" />
+    <Compile Include="Auth\OpenId\Provider\ProviderEndpoint.cs" />
+    <Compile Include="Auth\OpenId\Provider\ProviderSecuritySettings.cs" />
+    <Compile Include="Auth\OpenId\Provider\RelyingPartyDiscoveryResult.cs" />
+    <Compile Include="Auth\OpenId\Provider\Request.cs" />
+    <Compile Include="Auth\OpenId\Provider\RequestContract.cs" />
+    <Compile Include="Auth\OpenId\Provider\StandardProviderApplicationStore.cs" />
+    <Compile Include="Auth\OpenId\Realm.cs" />
+    <Compile Include="Auth\OpenId\RelyingPartyDescription.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\AssociationManager.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\AssociationPreference.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\AuthenticationRequest.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\AuthenticationRequestMode.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\AuthenticationStatus.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\DuplicateRequestedHostsComparer.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\FailedAuthenticationResponse.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\IAuthenticationRequest.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\IAuthenticationRequestContract.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\IAuthenticationResponse.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\IProviderEndpoint.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\IRelyingPartyApplicationStore.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\IRelyingPartyBehavior.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\ISetupRequiredAuthenticationResponse.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\NegativeAuthenticationResponse.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\OpenIdRelyingParty.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\PositiveAnonymousResponse.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\PositiveAuthenticationResponse.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\PositiveAuthenticationResponseSnapshot.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\PrivateSecretManager.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\RelyingPartySecuritySettings.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\SimpleXrdsProviderEndpoint.cs" />
+    <Compile Include="Auth\OpenId\RelyingParty\StandardRelyingPartyApplicationStore.cs" />
+    <Compile Include="Auth\OpenId\SecuritySettings.cs" />
+    <Compile Include="Auth\OpenId\UriDiscoveryService.cs" />
+    <Compile Include="Auth\OpenId\UriIdentifier.cs" />
+    <Compile Include="Auth\OpenId\XriDiscoveryProxyService.cs" />
+    <Compile Include="Auth\OpenId\XriIdentifier.cs" />
+    <Compile Include="Auth\Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Auth\UriUtil.cs" />
+    <Compile Include="Auth\Util.cs" />
+    <Compile Include="Auth\Xrds\ServiceElement.cs" />
+    <Compile Include="Auth\Xrds\TypeElement.cs" />
+    <Compile Include="Auth\Xrds\UriElement.cs" />
+    <Compile Include="Auth\Xrds\XrdElement.cs" />
+    <Compile Include="Auth\Xrds\XrdsDocument.cs" />
+    <Compile Include="Auth\Xrds\XrdsNode.cs" />
+    <Compile Include="Auth\Xrds\XrdsStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>XrdsStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Auth\Yadis\ContentTypes.cs" />
+    <Compile Include="Auth\Yadis\DiscoveryResult.cs" />
+    <Compile Include="Auth\Yadis\HtmlParser.cs" />
+    <Compile Include="Auth\Yadis\Yadis.cs" />
     <Compile Include="Cache\WebCacheProvider.cs" />
     <Compile Include="Controls\IContextAwaredControl.cs" />
     <Compile Include="Controls\Layout.cs" />
@@ -229,6 +581,26 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Ajax\js" />
+    <EmbeddedResource Include="Auth\Messaging\MessagingStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MessagingStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Auth\OpenId\Behaviors\BehaviorStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BehaviorStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Auth\OpenId\OpenIdStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OpenIdStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Auth\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Auth\Xrds\XrdsStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>XrdsStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="jQuery\bgiframe.js" />
     <EmbeddedResource Include="jQuery\calendar\img\dropdown.gif" />
     <EmbeddedResource Include="jQuery\calendar\img\dropup.gif" />
@@ -316,9 +688,7 @@
   <ItemGroup>
     <EmbeddedResource Include="jQuery\lazyinclude.js" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Auth\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
