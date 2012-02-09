@@ -56,10 +56,17 @@ namespace Kiss.Web.Area
             List<string> monitor_paths = new List<string>();
 
             List<string> privateBins = new List<string>() { "bin" };
-#if !MONO
-            var m = typeof(AppDomainSetup).GetMethod("UpdateContextProperty", BindingFlags.NonPublic | BindingFlags.Static);
-            var funsion = typeof(AppDomain).GetMethod("GetFusionContext", BindingFlags.NonPublic | BindingFlags.Instance);
-#endif
+
+            MethodInfo m = null, funsion = null;
+
+            // check if i am running under mono at runtime. bad coding style
+            bool isMono = Type.GetType("Mono.Runtime") != null;
+
+            if (!isMono)
+            {
+                m = typeof(AppDomainSetup).GetMethod("UpdateContextProperty", BindingFlags.NonPublic | BindingFlags.Static);
+                funsion = typeof(AppDomain).GetMethod("GetFusionContext", BindingFlags.NonPublic | BindingFlags.Instance);
+            }
 
             foreach (var dir in Directory.GetDirectories(ServerUtil.MapPath("~")))
             {
@@ -94,14 +101,15 @@ namespace Kiss.Web.Area
 
                     monitor_paths.Add(bindir);
 
-#if !MONO
-                    // hack !!!
-                    if (m != null && funsion != null)
+                    if (!isMono)
                     {
-                        m.Invoke(null, new object[] { funsion.Invoke(AppDomain.CurrentDomain, null), "PRIVATE_BINPATH", privateBins.Join(";") });
-                        m.Invoke(null, new object[] { funsion.Invoke(AppDomain.CurrentDomain, null), "SHADOW_COPY_DIRS", privateBins.Join(";") });
+                        // hack !!!
+                        if (m != null && funsion != null)
+                        {
+                            m.Invoke(null, new object[] { funsion.Invoke(AppDomain.CurrentDomain, null), "PRIVATE_BINPATH", privateBins.Join(";") });
+                            m.Invoke(null, new object[] { funsion.Invoke(AppDomain.CurrentDomain, null), "SHADOW_COPY_DIRS", privateBins.Join(";") });
+                        }
                     }
-#endif
 
                     List<Assembly> assemblies = new List<Assembly>();
 
@@ -109,11 +117,10 @@ namespace Kiss.Web.Area
                     {
                         try
                         {
-#if MONO
-                            assemblies.Add(Assembly.Load(File.ReadAllBytes(item)));
-#else
-                            assemblies.Add(AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(item)));
-#endif
+                            if (isMono)
+                                assemblies.Add(Assembly.Load(File.ReadAllBytes(item)));
+                            else
+                                assemblies.Add(AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(item)));
                         }
                         catch (BadImageFormatException)
                         {
