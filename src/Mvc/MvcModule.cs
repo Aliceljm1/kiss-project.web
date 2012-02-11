@@ -13,6 +13,9 @@ namespace Kiss.Web.Mvc
         protected virtual void Invoke(object sender, EventArgs e)
         {
             JContext jc = JContext.Current;
+
+            logger.Debug("begin invoke controller's action. {0}", jc.Navigation.ToString());
+
             try
             {
                 jc.Controller = ControllerResolver.Instance.CreateController(jc.Navigation.Id);
@@ -40,7 +43,7 @@ namespace Kiss.Web.Mvc
         public virtual void Start()
         {
             invoker = new ActionInvoker();
-            
+
             //EventBroker.Instance.PostAcquireRequestState += Invoke;
             EventBroker.Instance.PreRequestHandlerExecute += Invoke;
         }

@@ -48,16 +48,19 @@ namespace Kiss.Web.Mvc
 
             string binPath = ServerUtil.MapPath("~/bin");
 
+            bool isMono = Type.GetType("Mono.Runtime") != null;
+
             foreach (Assembly asm in ServiceLocator.Instance.Resolve<ITypeFinder>().GetAssemblies())
             {
                 if (asm.GetCustomAttributes(typeof(MvcAttribute), false).Length == 0)
                     continue;
 
-#if !MONO
-                // only load assembly in bin dir
-                if (!Directory.GetParent(new Uri(asm.CodeBase).LocalPath).FullName.Equals(binPath))
-                    continue;
-#endif
+                if (!isMono)
+                {
+                    // only load assembly in bin dir
+                    if (!Directory.GetParent(new Uri(asm.CodeBase).LocalPath).FullName.Equals(binPath))
+                        continue;
+                }
 
                 foreach (var item in GetsControllerFromAssembly(asm))
                 {
