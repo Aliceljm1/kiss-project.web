@@ -14,13 +14,13 @@ namespace Kiss.Web.Mvc
         {
             JContext jc = JContext.Current;
 
-            logger.Debug("begin invoke controller's action. {0}", jc.Navigation.ToString());
-
             try
             {
                 jc.Controller = ControllerResolver.Instance.CreateController(jc.Navigation.Id);
                 if (jc.Controller == null)
                     return;
+
+                logger.Debug("begin invoke controller's action. {0}", jc.Navigation.ToString());
 
                 jc.Controller.jc = jc;
                 jc.ViewData["this"] = jc.Controller;
