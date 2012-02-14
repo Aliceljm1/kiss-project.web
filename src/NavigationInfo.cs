@@ -189,6 +189,9 @@ namespace Kiss.Web
                     int dotindex = _action.IndexOf(".");
                     if (dotindex != -1)
                         _action = _action.Remove(dotindex);
+
+                    if (string.Equals(_action, "default", StringComparison.InvariantCultureIgnoreCase))
+                        _action = "index";
                 }
 
                 return _action;
