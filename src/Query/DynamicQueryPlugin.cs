@@ -16,6 +16,7 @@ namespace Kiss.Web.Query
         const string kCACHE_KEY = "__DynamicQueryPlugin_cache_key__";
         CacheDependency _fileDependency;
         const string FORMAT = "{0}.{1}";
+        private static readonly ILogger _logger = LogManager.GetLogger<DynamicQueryPlugin>();
 
         public void Start()
         {
@@ -32,46 +33,63 @@ namespace Kiss.Web.Query
 
             foreach (ISite site in ServiceLocator.Instance.Resolve<IHost>().AllSites)
             {
+                string dir;
                 string filename;
+                List<string> files = new List<string>();
 
                 if (site.SiteKey == SiteConfig.Instance.SiteKey)// default site
-                    filename = ServerUtil.MapPath("~/App_Data");
+                    dir = ServerUtil.MapPath("~/App_Data");
                 else
-                    filename = ServerUtil.MapPath(site.VirtualPath);
+                    dir = ServerUtil.MapPath(site.VirtualPath);
 
-                filename = Path.Combine(filename, "query.config");
+                filename = Path.Combine(dir, "query.config");
 
-                if (!File.Exists(filename))
+                if (!Directory.Exists(dir))
                     continue;
 
-                filenames.Add(filename);
+                if (File.Exists(filename))
+                    files.Add(filename);
+
+                // add filename like "query.post.config"
+                files.AddRange(Directory.GetFiles(dir, "query.*.config", SearchOption.TopDirectoryOnly));
+
+                filenames.AddRange(files);
 
                 // prase xml
-                XmlDocument doc = new XmlDocument();
-                doc.Load(filename);
-
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("//query"))
+                foreach (var item in files)
                 {
-                    string id = XmlUtil.GetStringAttribute(node, "id", string.Empty);
-                    if (string.IsNullOrEmpty(id))
-                        continue;
+                    _logger.Debug("begin parse query file: {0}.", item);
 
-                    id = string.Format(FORMAT, site.SiteKey, id.ToLower());
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(item);
 
-                    qc_dict[id] = new Qc()
+                    foreach (XmlNode node in doc.DocumentElement.SelectNodes("//query"))
                     {
-                        Id = id,
-                        Field = XmlUtil.GetStringAttribute(node, "field", string.Empty),
-                        AllowedOrderbyColumns = XmlUtil.GetStringAttribute(node, "allowedOrderbyColumns", string.Empty),
-                        Orderby = XmlUtil.GetStringAttribute(node, "orderby", string.Empty),
-                        Where = node.InnerText,
-                        PageSize = XmlUtil.GetIntAttribute(node, "pageSize", -1)
-                    };
+                        string id = XmlUtil.GetStringAttribute(node, "id", string.Empty);
+                        if (string.IsNullOrEmpty(id))
+                            continue;
 
-                    foreach (XmlAttribute attr in node.Attributes)
-                    {
-                        qc_dict[id][attr.Name] = attr.Value;
+                        id = string.Format(FORMAT, site.SiteKey, id.ToLower());
+
+                        _logger.Debug("RESULT: query id:{0}", id);
+
+                        qc_dict[id] = new Qc()
+                        {
+                            Id = id,
+                            Field = XmlUtil.GetStringAttribute(node, "field", string.Empty),
+                            AllowedOrderbyColumns = XmlUtil.GetStringAttribute(node, "allowedOrderbyColumns", string.Empty),
+                            Orderby = XmlUtil.GetStringAttribute(node, "orderby", string.Empty),
+                            Where = node.InnerText,
+                            PageSize = XmlUtil.GetIntAttribute(node, "pageSize", -1)
+                        };
+
+                        foreach (XmlAttribute attr in node.Attributes)
+                        {
+                            qc_dict[id][attr.Name] = attr.Value;
+                        }
                     }
+
+                    _logger.Debug("end parse query file: {0}.", item);
                 }
             }
 
