@@ -35,7 +35,7 @@ namespace Kiss.Web.Controls
             if (renderers.Count == 0) return;
 
             Include include = new Include();
-            include.Js = "cookie,scrollfollow";
+            include.Js = "cookie";
             Controls.Add(include);
 
             ClientScriptProxy.Current.RegisterCssResource(GetType(),

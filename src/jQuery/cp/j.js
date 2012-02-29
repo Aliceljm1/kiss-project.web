@@ -46,6 +46,5 @@
     $sc.find(".open").click(curtain.open);
 };
 $(function () {
-    slidingCurtain('#_g_sc', false);
-    $('#_g_sc').scrollFollow({ offset: 0 });
+    slidingCurtain('#_g_sc', false);    
 });

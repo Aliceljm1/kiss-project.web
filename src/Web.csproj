@@ -259,9 +259,6 @@
     <EmbeddedResource Include="jQuery\calendar\js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="jQuery\scrollfollow.js" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="jQuery\UI\addon.timepicker.js" />
   </ItemGroup>
   <ItemGroup>
