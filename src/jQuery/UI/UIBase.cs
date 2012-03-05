@@ -25,6 +25,8 @@ namespace Kiss.Web.Controls
         protected List<string> JsIncludes { get; private set; }
         protected StringBuilder Js { get; private set; }
 
+        public string ThemeStyleUrl { get { return Context.Items["_jqueryUI_ThemeStyleUrl"] as string; } set { Context.Items["_jqueryUI_ThemeStyleUrl"] = value; } }
+
         #region ctor
 
         public UIBase()
@@ -42,8 +44,10 @@ namespace Kiss.Web.Controls
             base.OnLoad(e);
 
             // register style
-            Proxy.RegisterCssResource(typeof(UIBase),
-                string.Format("Kiss.Web.jQuery.UI.themes.{0}.style.css", SiteConfig.Instance.jQueryUI));
+            if (string.IsNullOrEmpty(ThemeStyleUrl))
+                Proxy.RegisterCssResource("Kiss.Web", "Kiss.Web.jQuery.UI.themes.smoothness.style.css");
+            else
+                Proxy.RegisterCss(JContext.Current.url(ThemeStyleUrl));
         }
 
         protected override void Render(HtmlTextWriter writer)
