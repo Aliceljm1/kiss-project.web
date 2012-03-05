@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Web;
 using System.Web.Caching;
 using Kiss.Utils;
@@ -95,11 +94,20 @@ namespace Kiss.Web.Resources
                             path = StringUtil.CombinUrl(site.VirtualPath, path);
                     }
 
-                    virtualPath = string.Format("{0}://{1}{2}",
-                        context.Request.Url.Scheme,
-                        jc.SiteConfig == null ? context.Request.Url.Authority : jc.SiteConfig.Authority,
-                        path);
-
+                    if (jc.SiteConfig == null)
+                    {
+                        virtualPath = string.Format("{0}://localhost:{1}{2}",
+                            context.Request.Url.Scheme,
+                            context.Request.Url.Port,
+                            path);
+                    }
+                    else
+                    {
+                        virtualPath = string.Format("{0}://{1}{2}",
+                            context.Request.Url.Scheme,
+                            jc.SiteConfig.Authority,
+                            path);
+                    }
                 }
 
                 if (virtualPath.Contains("://"))
