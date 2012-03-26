@@ -176,20 +176,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Ajax\js" />
     <EmbeddedResource Include="jQuery\bgiframe.js" />
-    <EmbeddedResource Include="jQuery\calendar\img\dropdown.gif" />
-    <EmbeddedResource Include="jQuery\calendar\img\dropup.gif" />
-    <EmbeddedResource Include="jQuery\calendar\img\navleft.gif" />
-    <EmbeddedResource Include="jQuery\calendar\img\navleftx2.gif" />
-    <EmbeddedResource Include="jQuery\calendar\img\navright.gif" />
-    <EmbeddedResource Include="jQuery\calendar\img\navrightx2.gif" />
-    <EmbeddedResource Include="jQuery\calendar\img\timedown.png" />
-    <EmbeddedResource Include="jQuery\calendar\img\timeup.png" />
     <EmbeddedResource Include="jQuery\cookie.js" />
     <EmbeddedResource Include="jQuery\cp\c.css" />
     <EmbeddedResource Include="jQuery\cp\close.png" />
     <EmbeddedResource Include="jQuery\cp\j.js" />
     <EmbeddedResource Include="jQuery\cp\open.png" />
-    <EmbeddedResource Include="jQuery\dateSelector.js" />
     <EmbeddedResource Include="jQuery\dialogutil.js" />
     <EmbeddedResource Include="jQuery\flash.js" />
     <EmbeddedResource Include="jQuery\form.css" />
@@ -247,10 +238,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="jQuery\js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="jQuery\calendar\css" />
-    <EmbeddedResource Include="jQuery\calendar\js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="jQuery\UI\addon.timepicker.js" />
