@@ -160,16 +160,28 @@ namespace Kiss.Web.Controls
 
                     int index = path.IndexOf(s.VirtualPath);
                     if (index != -1)
+                    {
                         dir = path.Substring(index + s.VirtualPath.Length);
-                    else if (dir == "/")
-                        dir = string.Empty;// res.aspx
 
-                    writer.Write(string.Format(styleFormat,
+                        writer.Write(string.Format(styleFormat,
                                         Utility.FormatCssUrl(s, string.Format("{2}_resc.aspx?f={0}&t=text/css&v={1}",
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(di[s][path])),
                                                                 s.CssVersion,
                                                                 dir)),
                                         "screen"));
+                    }
+                    else
+                    {
+                        if (dir == "/")
+                            dir = string.Empty;// res.aspx
+
+                        writer.Write(string.Format(styleFormat,
+                                                  StringUtil.CombinUrl(s.CssHost, string.Format("{2}_resc.aspx?f={0}&t=text/css&v={1}",
+                                                                ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(di[s][path])),
+                                                                s.CssVersion,
+                                                                dir)),
+                                                   "screen"));
+                    }
                 }
             }
         }
