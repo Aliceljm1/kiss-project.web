@@ -90,8 +90,10 @@ namespace Kiss.Web.Resources
 
                             path = string.Concat(VirtualPathUtility.ToAbsolute(jc.CombinUrl(site.ThemeRoot)), path);
                         }
-                        else
+                        else if (index != -1)
+                        {
                             path = StringUtil.CombinUrl(site.VirtualPath, path);
+                        }
                     }
 
                     if (jc.SiteConfig == null)

@@ -161,7 +161,7 @@ namespace Kiss.Web.Controls
                     int index = path.IndexOf(s.VirtualPath);
                     if (index != -1)
                         dir = path.Substring(index + s.VirtualPath.Length);
-                    else
+                    else if (dir == "/")
                         dir = string.Empty;// res.aspx
 
                     writer.Write(string.Format(styleFormat,
