@@ -17,6 +17,7 @@ namespace Kiss.Web.Area
         private Dictionary<ISite, Dictionary<string, string>> _urls = new Dictionary<ISite, Dictionary<string, string>>();
         private UrlMappingItemCollection _manualGlobalRoutes = new UrlMappingItemCollection();
         private Dictionary<string, UrlMappingItemCollection> _manualItems = new Dictionary<string, UrlMappingItemCollection>();
+        private static readonly object _synclock = new object();
 
         private ILogger _logger;
         private ILogger logger
@@ -56,8 +57,7 @@ namespace Kiss.Web.Area
         {
             get
             {
-                if (HttpContext.Current.Cache[kCACHE_KEY] == null)
-                    RefreshUrlMappingData();
+                RefreshUrlMappingData();
 
                 ISite site = JContext.Current.Site;
 
@@ -78,8 +78,7 @@ namespace Kiss.Web.Area
 
         public Dictionary<int, NavigationItem> GetMenuItemsBySite(ISite site)
         {
-            if (HttpContext.Current.Cache[kCACHE_KEY] == null)
-                RefreshUrlMappingData();
+            RefreshUrlMappingData();
 
             if (!_menuItems.ContainsKey(site))
             {
@@ -92,8 +91,7 @@ namespace Kiss.Web.Area
 
         public Dictionary<string, string> GetUrlsBySite(ISite site)
         {
-            if (HttpContext.Current.Cache[kCACHE_KEY] == null)
-                RefreshUrlMappingData();
+            RefreshUrlMappingData();
 
             if (!_urls.ContainsKey(site))
             {
@@ -108,50 +106,58 @@ namespace Kiss.Web.Area
 
         protected void RefreshUrlMappingData()
         {
-            _urlMappings.Clear();
-            _menuItems.Clear();
-            _urls.Clear();
+            if (HttpContext.Current.Cache[kCACHE_KEY] != null)
+                return;
 
-            List<string> routefiles = new List<string>();
-
-            string root = ServerUtil.MapPath("~");
-
-            foreach (var item in AreaInitializer.Areas.Keys)
+            lock (_synclock)
             {
-                if (item.Equals("/"))
-                    routefiles.Add(Path.Combine(root, "App_Data" + Path.DirectorySeparatorChar + "routes.config"));
-                else
-                    routefiles.Add(Path.Combine(root, item.Substring(1) + Path.DirectorySeparatorChar + "routes.config"));
+                if (HttpContext.Current.Cache[kCACHE_KEY] != null) return;
+
+                _urlMappings.Clear();
+                _menuItems.Clear();
+                _urls.Clear();
+
+                List<string> routefiles = new List<string>();
+
+                string root = ServerUtil.MapPath("~");
+
+                foreach (var item in AreaInitializer.Areas.Keys)
+                {
+                    if (item.Equals("/"))
+                        routefiles.Add(Path.Combine(root, "App_Data" + Path.DirectorySeparatorChar + "routes.config"));
+                    else
+                        routefiles.Add(Path.Combine(root, item.Substring(1) + Path.DirectorySeparatorChar + "routes.config"));
+                }
+
+                foreach (var item in routefiles)
+                {
+                    string vp = Path.GetFileName(Path.GetDirectoryName(item)).ToLowerInvariant();
+                    if (string.Equals(vp, "App_Data", StringComparison.InvariantCultureIgnoreCase))
+                        vp = "/";
+                    else
+                        vp = "/" + vp;
+
+                    if (!AreaInitializer.Areas.ContainsKey(vp))
+                        throw new WebException("virtual path not found: {0}", vp);
+
+                    ISite site = AreaInitializer.Areas[vp];
+
+                    UrlMappingItemCollection routes = new UrlMappingItemCollection();
+                    Dictionary<string, string> urls = new Dictionary<string, string>();
+                    Dictionary<int, NavigationItem> menus = new Dictionary<int, NavigationItem>();
+
+                    XmlUrlMappingProvider.ParseXml(item, routes, menus, urls, IncomingQueryStringBehavior.PassThrough);
+
+                    _urlMappings[site] = routes;
+                    _menuItems[site] = menus;
+                    _urls[site] = urls;
+                }
+
+                _fileDependency = new CacheDependency(routefiles.ToArray());
+                HttpRuntime.Cache.Insert(kCACHE_KEY, "dummyValue", _fileDependency);
+
+                _latestRefresh = DateTime.Now;
             }
-
-            foreach (var item in routefiles)
-            {
-                string vp = Path.GetFileName(Path.GetDirectoryName(item)).ToLowerInvariant();
-                if (string.Equals(vp, "App_Data", StringComparison.InvariantCultureIgnoreCase))
-                    vp = "/";
-                else
-                    vp = "/" + vp;
-
-                if (!AreaInitializer.Areas.ContainsKey(vp))
-                    throw new WebException("virtual path not found: {0}", vp);
-
-                ISite site = AreaInitializer.Areas[vp];
-
-                UrlMappingItemCollection routes = new UrlMappingItemCollection();
-                Dictionary<string, string> urls = new Dictionary<string, string>();
-                Dictionary<int, NavigationItem> menus = new Dictionary<int, NavigationItem>();
-
-                XmlUrlMappingProvider.ParseXml(item, routes, menus, urls, IncomingQueryStringBehavior.PassThrough);
-
-                _urlMappings[site] = routes;
-                _menuItems[site] = menus;
-                _urls[site] = urls;
-            }
-
-            _fileDependency = new CacheDependency(routefiles.ToArray());
-            HttpRuntime.Cache.Insert(kCACHE_KEY, "dummyValue", _fileDependency);
-
-            _latestRefresh = DateTime.Now;
         }
 
         public void Dispose()
