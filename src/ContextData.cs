@@ -102,5 +102,10 @@ namespace Kiss.Web
         {
             return new Url(HttpContext.Current.Request.Url.PathAndQuery).UpdateQuery(k, v);
         }
+
+        public static bool hasText(string str)
+        {
+            return StringUtil.HasText(str);
+        }
     }
 }

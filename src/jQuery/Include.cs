@@ -67,7 +67,11 @@ namespace Kiss.Web.Controls
                         if (index != -1)
                             vp = js.Substring(0, index + 1);
 
-                        string path = ServerUtil.MapPath(vp);
+                        string path;
+                        if (vp.StartsWith("."))
+                            path = ServerUtil.MapPath(StringUtil.CombinUrl(JContext.Current.ThemePath, vp.Substring(1)));
+                        else
+                            path = ServerUtil.MapPath(vp);
 
                         if (!Directory.Exists(Path.GetDirectoryName(path)))
                             continue;
@@ -79,6 +83,8 @@ namespace Kiss.Web.Controls
 
                             if (vp.StartsWith("~"))
                                 proxy.RegisterJs(writer, StringUtil.CombinUrl(ServerUtil.ResolveUrl(vp), relativePath), NoCombine);
+                            else if (vp.StartsWith("."))
+                                proxy.RegisterJs(writer, StringUtil.CombinUrl(JContext.Current.ThemePath, StringUtil.CombinUrl(vp.Substring(1), relativePath)), NoCombine);
                             else
                                 proxy.RegisterJs(writer, StringUtil.CombinUrl(CurrentSite.VirtualPath, StringUtil.CombinUrl(vp, relativePath)), NoCombine);
                         }
@@ -87,6 +93,8 @@ namespace Kiss.Web.Controls
                     {
                         if (js.StartsWith("~"))
                             proxy.RegisterJs(writer, ServerUtil.ResolveUrl(js), NoCombine);
+                        else if (js.StartsWith("."))
+                            proxy.RegisterJs(writer, StringUtil.CombinUrl(JContext.Current.ThemePath, js.Substring(1)), NoCombine);
                         else
                             proxy.RegisterJs(writer, StringUtil.CombinUrl(CurrentSite.VirtualPath, js), NoCombine);
                     }
