@@ -271,7 +271,6 @@ namespace Kiss.Web.UrlMapping
                 item[attr.Name] = attr.Value;
             }
 
-
             if (XmlUtil.GetStringAttribute(node, "index", string.Empty) == "?")
                 item.Index = null;
             else

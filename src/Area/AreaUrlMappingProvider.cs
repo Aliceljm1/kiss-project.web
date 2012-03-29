@@ -12,9 +12,9 @@ namespace Kiss.Web.Area
     {
         private const string kCACHE_KEY = "__AreaUrlMappingProvider_cache_key__";
         private UrlMappingConfig config;
-        private Dictionary<ISite, UrlMappingItemCollection> _urlMappings = new Dictionary<ISite, UrlMappingItemCollection>();
-        private Dictionary<ISite, Dictionary<int, NavigationItem>> _menuItems = new Dictionary<ISite, Dictionary<int, NavigationItem>>();
-        private Dictionary<ISite, Dictionary<string, string>> _urls = new Dictionary<ISite, Dictionary<string, string>>();
+        private Dictionary<string, UrlMappingItemCollection> _urlMappings = new Dictionary<string, UrlMappingItemCollection>();
+        private Dictionary<string, Dictionary<int, NavigationItem>> _menuItems = new Dictionary<string, Dictionary<int, NavigationItem>>();
+        private Dictionary<string, Dictionary<string, string>> _urls = new Dictionary<string, Dictionary<string, string>>();
         private UrlMappingItemCollection _manualGlobalRoutes = new UrlMappingItemCollection();
         private Dictionary<string, UrlMappingItemCollection> _manualItems = new Dictionary<string, UrlMappingItemCollection>();
         private static readonly object _synclock = new object();
@@ -61,16 +61,16 @@ namespace Kiss.Web.Area
 
                 ISite site = JContext.Current.Site;
 
-                if (!_urlMappings.ContainsKey(site))
+                if (!_urlMappings.ContainsKey(site.SiteKey))
                 {
                     logger.Info("routes not exist! site={0}", site.VirtualPath);
                     return new UrlMappingItemCollection();
                 }
 
                 if (_manualItems.ContainsKey(site.SiteKey))
-                    return UrlMappingItemCollection.Combin(_manualGlobalRoutes, UrlMappingItemCollection.Combin(_manualItems[site.SiteKey], _urlMappings[site]));
+                    return UrlMappingItemCollection.Combin(_manualGlobalRoutes, UrlMappingItemCollection.Combin(_manualItems[site.SiteKey], _urlMappings[site.SiteKey]));
 
-                return UrlMappingItemCollection.Combin(_manualGlobalRoutes, _urlMappings[site]);
+                return UrlMappingItemCollection.Combin(_manualGlobalRoutes, _urlMappings[site.SiteKey]);
             }
         }
 
@@ -80,26 +80,26 @@ namespace Kiss.Web.Area
         {
             RefreshUrlMappingData();
 
-            if (!_menuItems.ContainsKey(site))
+            if (!_menuItems.ContainsKey(site.SiteKey))
             {
                 logger.Info("menu not exist! site={0}", site.VirtualPath);
                 return new Dictionary<int, NavigationItem>();
             }
 
-            return _menuItems[site];
+            return _menuItems[site.SiteKey];
         }
 
         public Dictionary<string, string> GetUrlsBySite(ISite site)
         {
             RefreshUrlMappingData();
 
-            if (!_urls.ContainsKey(site))
+            if (!_urls.ContainsKey(site.SiteKey))
             {
                 logger.Info("url not exist! site={0}", site.VirtualPath);
                 return new Dictionary<string, string>();
             }
 
-            return _urls[site];
+            return _urls[site.SiteKey];
         }
 
         public Dictionary<string, string> Urls { get { return GetUrlsBySite(JContext.Current.Site); } }
@@ -148,13 +148,13 @@ namespace Kiss.Web.Area
 
                     XmlUrlMappingProvider.ParseXml(item, routes, menus, urls, IncomingQueryStringBehavior.PassThrough);
 
-                    _urlMappings[site] = routes;
-                    _menuItems[site] = menus;
-                    _urls[site] = urls;
+                    _urlMappings[site.SiteKey] = routes;
+                    _menuItems[site.SiteKey] = menus;
+                    _urls[site.SiteKey] = urls;
                 }
 
                 _fileDependency = new CacheDependency(routefiles.ToArray());
-                HttpRuntime.Cache.Insert(kCACHE_KEY, "dummyValue", _fileDependency);
+                HttpRuntime.Cache.Insert(kCACHE_KEY, "dummyValue", _fileDependency, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.High, null);
 
                 _latestRefresh = DateTime.Now;
             }
