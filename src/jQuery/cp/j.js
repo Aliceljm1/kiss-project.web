@@ -11,7 +11,7 @@
         open: function (e) {
             if (openHeight)
                 $sc.height(openHeight);
-            var openPos = { top: $sc.css('top'), left: "0px" };
+            var openPos = { left: "0px" };
             if (e) {
                 $sc.animate(openPos);
             } else {
@@ -23,7 +23,7 @@
         },
         close: function (e) {
             openHeight = $sc.height();
-            var closedPos = { top: $sc.css('top'), left: (15 - $sc.width()) + "px" };
+            var closedPos = { left: (15 - $sc.width()) + "px" };
             if (e) {
                 $sc.animate(closedPos);
             } else {
@@ -35,7 +35,7 @@
     };
 
     if (startsOpen) {
-        $sc.animate({ top: '0px', left: '0px' }).addClass("opened");
+        $sc.animate({ left: '0px' }).addClass("opened");
     } else if (curtain.isOpen()) {
         curtain.open();
     } else {

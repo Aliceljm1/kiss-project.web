@@ -1,5 +1,6 @@
 ﻿.sc, .sc a { font-family: Arial, Sans-Serif; font-size: 12px; }
-.sc { background: none repeat scroll 0 0 #fff; border: 1px solid #ddd; border-top-style: none; border-left-style: none; position: fixed; top: -200px; left: -200px; z-index: 1001; }
+.sc { background: none repeat scroll 0 0 #fff; border: 1px solid #ddd; border-top-style: none; border-left-style: none; position: fixed; top: 0; left: 0; z-index: 1001; }
+* html .sc { position: absolute; top: expression(eval(document.documentElement.scrollTop)); }
 .sc .scContent { padding: 5px 0; }
 .controlPanel { padding-right: 10px; }
 .controlPanel img { margin-right: 2px; border: none; vertical-align: middle; }

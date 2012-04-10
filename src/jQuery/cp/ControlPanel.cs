@@ -46,7 +46,7 @@ namespace Kiss.Web.Controls
         {
             if (!isSiteAdmin || renderers.Count == 0) { base.Render(writer); return; }
 
-            writer.Write("<div id='_g_sc' class='sc opened' style='top: 0px; left: 0px;' path='{0}'><div class='scContent'><div class='controlPanel'><div class='plugins'>", JContext.Current.Site.VirtualPath);
+            writer.Write("<div id='_g_sc' class='sc opened' path='{0}'><div class='scContent'><div class='controlPanel'><div class='plugins'>", JContext.Current.Site.VirtualPath);
 
             foreach (var renderer in renderers)
             {
