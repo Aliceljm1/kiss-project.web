@@ -327,38 +327,6 @@ namespace Kiss.Web
         /// </summary>
         public NavigationInfo Navigation { get { return _navigation; } internal set { _navigation = value; } }
 
-        private List<NavigationItem> crumbs = new List<NavigationItem>();
-        /// <summary>
-        /// 面包屑导航
-        /// </summary>
-        public List<NavigationItem> Crumbs
-        {
-            get { return crumbs; }
-            set { crumbs = value; }
-        }
-
-        /// <summary>
-        /// 添加到面包屑导航
-        /// </summary>
-        /// <param name="title"></param>
-        /// <param name="url"></param>
-        public void AddCrumb(string title, string url)
-        {
-            if (!StringUtil.HasText(title))
-                return;
-
-            crumbs.Add(new NavigationItem(title, url));
-        }
-
-        /// <summary>
-        /// 添加到面包屑导航(无链接)
-        /// </summary>
-        /// <param name="title"></param>
-        public void AddCrumb(string title)
-        {
-            AddCrumb(title, string.Empty);
-        }
-
         #endregion
 
         #region ContextData

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Kiss.Web
@@ -14,16 +13,7 @@ namespace Kiss.Web
 
         public bool Selected { get; set; }
 
-        public string Desc { get; set; }
-
-        public string Url { get; set; }
-
-        private bool _visible = true;
-        public bool Visible
-        {
-            get { return _visible; }
-            set { _visible = value; }
-        }
+        public string Url { get; set; }        
 
         public List<NavigationItem> SubItems { get; set; }
 
@@ -42,8 +32,6 @@ namespace Kiss.Web
 
         public bool IsFirst { get; set; }
         public bool IsLast { get; set; }
-
-        public string Icon { get; set; }
 
         public Dictionary<int, NavigationItem> Children { get; set; }
 
@@ -68,10 +56,9 @@ namespace Kiss.Web
             Selected = selected;
         }
 
-        public NavigationItem(string name, string displayName, bool selected, string desc, string url)
+        public NavigationItem(string name, string displayName, bool selected,string url)
             : this(name, displayName, selected)
         {
-            Desc = desc;
             Url = url;
         }
 
@@ -85,9 +72,6 @@ namespace Kiss.Web
             item.Title = this.Title;
             item.Url = this.Url;
             item.Name = this.Name;
-            item.Icon = this.Icon;
-            item.Desc = this.Desc;
-            item.Visible = this.Visible;
             item.SetSerializerData(this.GetSerializerData());
 
             return item;

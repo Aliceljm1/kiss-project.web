@@ -17,6 +17,7 @@ namespace Kiss.Web.Ajax
             item.Action = "proc";
             item.Index = -1;
             item.SubIndex = -1;
+            item.SubsubIndex = -1;
 
             urlMapping.AddMapping(item);
         }

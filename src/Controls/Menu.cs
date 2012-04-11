@@ -84,6 +84,7 @@ namespace Kiss.Web.Controls
 
             int index = jc.Navigation.Index;
             int subIndex = jc.Navigation.SubIndex;
+            int subsubIndex = jc.Navigation.SubsubIndex;
 
             Dictionary<int, NavigationItem> Items = UrlMappingModule.Instance.Provider.GetMenuItemsBySite(site);
 
@@ -120,9 +121,6 @@ namespace Kiss.Web.Controls
 
                     foreach (int i in Items.Keys)
                     {
-                        if (!Items[i].Visible)
-                            continue;
-
                         NavigationItem item = Items[i].Clone() as NavigationItem;
                         item.Selected = index == i;
                         item.Url = GetUrl(site, item.Url);
@@ -144,9 +142,6 @@ namespace Kiss.Web.Controls
 
                         foreach (int i in subItems.Keys)
                         {
-                            if (!subItems[i].Visible)
-                                continue;
-
                             NavigationItem item = subItems[i].Clone() as NavigationItem;
                             item.Selected = subIndex == i;
                             item.Url = GetUrl(site, item.Url);
@@ -166,8 +161,6 @@ namespace Kiss.Web.Controls
 
                     foreach (int i in keys)
                     {
-                        if (!Items[i].Visible) continue;
-
                         NavigationItem item = Items[i].Clone() as NavigationItem;
                         item.Selected = index == i;
                         item.Url = GetUrl(site, item.Url);
@@ -177,19 +170,35 @@ namespace Kiss.Web.Controls
                         item.IsFirst = key_index == 0 || Items[keys[key_index - 1]].IsSeparator;
                         item.IsLast = key_index == Items.Count - 1 || Items[keys[key_index + 1]].IsSeparator;
 
-                        Dictionary<int, NavigationItem> children = Items[i].Children;
-                        List<int> sub_keys = new List<int>(children.Keys);
-                        foreach (int j in children.Keys)
+                        Dictionary<int, NavigationItem> sub = Items[i].Children;
+                        List<int> sub_keys = new List<int>(sub.Keys);
+                        foreach (int j in sub.Keys)
                         {
-                            if (!children[j].Visible) continue;
-                            NavigationItem subItem = children[j].Clone() as NavigationItem;
+                            NavigationItem subItem = sub[j].Clone() as NavigationItem;
                             subItem.Selected = item.Selected && subIndex == j;
                             subItem.Url = GetUrl(site, subItem.Url);
+                            subItem.SubItems = new List<NavigationItem>();
 
                             key_index = sub_keys.IndexOf(j);
 
-                            subItem.IsFirst = key_index == 0 || children[sub_keys[key_index - 1]].IsSeparator;
-                            subItem.IsLast = key_index == children.Count - 1 || children[sub_keys[key_index + 1]].IsSeparator;
+                            subItem.IsFirst = key_index == 0 || sub[sub_keys[key_index - 1]].IsSeparator;
+                            subItem.IsLast = key_index == sub.Count - 1 || sub[sub_keys[key_index + 1]].IsSeparator;
+
+                            Dictionary<int, NavigationItem> subsub = Items[i].Children[j].Children;
+                            List<int> subsub_keys = new List<int>(subsub.Keys);
+                            foreach (int k in subsub.Keys)
+                            {
+                                NavigationItem subsubItem = subsub[k].Clone() as NavigationItem;
+                                subsubItem.Selected = item.Selected && subsubIndex == k;
+                                subsubItem.Url = GetUrl(site, subsubItem.Url);
+
+                                key_index = subsub_keys.IndexOf(k);
+
+                                subsubItem.IsFirst = key_index == 0 || subsub[subsub_keys[key_index - 1]].IsSeparator;
+                                subsubItem.IsLast = key_index == subsub.Count - 1 || subsub[subsub_keys[key_index + 1]].IsSeparator;
+
+                                subItem.SubItems.Add(subsubItem);
+                            }
 
                             item.SubItems.Add(subItem);
                         }
@@ -213,8 +222,7 @@ namespace Kiss.Web.Controls
                         {
                             Selected = (i.SelfIndex == JContext.Current.Navigation.Url.SelfIndex),
                             Url = StringUtil.CombinUrl(site.VirtualPath, i.UrlTemplate.Replace("[page]", "1")),
-                            Title = i.Title,
-                            Desc = i.Desc
+                            Title = i.Title
                         };
                         nav.SetSerializerData(sd);
                         list.Add(nav);

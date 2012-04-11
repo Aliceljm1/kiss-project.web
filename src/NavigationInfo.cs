@@ -13,13 +13,17 @@ namespace Kiss.Web
     {
         public int Index { get; set; }
         public int SubIndex { get; set; }
+        public int SubsubIndex { get; set; }
 
         private string _title;
         public string Title
         {
             get
             {
-                if (StringUtil.HasText(_title) && _title.Contains("$"))
+                if (string.IsNullOrEmpty(_title) && ParentMenu != null)
+                    _title = ParentMenu.Title;
+
+                if (!string.IsNullOrEmpty(_title) && _title.Contains("$"))
                 {
                     ITemplateEngine te = ServiceLocator.Instance.Resolve<ITemplateEngine>();
                     using (StringWriter sw = new StringWriter())
@@ -33,10 +37,49 @@ namespace Kiss.Web
             }
             set { _title = value; }
         }
-        public string Desc { get; set; }
 
         public string Name { get; set; }
         public bool OK { get; private set; }
+
+        public NavigationItem ParentMenu
+        {
+            get
+            {
+                if (!OK) return null;
+
+                if (SubsubIndex >= 0)
+                    return Provider.MenuItems[Index].Children[SubIndex].Children[SubsubIndex];
+
+                if (SubIndex >= 0)
+                    return Provider.MenuItems[Index].Children[SubIndex];
+
+                if (Index >= 0)
+                    return Provider.MenuItems[Index];
+
+                return null;
+            }
+        }
+
+        public List<NavigationItem> Crumbs
+        {
+            get
+            {
+                List<NavigationItem> list = new List<NavigationItem>();
+
+                if (!OK) return list;
+
+                if (Index >= 0)
+                    list.Add(Provider.MenuItems[Index].Clone() as NavigationItem);
+
+                if (SubIndex >= 0)
+                    list.Add(Provider.MenuItems[Index].Children[SubIndex].Clone() as NavigationItem);
+
+                if (SubsubIndex >= 0)
+                    list.Add(Provider.MenuItems[Index].Children[SubIndex].Children[SubsubIndex].Clone() as NavigationItem);
+
+                return list;
+            }
+        }
 
         protected IUrlMappingProvider Provider
         {
@@ -47,48 +90,6 @@ namespace Kiss.Web
         }
 
         public UrlMapping.UrlMappingItem Url { get; private set; }
-
-        /// <summary>
-        /// top menu
-        /// </summary>
-        public NavigationItem Menu
-        {
-            get
-            {
-                if (!Provider.MenuItems.ContainsKey(Index))
-                    return null;
-
-                return Provider.MenuItems[Index];
-            }
-        }
-
-        /// <summary>
-        /// sub menu
-        /// </summary>
-        public NavigationItem SubMenu
-        {
-            get
-            {
-                if (Menu == null)
-                    return null;
-
-                if (Menu.Children != null && Menu.Children.ContainsKey(SubIndex))
-                    return Menu.Children[SubIndex];
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// parent menu. sub menu or top menu
-        /// </summary>
-        public NavigationItem ParentMenu
-        {
-            get
-            {
-                return SubMenu ?? Menu;
-            }
-        }
 
         private string _id;
         /// <summary>
@@ -105,9 +106,6 @@ namespace Kiss.Web
 
                     if (StringUtil.IsNullOrEmpty(Url.Id))
                     {
-                        if (ParentMenu != null)
-                            _id = ParentMenu.Name;
-
                         if (StringUtil.IsNullOrEmpty(_id))
                         {
                             int index = Url.UrlTemplate.IndexOf("/");
@@ -198,54 +196,35 @@ namespace Kiss.Web
             }
         }
 
-        /// <summary>
-        /// current url's icon
-        /// </summary>
-        public string Icon
-        {
-            get
-            {
-                if (!Provider.MenuItems.ContainsKey(Index))
-                    return string.Empty;
-
-                NavigationItem item = Provider.MenuItems[Index];
-
-                if (item.Children != null && item.Children.ContainsKey(SubIndex))
-                {
-                    NavigationItem subItem = item.Children[SubIndex];
-                    return subItem.Icon ?? item.Icon;
-                }
-
-                return item.Icon;
-            }
-        }
-
         public bool Set(UrlMapping.UrlMappingItem item, string requesturl)
         {
             Url = item;
 
             string url;
 
-            if (item.Index == null || item.SubIndex == null)
+            if (item.Index == null || item.SubIndex == null || item.SubsubIndex == null)
             {
                 Dictionary<int, NavigationItem> menuItems = UrlMapping.UrlMappingModule.Instance.Provider.MenuItems;
 
                 if (item.Index == null)
                 {
                     double max = 0;
-                    int maxi = 0, maxj = 0;
+                    int maxi = 0, maxj = 0, maxk = 0;
                     foreach (int i in menuItems.Keys)
                     {
                         double d = 0;
-                        if (menuItems[i].Children != null && menuItems[i].Children.Count > 0)
-                        {
-                            foreach (int j in menuItems[i].Children.Keys)
-                            {
-                                NavigationItem ni = menuItems[i].Children[j];
 
-                                url = ni.Url.TrimStart('/');
-                                if (string.IsNullOrEmpty(url))
-                                    continue;
+                        foreach (int j in menuItems[i].Children.Keys)
+                        {
+                            NavigationItem ni = menuItems[i].Children[j];
+
+                            foreach (int k in ni.Children.Keys)
+                            {
+                                NavigationItem nii = ni.Children[k];
+
+                                url = nii.Url.TrimStart('/');
+                                if (string.IsNullOrEmpty(url)) continue;
+
                                 d = StringUtil.Similarity(requesturl, url);
                                 if (d > max)
                                 {
@@ -253,13 +232,29 @@ namespace Kiss.Web
 
                                     maxi = i;
                                     maxj = j;
+                                    maxk = k;
                                 }
+                            }
+
+                            url = ni.Url.TrimStart('/');
+                            if (string.IsNullOrEmpty(url))
+                                continue;
+
+                            d = StringUtil.Similarity(requesturl, url);
+                            if (d > max)
+                            {
+                                max = d;
+
+                                maxi = i;
+                                maxj = j;
+                                maxk = -1;
                             }
                         }
 
                         url = menuItems[i].Url.TrimStart('/');
                         if (string.IsNullOrEmpty(url))
                             continue;
+
                         d = StringUtil.Similarity(requesturl, url);
                         if (d > max)
                         {
@@ -267,6 +262,7 @@ namespace Kiss.Web
 
                             maxi = i;
                             maxj = -1;
+                            maxk = -1;
                         }
                     }
 
@@ -274,48 +270,104 @@ namespace Kiss.Web
                     {
                         Index = maxi;
                         SubIndex = maxj;
+                        SubsubIndex = maxk;
+                    }
+                    else
+                        return false;
+                }
+                else if (item.SubIndex == null)
+                {
+                    Index = item.Index.Value;
+
+                    double max = 0;
+                    int maxj = 0, maxk = 0;
+
+                    double d = 0;
+
+                    foreach (int j in menuItems[Index].Children.Keys)
+                    {
+                        NavigationItem ni = menuItems[Index].Children[j];
+
+                        foreach (int k in ni.Children.Keys)
+                        {
+                            NavigationItem nii = ni.Children[k];
+
+                            url = nii.Url.TrimStart('/');
+                            if (string.IsNullOrEmpty(url)) continue;
+
+                            d = StringUtil.Similarity(requesturl, url);
+                            if (d > max)
+                            {
+                                max = d;
+
+                                maxj = j;
+                                maxk = k;
+                            }
+                        }
+
+                        url = ni.Url.TrimStart('/');
+                        if (string.IsNullOrEmpty(url))
+                            continue;
+
+                        d = StringUtil.Similarity(requesturl, url);
+                        if (d > max)
+                        {
+                            max = d;
+
+                            maxj = j;
+                            maxk = -1;
+                        }
+                    }
+
+                    if (max > 0)
+                    {
+                        SubIndex = maxj;
+                        SubsubIndex = maxk;
                     }
                     else
                         return false;
                 }
                 else
                 {
-                    Index = item.Index.Value;
+                    double max = 0;
+                    int maxk = 0;
 
-                    if (item.SubIndex == null)
+                    double d = 0;
+
+                    NavigationItem ni = menuItems[Index].Children[SubIndex];
+
+                    foreach (int k in ni.Children.Keys)
                     {
-                        int i = 0;
-                        double max = 0;
-                        int maxi = 0;
-                        foreach (NavigationItem ni in menuItems[item.Index.Value].Children.Values)
+                        NavigationItem nii = ni.Children[k];
+
+                        url = nii.Url.TrimStart('/');
+                        if (string.IsNullOrEmpty(url)) continue;
+
+                        d = StringUtil.Similarity(requesturl, url);
+                        if (d > max)
                         {
-                            url = ni.Url.TrimStart('/');
-                            if (string.IsNullOrEmpty(url))
-                                continue;
-                            double d = StringUtil.Similarity(requesturl, ni.Url);
-                            if (d > max)
-                            {
-                                max = d;
-                                maxi = i;
-                            }
-
-                            i++;
+                            max = d;
+                            
+                            maxk = k;
                         }
+                    }                  
 
-                        if (max > 0)
-                            SubIndex = maxi;
-                        else
-                            return false;
+                    if (max > 0)
+                    {
+                        SubsubIndex = maxk;
                     }
+                    else
+                        return false;
                 }
             }
             else
             {
                 Index = item.Index.Value;
                 SubIndex = item.SubIndex.Value;
+                SubsubIndex = item.SubsubIndex.Value;
             }
+
             Title = item.Title;
-            Desc = item.Desc;
             Name = item.Name;
 
             foreach (string key in Url.Keys)

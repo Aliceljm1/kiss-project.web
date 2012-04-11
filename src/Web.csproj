@@ -95,7 +95,6 @@
     <Compile Include="Controls\Container.cs" />
     <Compile Include="Controls\Content.cs" />
     <Compile Include="Controls\ContentPlaceHolder.cs" />
-    <Compile Include="Controls\Crumb.cs" />
     <Compile Include="Controls\Head.cs" />
     <Compile Include="Controls\MasterPage.cs">
       <SubType>ASPXCodeBehind</SubType>

@@ -327,6 +327,7 @@ namespace Kiss.Web.Mvc
 
                     item.Index = -1;
                     item.SubIndex = -1;
+                    item.SubsubIndex = -1;
                     item.Title = attr.Title;
 
                     item.Id = controller.Key;

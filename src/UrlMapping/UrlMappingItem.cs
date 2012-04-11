@@ -52,14 +52,14 @@ namespace Kiss.Web.UrlMapping
 
         public int? SubIndex { get; set; }
 
+        public int? SubsubIndex { get; set; }
+
         /// <summary>
         /// 标识自己在菜单中的index
         /// </summary>
         public int SelfIndex { get; set; }
 
         public string Title { get; set; }
-
-        public string Desc { get; set; }
 
         public string Action { get; set; }
 
