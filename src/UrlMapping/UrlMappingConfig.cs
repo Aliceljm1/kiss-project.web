@@ -58,12 +58,6 @@ namespace Kiss.Web.UrlMapping
         [ConfigProp("urlMappingFile", DefaultValue = "~/App_Data/routes.config", Desc = "配置文件路径")]
         public string UrlMappingFile { get; protected set; }
 
-        /// <summary>
-        /// 是否启用文件缓存依赖
-        /// </summary>
-        [ConfigProp("useDependency", ConfigPropAttribute.DataType.Boolean, DefaultValue = true, Desc = "是否启用文件缓存依赖")]
-        public bool UseDependency { get; protected set; }
-
         internal IUrlMappingProvider Provider { get; set; }
 
         #endregion

@@ -117,6 +117,9 @@ namespace Kiss.Web.Area
                 _menuItems.Clear();
                 _urls.Clear();
 
+                // clear url mapping cache
+                UrlMappingModule.Instance._caches.Clear();
+
                 List<string> routefiles = new List<string>();
 
                 string root = ServerUtil.MapPath("~");

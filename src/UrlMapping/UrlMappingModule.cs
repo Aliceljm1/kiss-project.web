@@ -16,7 +16,7 @@ namespace Kiss.Web.UrlMapping
     {
         #region props
 
-        private Dictionary<string, Dictionary<string, UrlMappingItem>> _caches = new Dictionary<string, Dictionary<string, UrlMappingItem>>();
+        internal Dictionary<string, Dictionary<string, UrlMappingItem>> _caches = new Dictionary<string, Dictionary<string, UrlMappingItem>>();
 
         private Dictionary<string, UrlMappingItem> _site_caches
         {
@@ -95,6 +95,7 @@ namespace Kiss.Web.UrlMapping
 
             urlRequested = GetUrlRequested(urlRequested);
 
+            // first check out from cache
             Dictionary<string, UrlMappingItem> sitecaches = _site_caches;
 
             if (sitecaches.ContainsKey(urlRequested))
