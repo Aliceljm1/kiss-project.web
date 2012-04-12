@@ -189,7 +189,7 @@ namespace Kiss.Web.Controls
                             foreach (int k in subsub.Keys)
                             {
                                 NavigationItem subsubItem = subsub[k].Clone() as NavigationItem;
-                                subsubItem.Selected = item.Selected && subsubIndex == k;
+                                subsubItem.Selected = subItem.Selected && subsubIndex == k;
                                 subsubItem.Url = GetUrl(site, subsubItem.Url);
 
                                 key_index = subsub_keys.IndexOf(k);
