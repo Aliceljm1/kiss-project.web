@@ -14,87 +14,92 @@ namespace Kiss.Web.Query
     {
         Dictionary<string, Qc> qc_dict = new Dictionary<string, Qc>();
         const string kCACHE_KEY = "__DynamicQueryPlugin_cache_key__";
-        CacheDependency _fileDependency;
+
         const string FORMAT = "{0}.{1}";
         private static readonly ILogger _logger = LogManager.GetLogger<DynamicQueryPlugin>();
+        private static readonly object _synclock = new object();
 
         public void Start()
         {
-            Refresh();
-
             QueryCondition.BeforeQuery += QueryCondition_BeforeQuery;
         }
 
         private void Refresh()
         {
-            qc_dict.Clear();
-
-            List<string> filenames = new List<string>();
-
-            foreach (ISite site in ServiceLocator.Instance.Resolve<IHost>().AllSites)
+            lock (_synclock)
             {
-                string dir;
-                string filename;
-                List<string> files = new List<string>();
-
-                if (site.SiteKey == SiteConfig.Instance.SiteKey)// default site
-                    dir = ServerUtil.MapPath("~/App_Data");
-                else
-                    dir = ServerUtil.MapPath(site.VirtualPath);
-
-                filename = Path.Combine(dir, "query.config");
-
-                if (!Directory.Exists(dir))
-                    continue;
-
-                if (File.Exists(filename))
-                    files.Add(filename);
-
-                // add filename like "query.post.config"
-                files.AddRange(Directory.GetFiles(dir, "query.*.config", SearchOption.TopDirectoryOnly));
-
-                filenames.AddRange(files);
-
-                // prase xml
-                foreach (var item in files)
+                if (HttpContext.Current.Cache[kCACHE_KEY] == null)
                 {
-                    _logger.Debug("begin parse query file: {0}.", item);
+                    qc_dict.Clear();
 
-                    XmlDocument doc = new XmlDocument();
-                    doc.Load(item);
+                    List<string> filenames = new List<string>();
 
-                    foreach (XmlNode node in doc.DocumentElement.SelectNodes("//query"))
+                    foreach (ISite site in ServiceLocator.Instance.Resolve<IHost>().AllSites)
                     {
-                        string id = XmlUtil.GetStringAttribute(node, "id", string.Empty);
-                        if (string.IsNullOrEmpty(id))
+                        string dir;
+                        string filename;
+                        List<string> files = new List<string>();
+
+                        if (site.SiteKey == SiteConfig.Instance.SiteKey)// default site
+                            dir = ServerUtil.MapPath("~/App_Data");
+                        else
+                            dir = ServerUtil.MapPath(site.VirtualPath);
+
+                        filename = Path.Combine(dir, "query.config");
+
+                        if (!Directory.Exists(dir))
                             continue;
 
-                        id = string.Format(FORMAT, site.SiteKey, id.ToLower());
+                        if (File.Exists(filename))
+                            files.Add(filename);
 
-                        _logger.Debug("RESULT: query id:{0}", id);
+                        // add filename like "query.post.config"
+                        files.AddRange(Directory.GetFiles(dir, "query.*.config", SearchOption.TopDirectoryOnly));
 
-                        qc_dict[id] = new Qc()
+                        filenames.AddRange(files);
+
+                        // prase xml
+                        foreach (var item in files)
                         {
-                            Id = id,
-                            Field = XmlUtil.GetStringAttribute(node, "field", string.Empty),
-                            AllowedOrderbyColumns = XmlUtil.GetStringAttribute(node, "allowedOrderbyColumns", string.Empty),
-                            Orderby = XmlUtil.GetStringAttribute(node, "orderby", string.Empty),
-                            Where = node.InnerText,
-                            PageSize = XmlUtil.GetIntAttribute(node, "pageSize", -1)
-                        };
+                            _logger.Debug("begin parse query file: {0}.", item);
 
-                        foreach (XmlAttribute attr in node.Attributes)
-                        {
-                            qc_dict[id][attr.Name] = attr.Value;
+                            XmlDocument doc = new XmlDocument();
+                            doc.Load(item);
+
+                            foreach (XmlNode node in doc.DocumentElement.SelectNodes("//query"))
+                            {
+                                string id = XmlUtil.GetStringAttribute(node, "id", string.Empty);
+                                if (string.IsNullOrEmpty(id))
+                                    continue;
+
+                                id = string.Format(FORMAT, site.SiteKey, id.ToLower());
+
+                                _logger.Debug("RESULT: query id:{0}", id);
+
+                                qc_dict[id] = new Qc()
+                                {
+                                    Id = id,
+                                    Field = XmlUtil.GetStringAttribute(node, "field", string.Empty),
+                                    AllowedOrderbyColumns = XmlUtil.GetStringAttribute(node, "allowedOrderbyColumns", string.Empty),
+                                    Orderby = XmlUtil.GetStringAttribute(node, "orderby", string.Empty),
+                                    Where = node.InnerText,
+                                    PageSize = XmlUtil.GetIntAttribute(node, "pageSize", -1)
+                                };
+
+                                foreach (XmlAttribute attr in node.Attributes)
+                                {
+                                    qc_dict[id][attr.Name] = attr.Value;
+                                }
+                            }
+
+                            _logger.Debug("end parse query file: {0}.", item);
                         }
                     }
 
-                    _logger.Debug("end parse query file: {0}.", item);
+                    CacheDependency fileDependency = new CacheDependency(filenames.ToArray());
+                    HttpContext.Current.Cache.Insert(kCACHE_KEY, "dummyValue", fileDependency, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.High, null);
                 }
             }
-
-            _fileDependency = new CacheDependency(filenames.ToArray());
-            HttpContext.Current.Cache.Insert(kCACHE_KEY, "dummyValue", _fileDependency);
         }
 
         void QueryCondition_BeforeQuery(object sender, QueryCondition.BeforeQueryEventArgs e)
