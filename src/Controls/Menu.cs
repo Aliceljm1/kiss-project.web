@@ -140,18 +140,55 @@ namespace Kiss.Web.Controls
 
                         keys = new List<int>(subItems.Keys);
 
-                        foreach (int i in subItems.Keys)
+                        foreach (int j in subItems.Keys)
                         {
-                            NavigationItem item = subItems[i].Clone() as NavigationItem;
-                            item.Selected = subIndex == i;
-                            item.Url = GetUrl(site, item.Url);
+                            NavigationItem subItem = subItems[j].Clone() as NavigationItem;
+                            subItem.Selected = subIndex == j;
+                            subItem.Url = GetUrl(site, subItem.Url);
+                            subItem.SubItems = new List<NavigationItem>();
 
-                            key_index = keys.IndexOf(i);
+                            key_index = keys.IndexOf(j);
 
-                            item.IsFirst = key_index == 0 || subItems[keys[key_index - 1]].IsSeparator;
-                            item.IsLast = key_index == subItems.Count - 1 || subItems[keys[key_index + 1]].IsSeparator;
+                            subItem.IsFirst = key_index == 0 || subItems[keys[key_index - 1]].IsSeparator;
+                            subItem.IsLast = key_index == subItems.Count - 1 || subItems[keys[key_index + 1]].IsSeparator;
 
-                            list.Add(item);
+                            Dictionary<int, NavigationItem> subsub = Items[index].Children[j].Children;
+                            List<int> subsub_keys = new List<int>(subsub.Keys);
+                            foreach (int k in subsub.Keys)
+                            {
+                                NavigationItem subsubItem = subsub[k].Clone() as NavigationItem;
+                                subsubItem.Selected = subItem.Selected && subsubIndex == k;
+                                subsubItem.Url = GetUrl(site, subsubItem.Url);
+
+                                key_index = subsub_keys.IndexOf(k);
+
+                                subsubItem.IsFirst = key_index == 0 || subsub[subsub_keys[key_index - 1]].IsSeparator;
+                                subsubItem.IsLast = key_index == subsub.Count - 1 || subsub[subsub_keys[key_index + 1]].IsSeparator;
+
+                                subItem.SubItems.Add(subsubItem);
+                            }
+
+                            list.Add(subItem);
+                        }
+                    }
+                    break;
+                case MenuType.SubsubLevel:
+                    if (Items.ContainsKey(index) && Items[index].Children.ContainsKey(subIndex))
+                    {
+                        Dictionary<int, NavigationItem> subsub = Items[index].Children[subIndex].Children;
+                        List<int> subsub_keys = new List<int>(subsub.Keys);
+                        foreach (int k in subsub.Keys)
+                        {
+                            NavigationItem subsubItem = subsub[k].Clone() as NavigationItem;
+                            subsubItem.Selected = subsubIndex == k;
+                            subsubItem.Url = GetUrl(site, subsubItem.Url);
+
+                            key_index = subsub_keys.IndexOf(k);
+
+                            subsubItem.IsFirst = key_index == 0 || subsub[subsub_keys[key_index - 1]].IsSeparator;
+                            subsubItem.IsLast = key_index == subsub.Count - 1 || subsub[subsub_keys[key_index + 1]].IsSeparator;
+
+                            list.Add(subsubItem);
                         }
                     }
                     break;
@@ -276,7 +313,9 @@ namespace Kiss.Web.Controls
             /// <summary>
             /// custom menu
             /// </summary>
-            Custom = 4
+            Custom = 4,
+
+            SubsubLevel = 5
         }
     }
 }

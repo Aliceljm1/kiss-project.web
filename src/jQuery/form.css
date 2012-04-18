@@ -1,8 +1,7 @@
 ﻿.gform { overflow: hidden !important; }
-.gform .gformbox{ float:left;  width:230px; height:35px; overflow:hidden;}
+.gform .gformbox{ float:left; width:260px; height:35px; overflow:hidden;}
 .gform label, .gform select, .gform input, .gform .l{ float: left; }
 .gform input, .gform textarea { padding: 2px; margin: 12px 0 0 0; float: left;}
-.gform .select_dept {padding: 2px; margin: 12px 0 0 0; float: left; font-size:12px; text-decoration:none; color:#fff; background:#666 ; margin-left:10px;}
 .gform .flow { float: left; }
 .gform .flow * { float: none; display: inline; }
 .gform .flow label { width: 60px; font-weight: normal; }
