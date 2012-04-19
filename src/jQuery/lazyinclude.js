@@ -8,7 +8,8 @@ var LazyInclude = {
             var type = (tag == "script") ? "src" : "href";
 
             $(tag + '[' + type + ']').each(function (i, v) {
-                if ($(v).attr(type) == url) {
+                var attr = $(v).attr(type)
+                if (attr == url || decodeURIComponent(attr).indexOf(url) != -1) {
                     contains = true;
                     return false;
                 }
