@@ -160,7 +160,16 @@ namespace Kiss.Web.Controls
         protected override void Render(HtmlTextWriter writer)
         {
             if (Templated)
-                writer.Write(Util.Render(delegate(HtmlTextWriter w) { base.Render(w); }));
+            {
+                writer.Write(Util.Render(delegate(HtmlTextWriter w)
+                {
+                    base.Render(w);
+                    if (jc.IsAjaxRequest)
+                    {
+                        w.Write("$!jc.render_lazy_include()");
+                    }
+                }));
+            }
             else
                 base.Render(writer);
         }

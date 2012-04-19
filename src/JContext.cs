@@ -753,8 +753,8 @@ namespace Kiss.Web
                             break;
                         }
                     }
-                    if (!scripts_added && !is_css)
-                        scripts.AddRange(includes[item]);
+                    //if (!scripts_added && !is_css)
+                    //    scripts.AddRange(includes[item]);
 
                     // comine url
                     if (is_css && Site.CombineCss)
@@ -795,7 +795,7 @@ namespace Kiss.Web
 
             StringBuilder sb = new StringBuilder();
 
-            if (cssfiles.Count > 0 || jsfiles.Count > 0)
+            if (!IsAjaxRequest && (cssfiles.Count > 0 || jsfiles.Count > 0))
                 sb.AppendFormat("<script src='{0}' type='text/javascript'></script>", Resources.Utility.GetResourceUrl("Kiss.Web.jQuery.lazyinclude.js,Kiss.Web", true));
 
             sb.Append("<script type='text/javascript'>");

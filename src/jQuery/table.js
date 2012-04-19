@@ -252,6 +252,7 @@
         });
         return ids;
     };
+
     $.fn.removeRow = function (rowId) {
         var redirect = function () {
             if ($('tbody tr', t).length == 0) {

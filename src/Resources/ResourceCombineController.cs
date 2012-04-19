@@ -130,6 +130,8 @@ namespace Kiss.Web.Resources
                 logger.Error("file: {0} is not found. {1}", virtualPath, ExceptionUtil.WriteException(ex));
             }
 
+            if (content == null) return null;
+
             // remove bom byte
             if (content.Length <= 3 || !(content[0] == 0xEF && content[1] == 0xBB && content[2] == 0xBF))
                 return content;

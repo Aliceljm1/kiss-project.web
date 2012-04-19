@@ -5,14 +5,15 @@ var LazyInclude = {
     call: (function () {
         function hasFile(tag, url) {
             var contains = false;
-            var files = document.getElementsByTagName(tag);
-            var type = tag == "script" ? "src" : "href";
-            for (var i = 0, len = files.length; i < len; i++) {
-                if (files[i].getAttribute(type) == url) {
+            var type = (tag == "script") ? "src" : "href";
+
+            $(tag + '[' + type + ']').each(function (i, v) {
+                if ($(v).attr(type) == url) {
                     contains = true;
-                    break;
+                    return false;
                 }
-            }
+            });
+
             return contains;
         }
 
@@ -38,7 +39,21 @@ var LazyInclude = {
 
             for (var i = 0; i < urls.length; i++) {
                 if (!hasFile("script", urls[i].url)) {
-                    $.getScript(urls[i].url, urls[i].cb);
+                    var oScript = document.createElement('script');
+                    oScript.type = 'text/javascript';
+                    oScript.src = urls[i].url;
+                    // most browsers
+                    oScript.onload = urls[i].cb;
+                    // IE 6 & 7
+                    oScript.onreadystatechange = function () {
+                        if (this.readyState == 'complete') {
+                            urls[i].cb();
+                        }
+                    }
+                    document.getElementsByTagName('head')[0].appendChild(oScript);
+                }
+                else {
+                    urls[i].cb();
                 }
             }
 
