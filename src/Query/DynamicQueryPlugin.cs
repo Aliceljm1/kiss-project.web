@@ -134,7 +134,29 @@ namespace Kiss.Web.Query
                 q.PageSize = qc.PageSize;
 
             if (StringUtil.HasText(qc.Field))
-                q.TableField = qc.Field;
+            {
+                if (qc.Field.Contains("$"))
+                {
+                    using (StringWriter writer = new StringWriter())
+                    {
+                        Dictionary<string, object> di = new Dictionary<string, object>();
+                        di.Add("this", sender);
+                        di.Add("jc", jc);
+                        di.Add("utils", Utils.Instance);
+
+                        ServiceLocator.Instance.Resolve<ITemplateEngine>().Process(di,
+                                   string.Empty,
+                                   writer,
+                                   qc.Field);
+
+                        q.TableField = writer.GetStringBuilder().ToString();
+                    }
+                }
+                else
+                {
+                    q.TableField = qc.Field;
+                }
+            }
 
             if (StringUtil.HasText(qc.AllowedOrderbyColumns))
                 q.AllowedOrderbyColumns.AddRange(StringUtil.CommaDelimitedListToStringArray(qc.AllowedOrderbyColumns));
