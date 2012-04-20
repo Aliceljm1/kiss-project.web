@@ -44,12 +44,13 @@ var LazyInclude = {
                     oScript.type = 'text/javascript';
                     oScript.src = urls[i].url;
 
-                    // most browsers
-                    oScript.onload = urls[i].cb;
-                    // IE 6 & 7
-                    oScript.onreadystatechange = function () {
-                        if (this.readyState == 'complete' || this.readyState == 'loaded') {
-                            this.onload();
+                    // store callback function
+                    oScript.tmp = urls[i].cb;
+                    oScript.onload = oScript.onreadystatechange = function () {
+                        if (!this.readyState || /loaded|complete/.test(this.readyState)) {
+                            this.tmp();
+
+                            this.onload = this.onreadystatechange = this.tmp = null;
                         }
                     }
 
