@@ -43,14 +43,16 @@ var LazyInclude = {
                     var oScript = document.createElement('script');
                     oScript.type = 'text/javascript';
                     oScript.src = urls[i].url;
+
                     // most browsers
                     oScript.onload = urls[i].cb;
                     // IE 6 & 7
                     oScript.onreadystatechange = function () {
-                        if (this.readyState == 'complete') {
-                            urls[i].cb();
+                        if (this.readyState == 'complete' || this.readyState == 'loaded') {
+                            this.onload();
                         }
                     }
+
                     document.getElementsByTagName('head')[0].appendChild(oScript);
                 }
                 else {
