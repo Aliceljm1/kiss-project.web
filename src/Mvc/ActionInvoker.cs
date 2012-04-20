@@ -74,7 +74,7 @@ namespace Kiss.Web.Mvc
 
                     if (!e.PreventDefault)
                     {
-                        ret = execute(jc.Controller, mi, jc.Form);
+                        ret = execute(jc.Controller, mi, jc.Params);
                     }
 
                     if (ret != null && !jc.RenderContent)
@@ -84,7 +84,7 @@ namespace Kiss.Web.Mvc
                 {
                     if (!e.PreventDefault)
                     {
-                        ret = execute(jc.Controller, mi, jc.QueryString);
+                        ret = execute(jc.Controller, mi, jc.Params);
                     }
 
                     if (ret != null)
