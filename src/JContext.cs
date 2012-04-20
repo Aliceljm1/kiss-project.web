@@ -725,21 +725,16 @@ namespace Kiss.Web
                             href = Resources.Utility.GetResourceUrl(href);
 
                         if (csp.IsScriptRended(href))
-                        {
                             continue;
-                        }
 
                         csp.SetScriptRended(href);
 
                         if (is_css && !Site.CombineCss)
                             cssfiles.Add(href);
-                        else if (!is_css && !Site.CombineJs)
-                            jsfiles.Add(href, string.Empty);
                         else
                             hrefs.Add(href);
                     }
 
-                    bool scripts_added = false;
                     for (int i = strs.Length - 1; i >= 0; i--)
                     {
                         string href = strs[i];
@@ -749,19 +744,15 @@ namespace Kiss.Web
                         if (jsfiles.ContainsKey(href))
                         {
                             jsfiles[href] = includes[item].Join(";");
-                            scripts_added = true;
-                            break;
                         }
                     }
-                    //if (!scripts_added && !is_css)
-                    //    scripts.AddRange(includes[item]);
 
                     // comine url
                     if (is_css && Site.CombineCss)
                         url = Utility.FormatCssUrl(Site, string.Format("_resc.aspx?f={0}&t=text/css&v={1}",
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
                                                                 Site.CssVersion));
-                    else if (!is_css && Site.CombineJs)
+                    else if (!is_css)
                         url = Utility.FormatJsUrl(Kiss.Web.SiteConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
                                                             Site.JsVersion));
