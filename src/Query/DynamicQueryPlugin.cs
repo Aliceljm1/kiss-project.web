@@ -124,8 +124,6 @@ namespace Kiss.Web.Query
 
             if (qc == null)
                 qc = GetById(jc.Site, qId);
-            else
-                q.EnableFireEventMulti = true;
 
             if (qc == null)
                 return;

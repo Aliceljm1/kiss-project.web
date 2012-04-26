@@ -6,8 +6,6 @@ namespace Kiss.Web.Mvc
 {
     public class MvcModule
     {
-        static readonly ILogger logger = LogManager.GetLogger<MvcModule>();
-
         internal ActionInvoker invoker;
 
         protected virtual void Invoke(object sender, EventArgs e)
@@ -20,8 +18,6 @@ namespace Kiss.Web.Mvc
                 if (jc.Controller == null)
                     return;
 
-                logger.Debug("begin invoke controller's action. {0}", jc.Navigation.ToString());
-
                 jc.Controller.jc = jc;
                 jc.ViewData["this"] = jc.Controller;
 
@@ -33,7 +29,7 @@ namespace Kiss.Web.Mvc
             catch (ThreadAbortException) { }// ignore this exception
             catch (Exception ex)
             {
-                logger.Fatal(ExceptionUtil.WriteException(ex));
+                LogManager.GetLogger<MvcModule>().Fatal(ExceptionUtil.WriteException(ex));
 
                 if (jc.Context.IsDebuggingEnabled)
                     throw ex;
