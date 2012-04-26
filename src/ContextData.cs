@@ -65,6 +65,8 @@ namespace Kiss.Web
     [ContextData("utils")]
     class ContextDataUtils
     {
+        public static readonly ContextDataUtils Instance = new ContextDataUtils();
+
         public static string[] split(string str)
         {
             return StringUtil.Split(str, StringUtil.Comma, true, true);
@@ -106,6 +108,34 @@ namespace Kiss.Web
         public static bool hasText(string str)
         {
             return StringUtil.HasText(str);
+        }
+
+        public static DateTime toDateTime(string obj)
+        {
+            if (string.IsNullOrEmpty(obj)) return DateTime.Now;
+
+            return StringUtil.ToDateTime(obj);
+        }
+
+        public bool isDateTime(string str)
+        {
+            if (StringUtil.IsNullOrEmpty(str)) return false;
+
+            DateTime dt;
+
+            bool valid = DateTime.TryParse(str, out dt);
+
+            if (valid)
+            {
+                valid = dt < DateTime.MaxValue && dt > DateTime.MinValue;
+            }
+
+            return valid;
+        }
+
+        public int toInt(string str)
+        {
+            return str.ToInt();
         }
     }
 }

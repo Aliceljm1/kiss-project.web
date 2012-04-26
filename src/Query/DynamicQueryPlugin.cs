@@ -142,7 +142,7 @@ namespace Kiss.Web.Query
                         Dictionary<string, object> di = new Dictionary<string, object>();
                         di.Add("this", sender);
                         di.Add("jc", jc);
-                        di.Add("utils", Utils.Instance);
+                        di.Add("utils", ContextDataUtils.Instance);
 
                         ServiceLocator.Instance.Resolve<ITemplateEngine>().Process(di,
                                    string.Empty,
@@ -179,7 +179,7 @@ namespace Kiss.Web.Query
                 Dictionary<string, object> di = new Dictionary<string, object>();
                 di.Add("this", sender);
                 di.Add("jc", jc);
-                di.Add("utils", Utils.Instance);
+                di.Add("utils", ContextDataUtils.Instance);
 
                 ServiceLocator.Instance.Resolve<ITemplateEngine>().Process(di,
                            string.Empty,
@@ -215,41 +215,5 @@ namespace Kiss.Web.Query
         public string Where { get; set; }
         public int PageSize { get; set; }
         public string Orderby { get; set; }
-    }
-
-    public class Utils
-    {
-        public static readonly Utils Instance = new Utils();
-
-        public bool hasText(string str)
-        {
-            return StringUtil.HasText(str);
-        }
-
-        public bool isDateTime(string str)
-        {
-            if (StringUtil.IsNullOrEmpty(str)) return false;
-
-            DateTime dt;
-
-            bool valid = DateTime.TryParse(str, out dt);
-
-            if (valid)
-            {
-                valid = dt < DateTime.MaxValue && dt > DateTime.MinValue;
-            }
-
-            return valid;
-        }
-
-        public int toInt(string str)
-        {
-            return str.ToInt();
-        }
-
-        public DateTime toDateTime(string str)
-        {
-            return DateTime.Parse(str);
-        }
     }
 }
