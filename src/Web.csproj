@@ -69,6 +69,7 @@
     <Compile Include="Cache\WebCacheProvider.cs" />
     <Compile Include="Controls\IContextAwaredControl.cs" />
     <Compile Include="Controls\Layout.cs" />
+    <Compile Include="ExportHelper.cs" />
     <Compile Include="IErrorHandler.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
