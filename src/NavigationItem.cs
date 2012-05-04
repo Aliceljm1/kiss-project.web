@@ -13,7 +13,7 @@ namespace Kiss.Web
 
         public bool Selected { get; set; }
 
-        public string Url { get; set; }        
+        public string Url { get; set; }
 
         public List<NavigationItem> SubItems { get; set; }
 

@@ -222,7 +222,7 @@ namespace Kiss.Web
                             {
                                 NavigationItem nii = ni.Children[k];
 
-                                url = nii.Url.TrimStart('/');
+                                url = trimUrl(nii.Url);
                                 if (string.IsNullOrEmpty(url)) continue;
 
                                 d = StringUtil.Similarity(requesturl, url);
@@ -236,7 +236,7 @@ namespace Kiss.Web
                                 }
                             }
 
-                            url = ni.Url.TrimStart('/');
+                            url = trimUrl(ni.Url);
                             if (string.IsNullOrEmpty(url))
                                 continue;
 
@@ -251,7 +251,7 @@ namespace Kiss.Web
                             }
                         }
 
-                        url = menuItems[i].Url.TrimStart('/');
+                        url = trimUrl(menuItems[i].Url);
                         if (string.IsNullOrEmpty(url))
                             continue;
 
@@ -292,7 +292,7 @@ namespace Kiss.Web
                         {
                             NavigationItem nii = ni.Children[k];
 
-                            url = nii.Url.TrimStart('/');
+                            url = trimUrl(nii.Url);
                             if (string.IsNullOrEmpty(url)) continue;
 
                             d = StringUtil.Similarity(requesturl, url);
@@ -305,7 +305,7 @@ namespace Kiss.Web
                             }
                         }
 
-                        url = ni.Url.TrimStart('/');
+                        url = trimUrl(ni.Url);
                         if (string.IsNullOrEmpty(url))
                             continue;
 
@@ -340,17 +340,17 @@ namespace Kiss.Web
                     {
                         NavigationItem nii = ni.Children[k];
 
-                        url = nii.Url.TrimStart('/');
+                        url = trimUrl(nii.Url);
                         if (string.IsNullOrEmpty(url)) continue;
 
                         d = StringUtil.Similarity(requesturl, url);
                         if (d > max)
                         {
                             max = d;
-                            
+
                             maxk = k;
                         }
-                    }                  
+                    }
 
                     if (max > 0)
                     {
@@ -378,6 +378,11 @@ namespace Kiss.Web
             OK = true;
 
             return true;
+        }
+
+        static string trimUrl(string url)
+        {
+            return new Url(url).Path.TrimStart('/');
         }
 
         public override string ToString()
