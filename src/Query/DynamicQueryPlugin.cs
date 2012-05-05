@@ -114,13 +114,13 @@ namespace Kiss.Web.Query
             if (string.IsNullOrEmpty(qId))
                 qId = jc.Navigation.ToString();
 
-            qc = GetById(jc.Site, string.Format("{0}.{1}.{2}", q.Id, e.Method, e.DbProviderName));
+            qc = GetById(jc.Site, string.Format("{0}.{1}.{2}", qId, e.Method, e.DbProviderName));
 
             if (qc == null)
-                qc = GetById(jc.Site, string.Format("{0}.{1}", q.Id, e.Method));
+                qc = GetById(jc.Site, string.Format("{0}.{1}", qId, e.Method));
 
             if (qc == null)
-                qc = GetById(jc.Site, string.Format("{0}.{1}", q.Id, e.DbProviderName));
+                qc = GetById(jc.Site, string.Format("{0}.{1}", qId, e.DbProviderName));
 
             if (qc == null)
                 qc = GetById(jc.Site, qId);

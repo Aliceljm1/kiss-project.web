@@ -53,6 +53,10 @@ namespace Kiss.Web
                     QC.PageSize = pageSize.Value;
                 }
             }
+            else
+            {
+                QC.PageSize = pageSize.Value;
+            }
         }
 
         public void Dispose()
