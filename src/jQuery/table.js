@@ -169,7 +169,7 @@
                 sort = jQuery.query.get('sort');
 
             if (sort && typeof sort == 'string') {
-                asc = (sort.indexOf('-') == -1);
+                asc = !sort.startWith('-');
                 if (!asc) sort = sort.substr(1);
                 if (sort) $("thead [id='" + sort + "'] span", $this).addClass(asc ? 'asc' : 'desc');
             }

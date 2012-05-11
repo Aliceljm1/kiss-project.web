@@ -1018,7 +1018,7 @@
 					                func.apply(null, [ele]);
 							    }
 
-							ele.trigger('change');
+							$(this).css('visibility','hidden');
 						})
 						.hover(function(){$(this).removeClass('ui-state-disabled');},function(){$(this).addClass('ui-state-disabled');});
 
@@ -1096,8 +1096,7 @@
 						return false;
 				});
 
-				if (valid && opts.submitFunc && $.isFunction(opts.submitFunc)) {
-					//$.fn.gform.working = true;
+				if (valid && opts.submitFunc && $.isFunction(opts.submitFunc)) {					
 					_tip.hide();
 					var qs = $.param(formData);
 					opts.submitFunc.apply(jqForm, [qs]);
