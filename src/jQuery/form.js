@@ -1247,8 +1247,7 @@
 			}
 			return true;
 		};
-		var checkFunction = function (ele) {
-			if ( ele.val() == null || $.trim(ele.val().toString()) == '') return true; 
+		var checkFunction = function (ele) {			
 			var func = ele.attr('func');
 			if (!func)
 				return true;

@@ -9,12 +9,12 @@
 .gform select { margin: 12px 0 0 0; }
 .gform input:focus, .gform input.focus, .gform textarea:focus, .gform textarea.focus, .gform .focus { background: #ffc; }
 .gform textarea { font: 12px Verdana, Arial, Helvetica, sans-serif; overflow: auto; width: 300px; height: 40px; }
-.gform label { display: block; margin: 12px 0 0; _margin-top: 16px; text-align: right; padding: 0 10px 0 0; font-weight: normal; font-size: 12px; width: 60px; _margin-top: 14px; float:left; }
+.gform label { display: block; margin: 14px 0 0; text-align: right; padding: 0 10px 0 0; font-weight: normal; font-size: 12px; width: 60px; float:left; }
 .gform .buttons { padding: 16px 0 0 70px; display: block; }
 .gform br { clear: both; float: none; }
 .gform .tip { margin: 0 0 0 30px; }
 
-.gform .clearContainer { margin: 10px 0 0; vertical-align: middle; float: left; padding: 1px 16px 1px 1px; position:relative; }
+.gform .clearContainer { margin: 11px 0 0; vertical-align: middle; float: left; padding: 1px 16px 1px 1px; position:relative; }
 .gform .clearContainer input, .gform .clearContainer textarea { border: 0; outline: 0; padding: 1px; margin: 0; float:none; }
 .gform .clearContainer .clearlink {  position:absolute;  right:2px; top:2px; }
 .gform .clearContainer .clearlink span { cursor: pointer; }
