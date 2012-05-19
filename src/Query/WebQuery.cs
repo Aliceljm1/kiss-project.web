@@ -59,6 +59,9 @@ namespace Kiss.Web
 
                 return val;
             }
+            set {
+                base[key] = value;
+            }
         }
     }
 }
