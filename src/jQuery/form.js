@@ -1097,7 +1097,6 @@
 				});
 
 				if (valid && opts.submitFunc && $.isFunction(opts.submitFunc)) {					
-					_tip.hide();
 					var qs = $.param(formData);
 					opts.submitFunc.apply(jqForm, [qs]);
 					return false;
@@ -1130,12 +1129,7 @@
 		};
 
 		var onSuccess = function (data, status) {
-			$.fn.gform.working = false;
-			var success = $('.success', $this);
-			if (success.length == 0)
-				_tip.hide();
-			else
-				updateTips(success.html());
+			$.fn.gform.working = false;			
 
 			var r;
 			try {
@@ -1263,9 +1257,6 @@
 			return true;
 		};
 
-		var _tip = $('.tip', $this);
-		if (_tip.length == 0)
-			_tip = $('.tip');
 		if (opts.ajax) {
 			if (!opts.url)
 				opts.url = $this.attr('action') || window.location.toString();
