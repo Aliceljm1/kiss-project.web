@@ -69,7 +69,6 @@ namespace Kiss.Web.Mvc
 
                 if (jc.IsPost)
                 {
-                    // set rendercontent to false before invoke action
                     jc.RenderContent = false;
 
                     if (!e.PreventDefault)
@@ -77,8 +76,18 @@ namespace Kiss.Web.Mvc
                         ret = execute(jc.Controller, mi, jc.Params);
                     }
 
-                    if (ret != null && !jc.RenderContent)
-                        ResponseUtil.OutputJson(jc.Context.Response, ret);
+                    if (ret != null)
+                    {
+                        if (ret is ActionResult)
+                        {
+                            ActionResult actionResult = ret as ActionResult;
+                            actionResult.ExecuteResult(jc);
+                        }
+                        else if (!jc.RenderContent)
+                        {
+                            ResponseUtil.OutputJson(jc.Context.Response, ret);
+                        }
+                    }                    
                 }
                 else
                 {
