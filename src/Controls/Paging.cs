@@ -65,14 +65,14 @@ namespace Kiss.Web.Controls
         /// </summary>
         public bool AlwaysShowNext { get; set; }
 
-        private int _numDispay = 8;
+        private int _numDisplay = 8;
         /// <summary>
         /// 显示页码总数
         /// </summary>
-        public int NumDispay
+        public int NumDisplay
         {
-            get { return _numDispay; }
-            set { _numDispay = value; }
+            get { return _numDisplay; }
+            set { _numDisplay = value; }
         }
 
         private int _numEdge = 1;
@@ -83,28 +83,6 @@ namespace Kiss.Web.Controls
         {
             get { return _numEdge; }
             set { _numEdge = value; }
-        }
-
-        private int numPages
-        {
-            get
-            {
-                return Convert.ToInt32(Math.Ceiling((decimal)QueryCondition.TotalCount / QueryCondition.PageSize));
-            }
-        }
-
-        private int[] getInterval
-        {
-            get
-            {
-                int half = Convert.ToInt32(Math.Ceiling((decimal)NumDispay / 2));
-                int np = numPages;
-                int upper_limit = np - NumDispay;
-                int start = QueryCondition.PageIndex > half ? Math.Max(Math.Min(QueryCondition.PageIndex - half, upper_limit), 0) : 0;
-                int end = QueryCondition.PageIndex > half ? Math.Min(QueryCondition.PageIndex + half, np) : Math.Min(NumDispay, np);
-
-                return new int[] { start, end };
-            }
         }
 
         /// <summary>
@@ -149,53 +127,18 @@ namespace Kiss.Web.Controls
             }
         }
 
+        public ArrayList GetDataSource()
+        {
+            return GetDataSource(QueryCondition, NumDisplay, NumEdge, AlwaysShowPrev, AlwaysShowNext);
+        }
+
         private void DrawLinks(HtmlTextWriter writer)
         {
             if (Template != null)
             {
-                ArrayList datasource = new ArrayList();
+                ArrayList datasource = GetDataSource();
 
-                StringBuilder txt = new StringBuilder();
-                int[] interval = getInterval;
-                var np = numPages;
-                if (np < 2)
-                    return;
-
-                if (QueryCondition.PageIndex > 0 || AlwaysShowPrev)
-                    datasource.Add(new { pageindex = QueryCondition.PageIndex - 1, type = "prev", href = FormatUrl(QueryCondition.PageIndex - 1) });
-
-                if (interval[0] > 0 && NumEdge > 0)
-                {
-                    var end = Math.Min(NumEdge, interval[0]);
-                    for (int i = 0; i < end; i++)
-                    {
-                        datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i) });
-                    }
-                    if (NumEdge < interval[0])
-                        datasource.Add(new { type = "ellipsis" });
-                }
-
-                for (int i = interval[0]; i < interval[1]; i++)
-                {
-                    datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i) });
-                }
-
-                if (interval[1] < np && NumEdge > 0)
-                {
-                    if (np - NumEdge > interval[1])
-                    {
-                        datasource.Add(new { type = "ellipsis" });
-                    }
-
-                    var begin = Math.Max(np - NumEdge, interval[1]);
-                    for (int i = begin; i < np; i++)
-                    {
-                        datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i) });
-                    }
-                }
-
-                if (QueryCondition.PageIndex < np - 1 || AlwaysShowNext)
-                    datasource.Add(new { pageindex = QueryCondition.PageIndex + 1, type = "next", href = FormatUrl(QueryCondition.PageIndex + 1) });
+                if (datasource == null || datasource.Count == 0) return;
 
                 Control ctrl = new Control() { };
 
@@ -241,20 +184,20 @@ namespace Kiss.Web.Controls
             else
             {
                 StringBuilder txt = new StringBuilder();
-                int[] interval = getInterval;
-                var np = numPages;
+                int[] interval = getInterval(QueryCondition, NumDisplay);
+                var np = get_numPages(QueryCondition);
                 if (np < 2)
                     return;
 
                 if (StringUtil.HasText(PrevText) && (QueryCondition.PageIndex > 0 || AlwaysShowPrev))
-                    txt.Append(appendItem(QueryCondition.PageIndex - 1, new string[] { PrevText, "prev" }));
+                    txt.Append(appendItem(QueryCondition.PageIndex - 1, np, new string[] { PrevText, "prev" }));
 
                 if (interval[0] > 0 && NumEdge > 0)
                 {
                     var end = Math.Min(NumEdge, interval[0]);
                     for (int i = 0; i < end; i++)
                     {
-                        txt.Append(appendItem(i, null));
+                        txt.Append(appendItem(i, np, null));
                     }
                     if (NumEdge < interval[0])
                         txt.Append("<span>...</span>");
@@ -262,7 +205,7 @@ namespace Kiss.Web.Controls
 
                 for (int i = interval[0]; i < interval[1]; i++)
                 {
-                    txt.Append(appendItem(i, null));
+                    txt.Append(appendItem(i, np, null));
                 }
 
                 if (interval[1] < np && NumEdge > 0)
@@ -275,12 +218,12 @@ namespace Kiss.Web.Controls
                     var begin = Math.Max(np - NumEdge, interval[1]);
                     for (int i = begin; i < np; i++)
                     {
-                        txt.Append(appendItem(i, null));
+                        txt.Append(appendItem(i, np, null));
                     }
                 }
 
                 if (StringUtil.HasText(NextText) && (QueryCondition.PageIndex < np - 1 || AlwaysShowNext))
-                    txt.Append(appendItem(QueryCondition.PageIndex + 1, new string[] { NextText, "next" }));
+                    txt.Append(appendItem(QueryCondition.PageIndex + 1, np, new string[] { NextText, "next" }));
 
                 writer.Write("<div class='pagination'>");
 
@@ -293,7 +236,58 @@ namespace Kiss.Web.Controls
             }
         }
 
-        public string appendItem(int page_id, string[] appendopts)
+        public static ArrayList GetDataSource(QueryCondition qc, int numDisplay, int numEdge, bool AlwaysShowPrev, bool AlwaysShowNext)
+        {
+            JContext jc = JContext.Current;
+
+            ArrayList datasource = new ArrayList();
+
+            StringBuilder txt = new StringBuilder();
+            int[] interval = getInterval(qc, numDisplay);
+            var np = get_numPages(qc);
+            if (np < 2)
+                return datasource;
+
+            if (qc.PageIndex > 0 || AlwaysShowPrev)
+                datasource.Add(new { pageindex = qc.PageIndex - 1, type = "prev", href = FormatUrl(qc.PageIndex - 1, null, jc.IsAjaxRequest) });
+
+            if (interval[0] > 0 && numEdge > 0)
+            {
+                var end = Math.Min(numEdge, interval[0]);
+                for (int i = 0; i < end; i++)
+                {
+                    datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i, null, jc.IsAjaxRequest) });
+                }
+                if (numEdge < interval[0])
+                    datasource.Add(new { type = "ellipsis" });
+            }
+
+            for (int i = interval[0]; i < interval[1]; i++)
+            {
+                datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i, null, jc.IsAjaxRequest) });
+            }
+
+            if (interval[1] < np && numEdge > 0)
+            {
+                if (np - numEdge > interval[1])
+                {
+                    datasource.Add(new { type = "ellipsis" });
+                }
+
+                var begin = Math.Max(np - numEdge, interval[1]);
+                for (int i = begin; i < np; i++)
+                {
+                    datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i, null, jc.IsAjaxRequest) });
+                }
+            }
+
+            if (qc.PageIndex < np - 1 || AlwaysShowNext)
+                datasource.Add(new { pageindex = qc.PageIndex + 1, type = "next", href = FormatUrl(qc.PageIndex + 1, null, jc.IsAjaxRequest) });
+
+            return datasource;
+        }
+
+        public string appendItem(int page_id, int numPages, string[] appendopts)
         {
             page_id = page_id < 0 ? 0 : (page_id < numPages ? page_id : numPages - 1);
             if (appendopts == null)
@@ -302,23 +296,25 @@ namespace Kiss.Web.Controls
                 return string.Format("<span class='current {1}'>{0}</span>", appendopts[0], appendopts[1]);
             return string.Format("<a href='{2}' {1}>{0}</a>", appendopts[0],
                 StringUtil.HasText(appendopts[1]) ? string.Format("class='{0}'", appendopts[1]) : string.Empty,
-               FormatUrl(page_id));
+               FormatUrl(page_id, Url, _isAjaxRequest));
         }
 
-        private string FormatUrl(int page_id)
+        private static string FormatUrl(int page_id, string Url, bool isAjaxRequest)
         {
-            if (_isAjaxRequest && StringUtil.IsNullOrEmpty(Url))
+            if (isAjaxRequest && StringUtil.IsNullOrEmpty(Url))
                 return "#";
+
+            HttpContext httpContext = HttpContext.Current;
 
             if (StringUtil.HasText(Url))
             {
                 if (Url.Contains("?"))
                     return string.Format(Url, page_id + 1);
-                return string.Format(Url + Context.Request.Url.Query, page_id + 1);
+                return string.Format(Url + httpContext.Request.Url.Query, page_id + 1);
             }
             else
             {
-                Web.Url url = new Url(HttpContext.Current.Request.Url.PathAndQuery);
+                Web.Url url = new Url(httpContext.Request.Url.PathAndQuery);
 
                 int i = url.Path.LastIndexOf("/");
 
@@ -329,6 +325,22 @@ namespace Kiss.Web.Controls
                     string.IsNullOrEmpty(url.Query) ? string.Empty : "?" + url.Query
                   );
             }
+        }
+
+        private static int get_numPages(QueryCondition qc)
+        {
+            return Convert.ToInt32(Math.Ceiling((decimal)qc.TotalCount / qc.PageSize));
+        }
+
+        private static int[] getInterval(QueryCondition qc, int numDisplay)
+        {
+            int half = Convert.ToInt32(Math.Ceiling((decimal)numDisplay / 2));
+            int np = get_numPages(qc);
+            int upper_limit = np - numDisplay;
+            int start = qc.PageIndex > half ? Math.Max(Math.Min(qc.PageIndex - half, upper_limit), 0) : 0;
+            int end = qc.PageIndex > half ? Math.Min(qc.PageIndex + half, np) : Math.Min(numDisplay, np);
+
+            return new int[] { start, end };
         }
     }
 }

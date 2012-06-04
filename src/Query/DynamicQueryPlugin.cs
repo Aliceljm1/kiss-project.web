@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -137,10 +136,8 @@ namespace Kiss.Web.Query
                 {
                     using (StringWriter writer = new StringWriter())
                     {
-                        Dictionary<string, object> di = new Dictionary<string, object>();
-                        di.Add("this", sender);
-                        di.Add("jc", jc);
-                        di.Add("utils", ContextDataUtils.Instance);
+                        Dictionary<string, object> di = new Dictionary<string, object>(jc.ViewData);
+                        di["this"] = sender;
 
                         ServiceLocator.Instance.Resolve<ITemplateEngine>().Process(di,
                                    string.Empty,
@@ -174,10 +171,8 @@ namespace Kiss.Web.Query
 
             using (StringWriter writer = new StringWriter())
             {
-                Dictionary<string, object> di = new Dictionary<string, object>();
-                di.Add("this", sender);
-                di.Add("jc", jc);
-                di.Add("utils", ContextDataUtils.Instance);
+                Dictionary<string, object> di = new Dictionary<string, object>(jc.ViewData);
+                di["this"] = sender;
 
                 ServiceLocator.Instance.Resolve<ITemplateEngine>().Process(di,
                            string.Empty,

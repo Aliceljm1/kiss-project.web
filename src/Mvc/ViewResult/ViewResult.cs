@@ -1,4 +1,5 @@
-﻿
+﻿using Kiss.Web.Controls;
+
 namespace Kiss.Web.Mvc
 {
     public class ViewResult : ActionResult
@@ -16,7 +17,19 @@ namespace Kiss.Web.Mvc
 
         public override void ExecuteResult(JContext jc)
         {
-            jc.Items["__viewResult__"] = ViewName;
+            if (jc.IsPost && !jc.RenderContent)
+            {
+                jc.Context.Response.Write(new TemplatedControl()
+                {
+                    SkinName = ViewName,
+                    UsedInMvc = !ViewName.StartsWith("/"),
+                    Templated = true
+                }.Execute());
+            }
+            else
+            {
+                jc.Items["__viewResult__"] = ViewName;
+            }
         }
     }
 }

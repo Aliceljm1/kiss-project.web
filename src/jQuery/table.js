@@ -45,6 +45,15 @@
             $this.trigger('gtable.row_selected', [$this.getSelectedRowIds()]);
         });
 
+        columnCheckboxes.change(function () {
+            var checked = columnCheckboxes.filter(':checked');
+            if (checked.length == columnCheckboxes.length) {
+                headerCheckbox.attr('checked', true).attr('title', settings.unselectTip);
+            } else {
+                headerCheckbox.attr('checked', false).attr('title', settings.selectTip);
+            }
+        });
+
         if (headerCheckbox.attr('checked'))
             headerCheckbox.trigger('click');
 
@@ -56,7 +65,7 @@
                 else if (event.target.tagName == 'TD') {
                     $(':checkbox:first', this).attr('checked', function () {
                         return !this.checked;
-                    });
+                    }).trigger('change');
                     $(this).toggleClass('selected');
                 }
 
@@ -87,7 +96,8 @@
 
             if (settings.sort == 'default' && !$.query) return;
 
-            var asc = true;
+            var sort = '';
+            var sort_column = '';
 
             $('thead .sortable', $this).each(function () {
                 var th = $(this),
@@ -138,7 +148,8 @@
                     }
                     else if (settings.sort == 'default') {
                         var column = $(this).attr('id');
-                        if (asc) column = '-' + column;
+                        if ((sort_column == column && !sort.startWith('-')) || sort_column != column)
+                            column = '-' + column;
                         var path = window.location.pathname;
                         var index = path.indexOf('.');
                         if (index != -1)
@@ -147,7 +158,8 @@
                         window.location = path + jQuery.query.set('sort', column);
                     } else if (settings.sort == 'ajax') {
                         var column = $(this).attr('id');
-                        if (asc) column = '-' + column;
+                        if ((sort_column == column && !sort.startWith('-')) || sort_column != column)
+                            column = '-' + column;
 
                         var form = $this.parents('form:first');
                         if ($('input[name=sort]', form).length == 0)
@@ -161,7 +173,6 @@
                 });
             });
 
-            var sort = '';
             if (settings.sort == 'ajax') {
                 var form = $this.parents('form:first');
                 sort = $('input[name=sort]', form).val();
@@ -169,9 +180,9 @@
                 sort = jQuery.query.get('sort');
 
             if (sort && typeof sort == 'string') {
-                asc = !sort.startWith('-');
-                if (!asc) sort = sort.substr(1);
-                if (sort) $("thead [id='" + sort + "'] span", $this).addClass(asc ? 'asc' : 'desc');
+                var asc = !sort.startWith('-');
+                if (!asc) sort_column = sort.substr(1);
+                if (sort_column) $("thead [id='" + sort_column + "'] span", $this).addClass(asc ? 'asc' : 'desc');
             }
         };
 

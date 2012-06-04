@@ -1013,10 +1013,10 @@
 								ele.text('');
 
 							if(ele.data('clearcallback')){
-							    var func = eval(ele.data('clearcallback'));
-				                if (func && jQuery.isFunction(func))
-					                func.apply(null, [ele]);
-							    }
+								var func = eval(ele.data('clearcallback'));
+								if (func && jQuery.isFunction(func))
+									func.apply(null, [ele]);
+								}
 
 							$(this).css('visibility','hidden');
 						})
@@ -1027,11 +1027,9 @@
 				
 			// default value
 			$('select[selected]', f).each(function (i, v) {
-				if( $(v).attr('multiple')=='multiple')
-					$(v).val(v.getAttribute('selected').split(','));
-				else
-					$(v).val(v.getAttribute('selected'));
-			}).trigger('change');
+                var val = v.getAttribute('selected');                
+				$.fn.gform.set_select_val($(v) , $(v).attr('multiple')=='multiple' ? val.split(',') : val , true);
+			});
 
 			window.setTimeout(function () {				
 				$(':checkbox[selected],:radio[selected]', f).each(function (i, v) {
@@ -1288,6 +1286,26 @@
 		autoAddRedStar: true,
 		focus_first_input:true,
 		enter_to_submit:false
+	};
+
+	$.fn.gform.set_select_val = function (select, value, triggerChange) {
+        if (!value) {
+            value = select.find('option:first').attr('value');
+        }
+		try {
+			select.val(value);
+
+			if (triggerChange)
+				select.trigger('change');
+		}
+		catch (e) {
+			setTimeout(function () {
+				select.val(value);
+
+				if (triggerChange)
+					select.trigger('change');
+			}, 1);
+		}
 	};
 
 	$.fn.gform.commonregs = {
