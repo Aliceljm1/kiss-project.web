@@ -36,7 +36,12 @@ namespace Kiss.Web
         public ExportHelper(bool isexport, int? pageSize, string filename, JContext jc)
         {
             this.isexport = isexport;
-            this.filename = filename;
+
+            if (!filename.EndsWith(".xls") || !filename.EndsWith(".xlsx"))
+                this.filename = filename + ".xls";
+            else
+                this.filename = filename;
+
             this.jc = jc;
 
             QC = new WebQuery();
