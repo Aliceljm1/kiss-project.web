@@ -73,7 +73,16 @@ namespace Kiss.Web.Mvc
 
                     if (!e.PreventDefault)
                     {
-                        ret = execute(jc.Controller, mi, jc.Params);
+                        NameValueCollection form = jc.Form;
+
+                        // 在post表单中加入key不存在的querystring值
+                        foreach (string key in jc.QueryString.Keys)
+                        {
+                            if (form[key] == null)
+                                form[key] = jc.QueryString[key];
+                        }
+
+                        ret = execute(jc.Controller, mi, form);
                     }
 
                     if (ret != null)
@@ -87,13 +96,13 @@ namespace Kiss.Web.Mvc
                         {
                             ResponseUtil.OutputJson(jc.Context.Response, ret);
                         }
-                    }                    
+                    }
                 }
                 else
                 {
                     if (!e.PreventDefault)
                     {
-                        ret = execute(jc.Controller, mi, jc.Params);
+                        ret = execute(jc.Controller, mi, jc.QueryString);
                     }
 
                     if (ret != null)
