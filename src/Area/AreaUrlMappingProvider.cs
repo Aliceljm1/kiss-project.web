@@ -156,7 +156,7 @@ namespace Kiss.Web.Area
                     _urls[site.SiteKey] = urls;
                 }
 
-                _fileDependency = new CacheDependency(routefiles.ToArray());
+                _fileDependency = new CacheDependency(Path.Combine(root, "App_Data" + Path.DirectorySeparatorChar + "routes.config"));
                 HttpRuntime.Cache.Insert(kCACHE_KEY, "dummyValue", _fileDependency, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.High, null);
 
                 _latestRefresh = DateTime.Now;

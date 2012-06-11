@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Web;
 using Kiss.Utils;
+using System.Text;
 
 namespace Kiss.Web
 {
@@ -12,7 +13,7 @@ namespace Kiss.Web
     /// </summary>
     public class KissHttpApplication : System.Web.HttpApplication
     {
-        private static bool needSetup = false;
+        private static bool deploying = false;
 
         protected void Application_Start(object sender, EventArgs e)
         {
@@ -35,15 +36,9 @@ namespace Kiss.Web
 
             LogManager.GetLogger<KissHttpApplication>().Debug("ALL components initialized.");
 
-            // check if system config is valid
-            if (Context != null)
-            {
-                if (ConfigurationManager.GetSection("kiss") == null && Directory.Exists(ServerUtil.MapPath("~/setup")))
-                {
-                    needSetup = true;
-                    Context.Response.Redirect("~/setup/", true);
-                }
-            }
+            // check if system is deploying
+            if (Context != null && File.Exists(ServerUtil.MapPath("~/deploying.html")) && Directory.Exists(ServerUtil.MapPath("~/setup")))
+                deploying = true;
 
             EventBroker.Instance.BeginRequest += onBeginRequest;
         }
@@ -62,19 +57,39 @@ namespace Kiss.Web
 
             HttpContext context = jc.Context;
 
-            if (needSetup)
-            {
-                if (!context.Response.IsRequestBeingRedirected && jc.Site.SiteKey != "setup")
-                    context.Response.Redirect("~/setup/", true);
-            }
-            else
-            {
-                if (jc.Site != null)
-                    context.Items["SITE_KEY"] = jc.Site.SiteKey;
+            if (context.Request.Url.AbsolutePath.IndexOf("_res.aspx", StringComparison.InvariantCultureIgnoreCase) != -1
+                || context.Request.Url.AbsolutePath.IndexOf("_resc.aspx", StringComparison.InvariantCultureIgnoreCase) != -1)
+                return;
 
-                if (!context.Response.IsRequestBeingRedirected)
-                    context.Response.AddHeader("X-Powered-By", "TXTEK.COM");
+            if (deploying)
+            {
+                if (!context.Response.IsRequestBeingRedirected
+                    && jc.Site.SiteKey != "setup")
+                {
+                    string filename = ServerUtil.MapPath("~/deploying.html");
+                    if (File.Exists(filename))
+                    {
+                        using (StreamReader rdr = new StreamReader(filename, Encoding.UTF8))
+                        {
+                            HttpCookie cookie = context.Request.Cookies["deploy"];
+                            string username = rdr.ReadLine();
+                            if (cookie == null || !string.Equals(cookie.Value, username))
+                            {
+                                context.Response.Write(rdr.ReadToEnd());
+                                context.Response.End();
+
+                                return;
+                            }
+                        }
+                    }
+                }
             }
+
+            if (jc.Site != null)
+                context.Items["SITE_KEY"] = jc.Site.SiteKey;
+
+            if (!context.Response.IsRequestBeingRedirected)
+                context.Response.AddHeader("X-Powered-By", "TXTEK.COM");
 
             context.Items["_PAGE_ID_"] = StringUtil.UniqueId();
         }
