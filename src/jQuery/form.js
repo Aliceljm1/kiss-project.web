@@ -1027,7 +1027,7 @@
 				
 			// default value
 			$('select[selected]', f).each(function (i, v) {
-                var val = v.getAttribute('selected');                
+				var val = v.getAttribute('selected');                
 				$.fn.gform.set_select_val($(v) , $(v).attr('multiple')=='multiple' ? val.split(',') : val , true);
 			});
 
@@ -1289,9 +1289,9 @@
 	};
 
 	$.fn.gform.set_select_val = function (select, value, triggerChange) {
-        if (!value) {
-            value = select.find('option:first').attr('value');
-        }
+		if (!value) {
+			value = select.find('option:first').attr('value');
+		}
 		try {
 			select.val(value);
 

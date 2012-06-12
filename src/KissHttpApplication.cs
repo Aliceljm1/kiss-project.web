@@ -52,6 +52,9 @@ namespace Kiss.Web
 
         private void onBeginRequest(object sender, EventArgs e)
         {
+            if (EventBroker.IsStaticResource((sender as HttpApplication).Request))
+                return;
+
             JContext jc = JContext.Current;
             if (jc == null) return;
 

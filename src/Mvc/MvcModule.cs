@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Web;
 using Kiss.Utils;
 
 namespace Kiss.Web.Mvc
@@ -10,6 +11,9 @@ namespace Kiss.Web.Mvc
 
         protected virtual void Invoke(object sender, EventArgs e)
         {
+            if (EventBroker.IsStaticResource((sender as HttpApplication).Request))
+                return;
+
             JContext jc = JContext.Current;
 
             try

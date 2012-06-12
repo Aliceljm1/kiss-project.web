@@ -85,68 +85,68 @@ namespace Kiss.Web
 
         protected void app_BeginRequest(object sender, EventArgs e)
         {
-            if (BeginRequest != null && !IsStaticResource(sender))
+            if (BeginRequest != null)
                 BeginRequest(sender, e);
         }
 
         void app_AuthenticateRequest(object sender, EventArgs e)
         {
-            if (AuthenticateRequest != null && !IsStaticResource(sender))
+            if (AuthenticateRequest != null)
                 AuthenticateRequest(sender, e);
         }
 
 
         protected void app_AuthorizeRequest(object sender, EventArgs e)
         {
-            if (AuthorizeRequest != null && !IsStaticResource(sender))
+            if (AuthorizeRequest != null)
                 AuthorizeRequest(sender, e);
         }
 
         void app_PostMapRequestHandler(object sender, EventArgs e)
         {
-            if (PostMapRequestHandler != null && !IsStaticResource(sender))
+            if (PostMapRequestHandler != null)
                 PostMapRequestHandler(sender, e);
         }
 
         protected void app_AcquireRequestState(object sender, EventArgs e)
         {
-            if (AcquireRequestState != null && !IsStaticResource(sender))
+            if (AcquireRequestState != null)
                 AcquireRequestState(sender, e);
         }
 
         void app_PostAcquireRequestStateHandler(object sender, EventArgs e)
         {
-            if (PostAcquireRequestState != null && !IsStaticResource(sender))
+            if (PostAcquireRequestState != null)
                 PostAcquireRequestState(sender, e);
         }
 
         void app_PreRequestHandlerExecute(object sender, EventArgs e)
         {
-            if (PreRequestHandlerExecute != null && !IsStaticResource(sender))
+            if (PreRequestHandlerExecute != null)
                 PreRequestHandlerExecute(sender, e);
         }
 
         protected void app_Error(object sender, EventArgs e)
         {
-            if (Error != null && !IsStaticResource(sender))
+            if (Error != null)
                 Error(sender, e);
         }
 
         protected void app_ReleaseRequestState(object sender, EventArgs e)
         {
-            if (ReleaseRequestState != null && !IsStaticResource(sender))
+            if (ReleaseRequestState != null)
                 ReleaseRequestState(sender, e);
         }
 
         protected void app_PreSendRequestHeaders(object sender, EventArgs e)
         {
-            if (PreSendRequestHeaders != null && !IsStaticResource(sender))
+            if (PreSendRequestHeaders != null)
                 PreSendRequestHeaders(sender, e);
         }
 
         protected void app_EndRequest(object sender, EventArgs e)
         {
-            if (EndRequest != null && !IsStaticResource(sender))
+            if (EndRequest != null)
                 EndRequest(sender, e);
         }
 
@@ -164,17 +164,7 @@ namespace Kiss.Web
         /// .jpeg
         /// .js
         /// </remarks>
-        protected static bool IsStaticResource(object sender)
-        {
-            HttpApplication application = sender as HttpApplication;
-            if (application != null)
-            {
-                return IsStaticResource(application.Request);
-            }
-            return false;
-        }
-
-        protected static bool IsStaticResource(HttpRequest request)
+        public static bool IsStaticResource(HttpRequest request)
         {
             if (request != null)
             {
