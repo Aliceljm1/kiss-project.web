@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
-using System;
 
 namespace Kiss.Web.Area
 {
@@ -65,6 +66,13 @@ namespace Kiss.Web.Area
 
                 return list;
             }
+        }
+
+        public ISite GetBySiteKey(string siteKey)
+        {
+            return (from q in AllSites
+                    where q.SiteKey == siteKey
+                    select q).FirstOrDefault();
         }
     }
 }

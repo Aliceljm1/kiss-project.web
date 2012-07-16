@@ -33,19 +33,27 @@ namespace Kiss.Web.Controls
         /// Folder which contains the master files
         /// </summary>        
         private string themeFolder = null;
-        private bool _root = false;
+        private ISite container_site = null;
         public string ThemeFolder
         {
             get
             {
                 if (themeFolder == null)
                     return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot), ThemeName);
-                else if (themeFolder == "~")
+
+                if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    _root = true;
-                    ISite site = SiteConfig.Instance;
-                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(site.VirtualPath, site.ThemeRoot), site.Theme);
+                    container_site = SiteConfig.Instance;
+
+                    if (themeFolder != "~")
+                        container_site = JContext.Current.Host.GetBySiteKey(themeFolder.Substring(1));
+
+                    if (container_site == null)
+                        throw new WebException("site:{0} not exist!", themeFolder.Substring(1));
+
+                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot), container_site.Theme);
                 }
+
                 return themeFolder;
             }
             set
@@ -185,7 +193,7 @@ namespace Kiss.Web.Controls
             {
                 // manuall add scripts control
                 lock (masterPage.Controls.SyncRoot)
-                {                    
+                {
                     masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Scripts());
                 }
 
@@ -195,7 +203,7 @@ namespace Kiss.Web.Controls
                         (ctrl as MasterFileAwaredControl).MasterPageFileName = ThemeMasterFile;
 
                     if (ctrl is IContextAwaredControl)
-                        (ctrl as IContextAwaredControl).CurrentSite = _root ? SiteConfig.Instance : CurrentSite;
+                        (ctrl as IContextAwaredControl).CurrentSite = container_site ?? CurrentSite;
 
                     // load head's child
                     if (ctrl is Head)
@@ -203,7 +211,7 @@ namespace Kiss.Web.Controls
                         foreach (var item in ctrl.Controls)
                         {
                             if (item is IContextAwaredControl)
-                                (item as IContextAwaredControl).CurrentSite = _root ? SiteConfig.Instance : CurrentSite;
+                                (item as IContextAwaredControl).CurrentSite = container_site ?? CurrentSite;
                         }
                     }
 

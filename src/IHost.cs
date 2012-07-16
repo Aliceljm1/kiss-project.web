@@ -14,6 +14,8 @@ namespace Kiss.Web
         ISite CurrentSite { get; }
 
         IList<ISite> AllSites { get; }
+
+        ISite GetBySiteKey(string siteKey);
     }
 
     public class Host : IHost
@@ -26,6 +28,11 @@ namespace Kiss.Web
         public IList<ISite> AllSites
         {
             get { return new List<ISite>() { CurrentSite }; }
+        }
+
+        public ISite GetBySiteKey(string siteKey)
+        {
+            return CurrentSite;
         }
     }
 }
