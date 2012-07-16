@@ -55,7 +55,7 @@ namespace Kiss.Web.Mvc
                 // the entity to a file, the suggested filename should be used as a
                 // basis for the actual filename, where possible.
                 string headerValue = ContentDispositionUtil.GetHeaderValue(FileDownloadName);
-                response.AddHeader("Content-Disposition", headerValue);
+                response.AddHeader("Content-Disposition", headerValue);                
             }
 
             WriteFile(response);

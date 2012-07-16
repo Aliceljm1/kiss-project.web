@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
 using System.Web;
@@ -31,28 +32,36 @@ namespace Kiss.Web.Resources
             HttpRequest request = httpContext.Request;
             HttpResponse response = httpContext.Response;
 
-            string contentType = request.QueryString["z"];
-            if (contentType == "0")
-                contentType = "text/css";
-            else if (contentType == "1")
-                contentType = "application/x-javascript";
+            byte[] output = GetResourceContent(request.QueryString);
 
-            bool shorturl = StringUtil.HasText(request.QueryString["su"]);
-
-            // *** Create a cachekey and check whether it exists
-            string CacheKey = request.QueryString.ToString();
-
-            byte[] output = httpContext.Cache[CacheKey] as byte[];
-            if (output != null)
+            if (output != null && output.Length > 0)
             {
-                // read cache and send to client
+                string contentType = request.QueryString["z"];
+                if (contentType == "0")
+                    contentType = "text/css";
+                else if (contentType == "1")
+                    contentType = "application/x-javascript";
+
+                // Write out to Response object with appropriate Client Cache settings
                 SendOutput(response, contentType, output);
-                return;
             }
+        }
+
+        internal static byte[] GetResourceContent(NameValueCollection qs)
+        {
+            bool shorturl = StringUtil.HasText(qs["su"]);
+            string assemblyName = qs["t"] ?? string.Empty;
+            string resource = qs["r"];
+
+            string CacheKey = string.Concat(shorturl, assemblyName, resource);
+
+            // 1, try get from cache
+            byte[] output = HttpRuntime.Cache[CacheKey] as byte[];
+            if (output != null)
+                return output;
 
             // *** Retrieve information about resource embedded
             // *** Values are base64 encoded
-            string assemblyName = request.QueryString["t"] ?? string.Empty;
             if (!string.IsNullOrEmpty(assemblyName))
             {
                 try
@@ -61,16 +70,13 @@ namespace Kiss.Web.Resources
                 }
                 catch (FormatException)
                 {
-                    SendErrorResponse(response, "Invalid Resource");
-                    return;
+                    return null;
                 }
             }
 
-            string resource = request.QueryString["r"];
             if (string.IsNullOrEmpty(resource))
             {
-                SendErrorResponse(response, "Invalid Resource");
-                return;
+                return null;
             }
 
             try
@@ -79,8 +85,7 @@ namespace Kiss.Web.Resources
             }
             catch (FormatException)
             {
-                SendErrorResponse(response, "Invalid Resource");
-                return;
+                return null;
             }
 
             if (shorturl)
@@ -95,32 +100,22 @@ namespace Kiss.Web.Resources
             // *** If no type is passed use the current assembly - otherwise
             // *** run through the loaded assemblies and try to find assembly
             if (string.IsNullOrEmpty(assemblyName))
-                resourceAssembly = this.GetType().Assembly;
+                resourceAssembly = Assembly.GetExecutingAssembly();
             else
             {
                 resourceAssembly = FindAssembly(assemblyName);
                 if (resourceAssembly == null)
                 {
-                    SendErrorResponse(response, "Invalid Type Information");
-                    return;
+                    return null;
                 }
             }
 
             output = ResourceUtil.LoadBufferFromAssembly(resourceAssembly, resource);
 
-            if (output == null)
-            {
-                logger.Error("resource: {0} not found!", resource);
-                SendErrorResponse(response, "Error!");
-            }
-            else
-            {
-                // Add into the cache
-                HttpRuntime.Cache.Insert(CacheKey, output, null, DateTime.MaxValue, Cache.NoSlidingExpiration);
+            // Add into the cache
+            HttpRuntime.Cache.Insert(CacheKey, output, null, DateTime.MaxValue, Cache.NoSlidingExpiration);
 
-                // Write out to Response object with appropriate Client Cache settings
-                SendOutput(response, contentType, output);
-            }
+            return output;
         }
 
         private static readonly Dictionary<string, Assembly> asmcaches = new Dictionary<string, Assembly>();

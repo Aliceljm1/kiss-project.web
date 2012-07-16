@@ -124,8 +124,12 @@ namespace Kiss.Web
         {
             get
             {
-                NameValueCollection p = new NameValueCollection(QueryString);
-                p.Add(Form);
+                NameValueCollection p = new NameValueCollection(Form);
+                foreach (string key in QueryString.Keys)
+                {
+                    if (string.IsNullOrEmpty(p[key]))
+                        p[key] = QueryString[key];
+                }
                 return p;
             }
         }

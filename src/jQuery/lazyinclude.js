@@ -64,16 +64,16 @@ var LazyInclude = {
             $.ajaxSetup({ cache: false });
         }
 
-        function includeFile(options) {
+        function includeFile(opts) {
             //首先加载css
-            loadCssFile(options.cssFiles);
+            loadCssFile(opts.cssFiles);
             //加载js                                 
-            loadScript(options.jsFiles);
+            loadScript(opts.jsFiles);
         }
         return { include: includeFile };
     })()
 };
 
-var lazy_include = function (options) {
-    LazyInclude.call.include(options);
-}
+var lazy_include = function (opts) {
+    LazyInclude.call.include(opts);
+};

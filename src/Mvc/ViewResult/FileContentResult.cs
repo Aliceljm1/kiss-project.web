@@ -24,7 +24,10 @@ namespace Kiss.Web.Mvc
 
         protected override void WriteFile(HttpResponse response)
         {
-            response.OutputStream.Write(FileContents, 0, FileContents.Length);
+            // 必须设置content-length，否则nginx+fastcgi-mono-server2环境下，下载文件时会出现奇怪的bug
+            response.AddHeader("Content-Length", FileContents.Length.ToString());
+            
+            response.BinaryWrite(FileContents);
         }
     }
 }

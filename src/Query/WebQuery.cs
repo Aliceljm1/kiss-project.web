@@ -54,7 +54,7 @@ namespace Kiss.Web
 
                     val = string.IsNullOrEmpty(val) ? string.Empty : val.Replace("'", "''").Replace("%", "");
 
-                    base[key] = val.Trim();
+                    base[key] = val.Trim().Trim('+').Replace('+',' ');
                 }
 
                 return val;

@@ -154,7 +154,7 @@ namespace Kiss.Web.Controls
                         htmlWriter.Flush();
                     }
 
-                    using (StreamReader rdr = new StreamReader(ms))
+                    using (StreamReader rdr = new StreamReader(ms, Encoding.UTF8))
                     {
                         rdr.BaseStream.Position = 0;
                         content = rdr.ReadToEnd();

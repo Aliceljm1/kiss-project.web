@@ -93,6 +93,8 @@ namespace Kiss.Web.UrlMapping
         {
             mapping = null;
 
+            urlRequested = (_qsBehavior == IncomingQueryStringBehavior.Include ? new Url(urlRequested).PathAndQuery : new Url(urlRequested).Path);
+
             urlRequested = GetUrlRequested(urlRequested);
 
             // first check out from cache

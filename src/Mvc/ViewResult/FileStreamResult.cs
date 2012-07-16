@@ -27,7 +27,9 @@ namespace Kiss.Web.Mvc
         }
 
         protected override void WriteFile(HttpResponse response)
-        {
+        {            
+            response.AddHeader("Content-Length", FileStream.Length.ToString());
+
             // grab chunks of data and write to the output stream
             Stream outputStream = response.OutputStream;
             using (FileStream)
