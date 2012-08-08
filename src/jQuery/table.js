@@ -112,7 +112,7 @@
 
                 var compare = th.attr('data_type') || 'string';
 
-                $(this).click(function () {
+                $(this).find('> div').click(function () {
                     if (settings.sort == 'inline') {
                         $this.last().find('td').filter(function () {
                             return $(this).index() === thIndex;
@@ -140,14 +140,10 @@
 
                         $('thead .sortable span', $this).removeClass('desc').removeClass('asc');
 
-                        if (inverse) {
-                            $(this).find('span').addClass('asc');
-                        } else {
-                            $(this).find('span').addClass('desc');
-                        }
+                        $this.find('span').addClass(inverse ? 'asc' : 'desc');
                     }
                     else if (settings.sort == 'default') {
-                        var column = $(this).attr('id');
+                        var column = th.attr('id');
                         if ((sort_column == column && !sort.startWith('-')) || sort_column != column)
                             column = '-' + column;
                         var path = window.location.pathname;
@@ -157,7 +153,7 @@
 
                         window.location = path + jQuery.query.set('sort', column);
                     } else if (settings.sort == 'ajax') {
-                        var column = $(this).attr('id');
+                        var column = th.attr('id');
                         if ((sort_column == column && !sort.startWith('-')) || sort_column != column)
                             column = '-' + column;
 
@@ -181,7 +177,10 @@
 
             if (sort && typeof sort == 'string') {
                 var asc = !sort.startWith('-');
-                if (!asc) sort_column = sort.substr(1);
+                if (!asc)
+                    sort_column = sort.substr(1);
+                else
+                    sort_column = sort;
                 if (sort_column) $("thead [id='" + sort_column + "'] span", $this).addClass(asc ? 'asc' : 'desc');
             }
         };

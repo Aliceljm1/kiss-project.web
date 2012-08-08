@@ -15,7 +15,7 @@ function handleException(result) {
 	else if (exc.action == "returnValue") {
 		return exc.parameter;
 	}
-}
+};
 
 function AjaxManager() { }
 

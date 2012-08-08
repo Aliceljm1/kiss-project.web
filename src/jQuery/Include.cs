@@ -71,7 +71,7 @@ namespace Kiss.Web.Controls
                         if (vp.StartsWith("."))
                             path = ServerUtil.MapPath(StringUtil.CombinUrl(JContext.Current.ThemePath, vp.Substring(1)));
                         else
-                            path = ServerUtil.MapPath(vp);
+                            path = ServerUtil.MapPath(StringUtil.CombinUrl(CurrentSite.VirtualPath, vp));
 
                         if (!Directory.Exists(Path.GetDirectoryName(path)))
                             continue;
