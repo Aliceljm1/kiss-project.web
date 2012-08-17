@@ -110,8 +110,11 @@ namespace Kiss.Web.Query
             Qc qc = null;
 
             string qId = q.Id;
-            if (string.IsNullOrEmpty(qId))
+            if (qId == null)
                 qId = jc.Navigation.ToString();
+
+            if (string.IsNullOrEmpty(qId))
+                return;
 
             qc = GetById(jc.Site, string.Format("{0}.{1}.{2}", qId, e.Method, e.DbProviderName));
 

@@ -120,7 +120,7 @@ namespace Kiss.Web.Controls
 
             if (QueryCondition != null)
             {
-                if (QueryCondition.PageSize == 0)
+                if (!QueryCondition.Paging)
                     return;
 
                 DrawLinks(writer);
@@ -129,7 +129,10 @@ namespace Kiss.Web.Controls
 
         public ArrayList GetDataSource()
         {
-            return GetDataSource(QueryCondition, NumDisplay, NumEdge, AlwaysShowPrev, AlwaysShowNext);
+            if (QueryCondition.Paging)
+                return GetDataSource(QueryCondition, NumDisplay, NumEdge, AlwaysShowPrev, AlwaysShowNext);
+
+            return null;
         }
 
         private void DrawLinks(HtmlTextWriter writer)
