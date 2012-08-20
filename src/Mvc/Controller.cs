@@ -95,7 +95,7 @@ namespace Kiss.Web.Mvc
         /// <typeparam name="T"></typeparam>
         protected void list<T>() where T : IQueryObject
         {
-            list<T>(string.Empty);
+            list<T>(jc.Navigation.ToString());
         }
 
         /// <summary>
