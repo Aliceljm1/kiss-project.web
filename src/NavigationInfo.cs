@@ -60,6 +60,18 @@ namespace Kiss.Web
             }
         }
 
+        public NavigationItem Menu
+        {
+            get
+            {
+                if (!OK) return null;
+
+                if (Index >= 0) return Provider.MenuItems[Index];
+
+                return null;
+            }
+        }
+
         public List<NavigationItem> Crumbs
         {
             get

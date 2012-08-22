@@ -415,7 +415,7 @@ jQuery.fn.sortElements = (function () {
                         if (ts.hasClass('next'))
                             p = parseInt(ts.parents('.pagination:first').find('.current:last').text()) + 1;
                         else if (ts.hasClass('prev'))
-                            p = parseInt(ts.parents('.pagination:first').find('.current:last').text()) - 1;
+                            p = parseInt(ts.parents('.pagination:first').find('.current:first').text()) - 1;
                         else if(ts.hasClass('first'))
                             p = 1;
                         else if(ts.hasClass('last'))
