@@ -77,3 +77,36 @@ var LazyInclude = {
 var lazy_include = function (opts) {
     LazyInclude.call.include(opts);
 };
+
+function handleException(result) {
+    if (result == null || !result.__AjaxException)
+        return result;
+
+    var exc = result.__AjaxException;
+    if (exc.action == "JSMethod") {
+        result = null;
+        eval(exc.parameter + "()");
+    }
+    else if (exc.action == "JSEval") {
+        result = null;
+        eval(exc.parameter);
+    }
+    else if (exc.action == "returnValue") {
+        return exc.parameter;
+    }
+};
+
+var lazy_embed = function (opts) {
+    var url = opts.url;
+
+    jQuery.ajax({
+        headers: { 'embed': '1' },
+        dataType: 'json',
+        url: url,
+        success: function (data) {
+            data = handleException(data);
+            opts.container.empty().html(data);
+        },
+        error: function () { }
+    });
+};

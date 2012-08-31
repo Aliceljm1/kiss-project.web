@@ -77,6 +77,11 @@ namespace Kiss.Web
             return StringUtil.Trim(str, maxlength);
         }
 
+        public static StringUtil str()
+        {
+            return new StringUtil();
+        }
+
         public static DateTime now { get { return DateTime.Now; } }
 
         public static string htmlEncode(string str)

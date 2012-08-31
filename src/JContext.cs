@@ -405,6 +405,13 @@ namespace Kiss.Web
 
         public bool IsAsync { get; internal set; }
 
+        private bool? _isEmbed;
+
+        /// <summary>
+        /// 当前请求是否是嵌入式（只返回html片段）
+        /// </summary>
+        public bool IsEmbed { get { if (_isEmbed == null) _isEmbed = Context.Request.Headers["embed"] == "1"; return _isEmbed.Value; } }
+
         private bool _renderContent = true;
         /// <summary>
         /// 是否渲染皮肤
@@ -688,6 +695,27 @@ namespace Kiss.Web
             else
             {
                 includes = ViewData["_lazy_include_"] as Dictionary<string, List<string>>;
+            }
+
+            if (res.Contains(";"))
+            {
+                List<string> items = new List<string>();
+                foreach (var item in StringUtil.Split(res, ";", true, true))
+                {
+                    if (item.Contains("/") || item.Contains(","))
+                        items.Add(item);
+                    else
+                    {
+                        items.Add(string.Format("Kiss.Web.jQuery.{0},Kiss.Web", item));
+                    }
+                }
+
+                res = items.Join(";");
+            }
+            else
+            {
+                if (!res.Contains("/") && !res.Contains(","))
+                    res = string.Format("Kiss.Web.jQuery.{0},Kiss.Web", res);
             }
 
             if (includes.ContainsKey(res))

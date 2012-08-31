@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading;
 using Kiss.Security;
 using Kiss.Utils;
+using Kiss.Web.Controls;
 using Kiss.Web.Utils;
 
 namespace Kiss.Web.Mvc
@@ -67,6 +68,8 @@ namespace Kiss.Web.Mvc
                     ret = e.ReturnValue;
                 }
 
+                bool support_embed = false;
+
                 if (jc.IsPost)
                 {
                     jc.RenderContent = false;
@@ -111,6 +114,8 @@ namespace Kiss.Web.Mvc
                         {
                             ActionResult actionResult = ret as ActionResult;
                             actionResult.ExecuteResult(jc);
+
+                            support_embed = ret is ViewResult;
                         }
                         else
                         {
@@ -125,10 +130,21 @@ namespace Kiss.Web.Mvc
                             ResponseUtil.OutputJson(jc.Context.Response, ret, cacheMinutes);
                         }
                     }
+                    else
+                    {
+                        support_embed = true;
+                    }
                 }
 
                 // after execute action
                 jc.Controller.OnAfterActionExecute(ret);
+
+                if (support_embed && jc.IsEmbed)
+                {
+                    jc.RenderContent = false;
+                    ResponseUtil.OutputJson(jc.Context.Response,
+                        new TemplatedControl() { UsedInMvc = true, OverrideSkinName = true, Templated = true }.Execute());
+                }
             }
             catch (ThreadAbortException) { }// ignore this exception
             catch (Exception ex)
