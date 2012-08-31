@@ -241,7 +241,11 @@ namespace Kiss.Web.UrlMapping
                 _qs.Remove("kissMasterFile");
                 _qs.Remove("__VIEWSTATE");
                 newPath = ApplyQueryString(newPath, _qs);
-                jc.QueryString.Add(_qs);
+
+                foreach (string item in _qs.Keys)
+                {
+                    jc.QueryString[item] = _qs[item];
+                }
             }
 
             // perform the redirection

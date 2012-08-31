@@ -234,7 +234,7 @@ namespace Kiss.Web.Controls
 
                 writer.Write("</div>");
 
-                if (_isAjaxRequest)
+                if (_isAjaxRequest && !JContext.Current.IsEmbed)
                     ClientScriptProxy.Current.RegisterJsBlock(writer, "_paging_ajax_", "jQuery.paging.ajax()", true, true);
             }
         }
@@ -304,6 +304,16 @@ namespace Kiss.Web.Controls
 
         private static string FormatUrl(int page_id, string Url, bool isAjaxRequest)
         {
+            JContext jc = JContext.Current;
+
+            if (jc.IsEmbed)
+            {
+                Web.Url url = new Url(jc.Context.Request.Url.PathAndQuery).SetQuery(StringUtil.ToQueryString(jc.QueryString));
+                url = url.UpdateQuery("page", page_id + 1);
+
+                return string.Format("#{0}", url.PathAndQuery);
+            }
+
             if (isAjaxRequest && StringUtil.IsNullOrEmpty(Url))
                 return "#";
 

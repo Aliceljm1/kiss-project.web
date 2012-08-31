@@ -634,15 +634,37 @@ namespace Kiss.Web
         /// <returns></returns>
         public string CombinUrl(string baseurl)
         {
-            if (StringUtil.IsNullOrEmpty(baseurl)) return Site.VirtualPath;
+            string url;
 
-            if (baseurl.StartsWith("~"))
-                return ServerUtil.ResolveUrl(baseurl);
+            if (StringUtil.IsNullOrEmpty(baseurl))
+                url = Site.VirtualPath;
+            else if (baseurl.StartsWith("~"))
+                url = ServerUtil.ResolveUrl(baseurl);
+            else if (baseurl.StartsWith("."))
+                url = StringUtil.CombinUrl(Site.VirtualPath, baseurl.Substring(1)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
+            else
+                url = StringUtil.CombinUrl(Site.VirtualPath, baseurl);
 
-            if (baseurl.StartsWith("."))
-                return StringUtil.CombinUrl(Site.VirtualPath, baseurl.Substring(1)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
+            if (!IsEmbed) return url;
 
-            return StringUtil.CombinUrl(Site.VirtualPath, baseurl);
+            if (baseurl.IndexOf("_res.aspx", StringComparison.InvariantCultureIgnoreCase) != -1
+                || baseurl.IndexOf("_resc.aspx", StringComparison.InvariantCultureIgnoreCase) != -1
+                || baseurl.IndexOf(".css", StringComparison.InvariantCultureIgnoreCase) != -1
+                || baseurl.IndexOf(".js", StringComparison.InvariantCultureIgnoreCase) != -1
+                || baseurl.IndexOf("/themes/", StringComparison.InvariantCultureIgnoreCase) != -1
+                )
+                return url;
+
+            string embedUrl = Context.Request.Headers["embedUrl"];
+
+            if (string.IsNullOrEmpty(embedUrl)) return url;
+
+            if (!embedUrl.StartsWith("~"))
+                embedUrl = "~" + embedUrl;
+
+            embedUrl = ServerUtil.ResolveUrl(embedUrl);
+
+            return url.StartsWith(embedUrl, StringComparison.InvariantCultureIgnoreCase) ? '#' + url : url;
         }
 
         /// <summary>
