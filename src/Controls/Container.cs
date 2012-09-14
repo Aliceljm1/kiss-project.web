@@ -191,9 +191,11 @@ namespace Kiss.Web.Controls
 
             if (isRootMaster)
             {
-                // manuall add scripts control
+                // auto add some controls here
                 lock (masterPage.Controls.SyncRoot)
                 {
+                    masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new ControlPanel());
+
                     masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Scripts());
                 }
 

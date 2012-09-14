@@ -632,7 +632,7 @@ namespace Kiss.Web
         /// </summary>
         /// <param name="baseurl"></param>
         /// <returns></returns>
-        public string CombinUrl(string baseurl)
+        public string CombinUrl(string baseurl, bool embable)
         {
             string url;
 
@@ -645,7 +645,9 @@ namespace Kiss.Web
             else
                 url = StringUtil.CombinUrl(Site.VirtualPath, baseurl);
 
-            if (!IsEmbed) return url;
+            url = HttpUtility.UrlPathEncode(url);
+
+            if (!embable || !IsEmbed) return url;
 
             if (baseurl.IndexOf("_res.aspx", StringComparison.InvariantCultureIgnoreCase) != -1
                 || baseurl.IndexOf("_resc.aspx", StringComparison.InvariantCultureIgnoreCase) != -1
@@ -672,7 +674,12 @@ namespace Kiss.Web
         /// </summary>
         public string url(string baseUrl)
         {
-            return CombinUrl(baseUrl);
+            return CombinUrl(baseUrl, true);
+        }
+
+        public string url(string baseUrl, bool embable)
+        {
+            return CombinUrl(baseUrl, embable);
         }
 
         #region Engine
@@ -899,7 +906,7 @@ namespace Kiss.Web
         {
             get
             {
-                return CombinUrl(string.Format("/themes/{0}", Site.Theme));
+                return url(string.Format("/themes/{0}", Site.Theme));
             }
         }
 

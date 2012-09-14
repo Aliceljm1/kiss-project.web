@@ -98,7 +98,7 @@ function handleException(result) {
 
 var lazy_embed = function (opts) {
 
-    lazy_include({ jsFiles: [{ url: '_res.aspx?r=alF1ZXJ5Lmhhc2guanM=&t=&z=1&v=1&su=1', cb: function () {
+    lazy_include({ jsFiles: [{ url: (opts.vp || '/') + '_res.aspx?r=alF1ZXJ5Lmhhc2guanM=&t=&z=1&v=1&su=1', cb: function () {
         $(window).hashchange(function () {
             var url = opts.url;
             if (window.location.hash) {

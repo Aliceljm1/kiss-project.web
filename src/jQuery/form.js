@@ -1003,6 +1003,8 @@ function handleException(result) {
 
 		opts = $.extend(true, {}, $.fn.gform.defaults, opts);
 
+		var isEmbed = ($this.data('embed') == 'True');
+
 		var bind = function () {
 			var f = $this;
 			$('select', f).addClass('ui-widget-content');
@@ -1251,9 +1253,7 @@ function handleException(result) {
 			func = eval(func);
 			if ($.isFunction(func)) {
 				var ret = func.apply(ele, [$.trim(ele.val().toString())]);
-				if (!ret || !ret.ok) {
-					ele.addClass('ui-state-error').focus();
-					updateTips(ret.msg);
+				if (!ret || !ret.ok) {					
 					return false;
 				}
 			}
@@ -1263,8 +1263,15 @@ function handleException(result) {
 		if (opts.ajax) {
 			if (!opts.url)
 				opts.url = $this.attr('action') || window.location.toString();
-			if(opts.url && opts.url.indexOf('#') != -1)
-				opts.url = opts.url.substr(0, opts.url.indexOf('#'));
+			
+			var ix = opts.url.indexOf('#');
+			if(opts.url && ix != -1){
+			
+				if(isEmbed)
+					opts.url = opts.url.substr(ix+1);
+				else
+					opts.url = opts.url.substr(0,ix);
+			}
 			if (opts.submitFunc == null && !opts.url) {
 				alert('url不能为空'); return;
 			}

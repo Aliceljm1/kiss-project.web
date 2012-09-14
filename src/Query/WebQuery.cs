@@ -1,6 +1,7 @@
 ﻿using System.Collections.Specialized;
 using Kiss.Query;
 using Kiss.Utils;
+using System;
 
 namespace Kiss.Web
 {
@@ -33,7 +34,7 @@ namespace Kiss.Web
 
             param = JContext.Current.Params;
 
-            PageIndex = param["page"].ToInt(1) - 1;
+            PageIndex = Math.Max(0, param["page"].ToInt(1) - 1);
 
             string orderby = param["sort"];
 
@@ -54,7 +55,7 @@ namespace Kiss.Web
 
                     val = string.IsNullOrEmpty(val) ? string.Empty : val.Replace("'", "''").Replace("%", "");
 
-                    base[key] = val.Trim().Trim('+').Replace('+',' ');
+                    base[key] = val.Trim().Trim('+').Replace('+', ' ');
                 }
 
                 return val;

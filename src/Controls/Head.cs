@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Reflection;
 using System.Web;
 using System.Web.UI;
 using Kiss.Utils;
-using System.Reflection;
 
 namespace Kiss.Web.Controls
 {
@@ -56,7 +56,7 @@ namespace Kiss.Web.Controls
 
         private void RenderHtml(HtmlTextWriter writer)
         {
-            writer.WriteLine("<head>");
+            writer.WriteLine("<head data-vp='{0}'>", StringUtil.CombinUrl(Context.Request.ApplicationPath, "/"));
             if (!UseCustomSettings)
                 writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />");
 
