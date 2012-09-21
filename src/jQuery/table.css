@@ -27,9 +27,9 @@
 .draghandle { position: absolute; z-index: 5; width: 5px; cursor: e-resize; }
 TH.resizable { border-right: 1px solid #ccc; }
 
-.pagination { float: right; margin: 10px 10px 10px 0; }
+.pagination { margin: 10px auto; text-align: center; float:none; }
 .pagination a { border: 1px solid #AAAAEE; color: #1155BB; text-decoration: none; }
 .pagination a:hover { background-color: transparent; text-decoration: underline; }
-.pagination a, .pagination span { display: block; float: left; margin-bottom: 5px; margin-right: 5px; padding: 0.3em 0.5em; }
+.pagination a, .pagination span { margin-bottom: 5px; margin-right: 5px; padding: 0.3em 0.5em; }
 .pagination .current { background: #2266BB none repeat scroll 0 0; border: 1px solid #AAAAEE; color: #FFFFFF; }
 .pagination span.prev, .pagination span.next { background: #FFFFFF none repeat scroll 0 0; border-color: #999999; color: #999999; }
