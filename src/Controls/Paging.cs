@@ -233,9 +233,6 @@ namespace Kiss.Web.Controls
                 writer.Write(txt.ToString());
 
                 writer.Write("</div>");
-
-                if (_isAjaxRequest && !JContext.Current.IsEmbed)
-                    ClientScriptProxy.Current.RegisterJsBlock(writer, "_paging_ajax_", "jQuery.paging.ajax()", true, true);
             }
         }
 

@@ -400,8 +400,8 @@ jQuery.fn.sortElements = (function () {
 
             window.location = pre + pi + extension + window.location.search;
         },
-        ajax: function () {
-            $('.pagination').each(function (i, v) {
+        ajax: function (selector) {
+            $(selector).each(function (i, v) {
                 var $this = $(v);
                 if (!$this.hasClass('ajax')) {
                     $this.addClass('ajax');

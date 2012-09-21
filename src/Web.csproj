@@ -76,17 +76,8 @@
     <Compile Include="Ajax\Ajax.cs" />
     <Compile Include="jQuery\cp\ControlPanel.cs" />
     <Compile Include="jQuery\Include.cs" />
-    <Compile Include="jQuery\UI\Accordion.cs" />
     <Compile Include="jQuery\UI\Button.cs" />
-    <Compile Include="jQuery\UI\Timepicker.cs" />
-    <Compile Include="jQuery\UI\Datepicker.cs" />
     <Compile Include="jQuery\UI\Dialog.cs" />
-    <Compile Include="jQuery\UI\Draggable.cs" />
-    <Compile Include="jQuery\UI\Droppable.cs" />
-    <Compile Include="jQuery\UI\Progressbar.cs" />
-    <Compile Include="jQuery\UI\Resizable.cs" />
-    <Compile Include="jQuery\UI\Selectable.cs" />
-    <Compile Include="jQuery\UI\Slider.cs" />
     <Compile Include="jQuery\UI\Sortable.cs" />
     <Compile Include="jQuery\UI\Tabs.cs" />
     <Compile Include="jQuery\UI\UIBase.cs" />
