@@ -911,6 +911,17 @@ namespace Kiss.Web
         }
 
         /// <summary>
+        /// 皮肤的相对路径，主要用于模板引擎的#parse语法，不能用于url
+        /// </summary>
+        public string SkinPath
+        {
+            get
+            {
+                return url(string.Format("/themes/{0}/skins", Site.Theme)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
+            }
+        }
+
+        /// <summary>
         /// 指向主站点的主题目录
         /// </summary>
         public string DefaultThemePath
