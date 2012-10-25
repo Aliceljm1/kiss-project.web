@@ -133,7 +133,7 @@ namespace Kiss.Web.Query
             if (qc.PageSize > -1 && q.PageSize == -1)
                 q.PageSize = qc.PageSize;
 
-            if (StringUtil.HasText(qc.Field))
+            if ((string.IsNullOrEmpty(q.TableField) || q.TableField == "*" || q.EventFiredTimes > 1) && StringUtil.HasText(qc.Field))
             {
                 if (qc.Field.Contains("$"))
                 {
