@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Kiss.Utils;
+using System;
 using System.IO;
-using System.Text;
 using System.Web;
-using System.Web.UI;
-using Kiss.Utils;
 
 namespace Kiss.Web
 {
@@ -56,16 +54,16 @@ namespace Kiss.Web
 
             if (ex == null) return;
 
-            logger.Error(ExceptionUtil.WriteException(ex), ex);
+            logger.Error(HttpContext.Current.Request.RawUrl + ExceptionUtil.WriteException(ex));
 
-            HttpContext.Current.Response.StatusCode = 404;
+            int statusCode = HttpContext.Current.Response.StatusCode;            
 
             while (ex != null)
             {
                 if (ex is HttpException)
                 {
                     HttpException httpEx = ex as HttpException;
-                    HttpContext.Current.Response.StatusCode = httpEx.GetHttpCode();
+                    statusCode = httpEx.GetHttpCode();
 
                     break;
                 }
@@ -76,7 +74,46 @@ namespace Kiss.Web
             OnNotifyError(new NotifyErrorEventArgs() { Exception = ex });
 
             HttpContext.Current.Response.Clear();
-            HttpContext.Current.Server.Transfer(new ErrorPage(), true);
+
+            JContext jc = JContext.Current;
+
+            HttpContext.Current.Response.StatusCode = 200;
+
+            if (!File.Exists(HttpContext.Current.Server.MapPath("~/error.htm")))
+            {
+                logger.Warn("未找到error.htm文件。");
+
+                if (jc.IsAjaxRequest)
+                {
+                    HttpContext.Current.Response.Write(new Kiss.Json.JavaScriptSerializer().Serialize(new Ajax.AjaxServerException()
+                    {
+                        Action = Ajax.AjaxServerExceptionAction.JSEval,
+                        Parameter = "alert('您的访问出错了')"
+                    }.ToJson()));
+                }
+                else
+                {
+                    HttpContext.Current.Response.Write("您的访问出错了");
+                }
+            }
+            else
+            {
+                string error_pageUrl = jc.url("~error.htm?code=" + statusCode);
+
+                if (jc.IsAjaxRequest)
+                {
+                    HttpContext.Current.Response.Write(new Kiss.Json.JavaScriptSerializer().Serialize(new Ajax.AjaxServerException()
+                    {
+                        Action = Ajax.AjaxServerExceptionAction.JSEval,
+                        Parameter = string.Format("window.location='{0}'", error_pageUrl)
+                    }.ToJson()));
+                }
+                else
+                {
+                    HttpContext.Current.Response.Redirect(error_pageUrl);
+                }
+            }
+
             HttpContext.Current.Response.End();
         }
 
@@ -108,31 +145,6 @@ namespace Kiss.Web
                     }
                 }
             }
-        }
-    }
-
-    public class ErrorPage : Page
-    {
-        protected override void Render(HtmlTextWriter writer)
-        {
-            HttpContext.Current.Response.Clear();
-
-            string filename = Server.MapPath("~/404.html");
-
-            if (!File.Exists(filename))
-            {
-                writer.Write("ERROR!");
-            }
-            else
-            {
-                string response = File.ReadAllText(filename, Encoding.UTF8);
-                if (string.IsNullOrEmpty(response))
-                    writer.Write("ERROR!");
-                else
-                    writer.Write(response);
-            }
-
-            base.Render(writer);
         }
     }
 }

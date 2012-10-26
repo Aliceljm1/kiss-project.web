@@ -72,9 +72,7 @@
     <Compile Include="Controls\IContextAwaredControl.cs" />
     <Compile Include="Controls\Layout.cs" />
     <Compile Include="ExportHelper.cs" />
-    <Compile Include="IErrorHandler.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="IErrorHandler.cs" />
     <Compile Include="Ajax\Ajax.cs" />
     <Compile Include="jQuery\cp\ControlPanel.cs" />
     <Compile Include="jQuery\Include.cs" />

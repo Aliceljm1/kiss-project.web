@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Kiss.Query;
+using Kiss.Security;
+using Kiss.Utils;
+using Kiss.Web.Controls;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
 using System.Web.Security;
-using Kiss.Query;
-using Kiss.Security;
-using Kiss.Utils;
-using Kiss.Web.Ajax;
-using Kiss.Web.Controls;
-using Kiss.Web.Utils;
 
 namespace Kiss.Web.Mvc
 {
@@ -198,18 +196,10 @@ namespace Kiss.Web.Mvc
 
         protected internal virtual void OnException(Exception ex)
         {
-            if (!jc.RenderContent)
-            {
-                ResponseUtil.OutputJson(httpContext.Response,
-                    new AjaxServerException() { Action = AjaxServerExceptionAction.JSEval, Parameter = string.Format("alert('{0}');", ex.Message.Replace("'", @"\""")) }.ToJson());
-            }
-            else
-            {
-                throw new MvcException(string.Format("execute {0}.{1} failed. {2}",
-                           jc.Navigation.Id,
-                           jc.Navigation.Action,
-                           ex.Message), ex);
-            }
+            throw new MvcException(string.Format("execute {0}.{1} failed. {2}",
+                       jc.Navigation.Id,
+                       jc.Navigation.Action,
+                       ex.Message), ex);
         }
 
         public string GetReturnUrl(IUser user)
