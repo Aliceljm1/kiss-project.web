@@ -97,37 +97,46 @@ function handleException(result) {
 };
 
 var lazy_embed = function (opts) {
-
-    lazy_include({ jsFiles: [{ url: (opts.vp || '/') + '_res.aspx?r=alF1ZXJ5Lmhhc2guanM=&t=&z=1&v=1&su=1', cb: function () {
-        $(window).hashchange(function () {
-            var url = opts.url;
-            if (window.location.hash) {
-                url = window.location.hash.substr(1);
-
-                if (url.indexOf('?') == 0) {
-                    if (opts.url.indexOf('?') == -1)
-                        url = opts.url + url;
-                    else
-                        url = opts.url + '&' + url.substr(1);
-                }
-            }
-
-            jQuery.ajax({
-                headers: { 'embed': '1', 'embedUrl': (opts.affect_url || '') },
-                dataType: 'json',
-                url: url,
-                success: function (data) {
-                    data = handleException(data);
-
-                    opts.container.empty().html(data);
-                },
-                error: function () { }
-            });
-        });
-
+    if (opts.container.data('binded')) {
         $(window).hashchange();
+        return;
     }
-    }],
+
+    lazy_include({
+        jsFiles: [{
+            url: (opts.vp || '/') + '_res.aspx?r=alF1ZXJ5Lmhhc2guanM=&t=&z=1&v=1&su=1', cb: function () {
+
+                opts.container.data('binded', true);
+
+                $(window).hashchange(function () {
+                    var url = opts.url;
+                    if (window.location.hash) {
+                        url = window.location.hash.substr(1);
+
+                        if (url.indexOf('?') == 0) {
+                            if (opts.url.indexOf('?') == -1)
+                                url = opts.url + url;
+                            else
+                                url = opts.url + '&' + url.substr(1);
+                        }
+                    }
+
+                    jQuery.ajax({
+                        headers: { 'embed': '1', 'embedUrl': (opts.affect_url || '') },
+                        dataType: 'json',
+                        url: url,
+                        success: function (data) {
+                            data = handleException(data);
+
+                            opts.container.empty().html(data);
+                        },
+                        error: function () { }
+                    });
+                });
+
+                $(window).hashchange();
+            }
+        }],
         cssFiles: []
     });
 };
