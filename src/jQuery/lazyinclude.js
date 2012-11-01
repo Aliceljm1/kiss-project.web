@@ -96,7 +96,9 @@ function handleException(result) {
     }
 };
 
-var lazy_embed = function (opts) {
+var lazy_embed = function (options) {
+    window.lazy_embed_data = options;
+
     if ($('body').data('binded')) {
         $(window).hashchange();
         return;
@@ -104,11 +106,13 @@ var lazy_embed = function (opts) {
 
     lazy_include({
         jsFiles: [{
-            url: (opts.vp || '/') + '_res.aspx?r=alF1ZXJ5Lmhhc2guanM=&t=&z=1&v=1&su=1', cb: function () {
+            url: (options.vp || '/') + '_res.aspx?r=alF1ZXJ5Lmhhc2guanM=&t=&z=1&v=1&su=1', cb: function () {
 
                 $('body').data('binded', true);
 
                 $(window).hashchange(function () {
+                    var opts = window.lazy_embed_data;
+
                     var url = opts.url;
                     if (window.location.hash) {
                         url = window.location.hash.substr(1);
@@ -129,6 +133,10 @@ var lazy_embed = function (opts) {
                             data = handleException(data);
 
                             opts.container.empty().html(data);
+
+                            if (opts.callback && jQuery.isFunction(opts.callback)) {
+                                opts.callback.apply();
+                            }
                         },
                         error: function () { }
                     });
