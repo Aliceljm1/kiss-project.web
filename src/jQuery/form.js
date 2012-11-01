@@ -1130,7 +1130,7 @@ function handleException(result) {
                 $.each(inputs, function (i, v) {
                     var id = $(v).attr('id');
                     if (id)
-                        $('label[for=' + id + ']', f).append('<span style="color: red;">*</span>');
+                        $('label[for=' + id + ']', f).prepend('<span style="color: red;">*</span>');
                 });
             }
         };
