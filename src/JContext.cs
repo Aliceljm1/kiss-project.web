@@ -847,9 +847,6 @@ namespace Kiss.Web
 
             StringBuilder sb = new StringBuilder();
 
-            if (!IsAjaxRequest && (cssfiles.Count > 0 || jsfiles.Count > 0))
-                sb.AppendFormat("<script src='{0}' type='text/javascript'></script>", Resources.Utility.GetResourceUrl("Kiss.Web.jQuery.lazyinclude.js,Kiss.Web", true));
-
             sb.Append("<script type='text/javascript'>");
 
             sb.Append("$(function(){");
