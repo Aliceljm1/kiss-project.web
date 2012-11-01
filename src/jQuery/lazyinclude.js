@@ -97,7 +97,7 @@ function handleException(result) {
 };
 
 var lazy_embed = function (opts) {
-    if (opts.container.data('binded')) {
+    if ($('body').data('binded')) {
         $(window).hashchange();
         return;
     }
@@ -106,7 +106,7 @@ var lazy_embed = function (opts) {
         jsFiles: [{
             url: (opts.vp || '/') + '_res.aspx?r=alF1ZXJ5Lmhhc2guanM=&t=&z=1&v=1&su=1', cb: function () {
 
-                opts.container.data('binded', true);
+                $('body').data('binded', true);
 
                 $(window).hashchange(function () {
                     var url = opts.url;
