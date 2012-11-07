@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Web.UI;
-using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
@@ -28,20 +26,14 @@ namespace Kiss.Web.Controls
                 }
             }
 
-            try
-            {
-                ITemplateEngine te = ServiceLocator.Instance.Resolve<ITemplateEngine>();
 
-                using (StringWriter sw = new StringWriter())
-                {
-                    te.Process(JContext.Current.ViewData, string.Empty, sw, content);
+            ITemplateEngine te = ServiceLocator.Instance.Resolve<ITemplateEngine>();
 
-                    return sw.GetStringBuilder().ToString();
-                }
-            }
-            catch (Exception ex)
+            using (StringWriter sw = new StringWriter())
             {
-                return ExceptionUtil.WriteException(ex);
+                te.Process(JContext.Current.ViewData, string.Empty, sw, content);
+
+                return sw.GetStringBuilder().ToString();
             }
         }
     }
