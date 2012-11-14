@@ -94,6 +94,13 @@
                 });
             }
 
+            if (settings.sort == '') {
+                if ($this.parents('form:first').length == 1)
+                    settings.sort = "ajax";
+                else
+                    settings.sort = "default";
+            }
+
             if (settings.sort == 'default' && !$.query) return;
 
             var sort = '';
@@ -142,17 +149,7 @@
 
                         $this.find('span').addClass(inverse ? 'asc' : 'desc');
                     }
-                    else if (settings.sort == 'default') {
-                        var column = th.attr('id');
-                        if ((sort_column == column && !sort.startWith('-')) || sort_column != column)
-                            column = '-' + column;
-                        var path = window.location.pathname;
-                        var index = path.indexOf('.');
-                        if (index != -1)
-                            path = '1' + path.substr(index);
-
-                        window.location = path + jQuery.query.set('sort', column);
-                    } else if (settings.sort == 'ajax') {
+                    else if (settings.sort == 'ajax') {
                         var column = th.attr('id');
                         if ((sort_column == column && !sort.startWith('-')) || sort_column != column)
                             column = '-' + column;
@@ -165,6 +162,17 @@
                         $('input[name=page]', form).val(1);
 
                         form.submit();
+                    }
+                    else {
+                        var column = th.attr('id');
+                        if ((sort_column == column && !sort.startWith('-')) || sort_column != column)
+                            column = '-' + column;
+                        var path = window.location.pathname;
+                        var index = path.indexOf('.');
+                        if (index != -1)
+                            path = '1' + path.substr(index);
+
+                        window.location = path + jQuery.query.set('sort', column);
                     }
                 });
             });
@@ -252,7 +260,7 @@
         unselectTip: '全不选',
         clickToSelect: true,
         sortablecolumns: null,
-        sort: 'default'
+        sort: ''
     };
 
     $.fn.getSelectedRowIds = function () {
@@ -264,20 +272,31 @@
     };
 
     $.fn.removeRow = function (rowId) {
-        var redirect = function () {
-            if ($('tbody tr', t).length == 0) {
-                $.paging.goto('prev');
+        var t = this;
+        var redirect = function (len) {
+            var form = t.parents('form:first');
+            if (form.length == 1) {
+                if ($('tbody tr', t).length == len) {
+                    $('input[name=page]').val(Math.max(1, parseInt($('.pagination .current').text().trim(), 10) - 1));
+                }
+
+                jQuery.fn.gform.working = false;
+                form.submit();
             }
             else {
-                window.location.reload();
+                if ($('tbody tr', t).length == len) {
+                    $.paging.goto('prev');
+                }
+                else {
+                    window.location.reload();
+                }
             }
         };
 
-        var t = this;
         if (rowId.constructor.toString().indexOf("Array") == -1)
-            $('tbody tr[id=' + decodeURIComponent(rowId) + ']', t).fadeOut(100, function () { $(this).remove(); redirect(); });
+            redirect(1);
         else {
-            $.each(rowId, function (i, v) { $('tbody tr[id=' + decodeURIComponent(v) + ']', t).fadeOut(100, function () { $(this).remove(); if (i == rowId.length - 1) redirect(); }); });
+            redirect(rowId.length);
         }
     };
 })(jQuery);
@@ -416,9 +435,9 @@ jQuery.fn.sortElements = (function () {
                             p = parseInt(ts.parents('.pagination:first').find('.current:last').text()) + 1;
                         else if (ts.hasClass('prev'))
                             p = parseInt(ts.parents('.pagination:first').find('.current:first').text()) - 1;
-                        else if(ts.hasClass('first'))
+                        else if (ts.hasClass('first'))
                             p = 1;
-                        else if(ts.hasClass('last'))
+                        else if (ts.hasClass('last'))
                             p = parseInt(ts.parents('.pagination:first').find('.next').prev().text());
                         else
                             p = parseInt(ts.text());

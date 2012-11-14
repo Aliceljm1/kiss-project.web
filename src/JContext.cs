@@ -796,12 +796,10 @@ namespace Kiss.Web
                             hrefs.Add(href);
                     }
 
-                    for (int i = strs.Length - 1; i >= 0; i--)
+                    for (int i = hrefs.Count - 1; i >= 0; i--)
                     {
-                        string href = strs[i];
-                        if (!href.Contains("/"))
-                            href = Resources.Utility.GetResourceUrl(href);
-
+                        string href = hrefs[i];
+                        
                         if (jsfiles.ContainsKey(href))
                         {
                             jsfiles[href] = includes[item].Join(";");

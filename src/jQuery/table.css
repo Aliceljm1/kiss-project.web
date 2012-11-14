@@ -1,17 +1,79 @@
-﻿.gtable { font-size: 12px; margin: 0px; width: 100%; text-align: left; border-collapse: collapse; border-bottom: none; background-color: #FFF; }
-.gtable th { white-space: nowrap; font-size: 13px; font-weight: normal; padding: 6px 8px; background: #EFEFEF; border-top: 1px solid #FFF; color: #333; text-align: left; }
-.gtable td { padding: 8px; background: none; border-top: 1px solid #CCC; color: #666; border-bottom: none !important; vertical-align: middle; word-break: break-all; word-wrap: break-word; }
-.gtable tr.odd td { background-color: #E8EDFF; }
-.gtable tr.hover td { background-color: #D0DAFD; }
-.gtable tr.selected td { background-color: #FFF9DE; }
-.gtable tr.footer { background: none !important; }
-.gtable tr.footer:hover td { background: none !important; }
+﻿.gtable {
+    font-size: 12px;
+    margin: 0px;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    border-bottom: none;
+    background-color: #FFF;
+}
 
-.gtable thead tr .sortable { cursor: pointer; }
-.gtable thead tr .sortable div { position: relative; }
-.gtable thead tr .sortable span { right: 0; position: absolute; width: 16px; height: 16px; background-image: url(_res.aspx?r=alF1ZXJ5LlVJLnRoZW1lcy5zbW9vdGhuZXNzLmltYWdlcy51aS1pY29uc18yMjIyMjJfMjU2eDI0MC5wbmc=&t=&z=image/png&su=1); background-position: -128px 0; }
-.gtable thead tr .sortable span.asc { background-position: 0 -16px; }
-.gtable thead tr .sortable span.desc { background-position: -64px -16px; }
+    .gtable th {
+        white-space: nowrap;
+        font-size: 13px;
+        font-weight: normal;
+        padding: 6px 8px;
+        background: #EFEFEF;
+        border-top: 1px solid #FFF;
+        color: #333;
+        text-align: left;
+    }
+
+    .gtable td {
+        padding: 8px;
+        background: none;
+        border-top: 1px solid #CCC;
+        color: #666;
+        border-bottom: none !important;
+        vertical-align: middle;
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+
+    .gtable tr.odd td {
+        background-color: #E8EDFF;
+    }
+
+    .gtable tr.hover td {
+        background-color: #D0DAFD;
+    }
+
+    .gtable tr.selected td {
+        background-color: #FFF9DE;
+    }
+
+    .gtable tr.footer {
+        background: none !important;
+    }
+
+        .gtable tr.footer:hover td {
+            background: none !important;
+        }
+
+    .gtable thead tr .sortable {
+        cursor: pointer;
+    }
+
+        .gtable thead tr .sortable div {
+            position: relative;
+        }
+
+        .gtable thead tr .sortable span {
+            right: 0;
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-image: url(_res.aspx?r=alF1ZXJ5LlVJLnRoZW1lcy5zbW9vdGhuZXNzLmltYWdlcy51aS1pY29uc18yMjIyMjJfMjU2eDI0MC5wbmc=&t=&z=image/png&su=1);
+            background-position: -128px 0;
+        }
+
+            .gtable thead tr .sortable span.asc {
+                background-position: 0 -16px;
+            }
+
+            .gtable thead tr .sortable span.desc {
+                background-position: -64px -16px;
+            }
 
 /* jQuery TreeTable Core 2.0 stylesheet
  *
@@ -21,15 +83,60 @@
 
 /* jquery.treeTable.collapsible
  * ------------------------------------------------------------------------- */
-.treeTable tr td .expander { background-position: left center; background-repeat: no-repeat; cursor: pointer; padding: 0; zoom: 1; /* IE7 Hack */ }
+.treeTable tr td .expander {
+    background-position: left center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    padding: 0;
+    zoom: 1; /* IE7 Hack */
+}
 
-.draghandle.dragged { border-left: 1px solid #aaa; }
-.draghandle { position: absolute; z-index: 5; width: 5px; cursor: e-resize; }
-TH.resizable { border-right: 1px solid #ccc; }
+.draghandle.dragged {
+    border-left: 1px solid #aaa;
+}
 
-.pagination { margin: 10px auto; text-align: center; float:none; }
-.pagination a { border: 1px solid #AAAAEE; color: #1155BB; text-decoration: none; }
-.pagination a:hover { background-color: transparent; text-decoration: underline; }
-.pagination a, .pagination span { margin-bottom: 5px; margin-right: 5px; padding: 0.3em 0.5em; }
-.pagination .current { background: #2266BB none repeat scroll 0 0; border: 1px solid #AAAAEE; color: #FFFFFF; }
-.pagination span.prev, .pagination span.next { background: #FFFFFF none repeat scroll 0 0; border-color: #999999; color: #999999; }
+.draghandle {
+    position: absolute;
+    z-index: 5;
+    width: 5px;
+    cursor: e-resize;
+}
+
+TH.resizable {
+    border-right: 1px solid #ccc;
+}
+
+.pagination {
+    margin: 10px auto;
+    text-align: center;
+    float: none;
+}
+
+    .pagination a {
+        border: 1px solid #AAAAEE;
+        color: #1155BB;
+        text-decoration: none;
+    }
+
+        .pagination a:hover {
+            background-color: transparent;
+            text-decoration: underline;
+        }
+
+    .pagination a, .pagination span {
+        margin-bottom: 5px;
+        margin-right: 5px;
+        padding: 0.3em 0.5em;
+    }
+
+    .pagination .current {
+        background: #2266BB none repeat scroll 0 0;
+        border: 1px solid #AAAAEE;
+        color: #FFFFFF;
+    }
+
+    .pagination span.prev, .pagination span.next {
+        background: #FFFFFF none repeat scroll 0 0;
+        border-color: #999999;
+        color: #999999;
+    }

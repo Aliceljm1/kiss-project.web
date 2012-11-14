@@ -1043,7 +1043,7 @@ function handleException(result) {
         return this.keyup(onEdit)
                     .keydown(onEdit)
                     .focus(onEdit)
-                    .live('input paste change', onEdit);
+                    .bind('input paste change', onEdit);
     };
 })(jQuery);
 
