@@ -884,16 +884,6 @@ namespace Kiss.Web
 
         #region utils
 
-        public string UrlEncode(string str)
-        {
-            return HttpUtility.UrlEncode(str);
-        }
-
-        public string HtmlEncode(string str)
-        {
-            return HttpUtility.HtmlEncode(str);
-        }
-
         /// <summary>
         /// 指向当前站点的主题目录
         /// </summary>

@@ -1015,8 +1015,8 @@ function handleException(result) {
             var char = '';
 
             for (var i = 0; i < text.length; i++) {
-                if (len >= maxlength) {
-                    textarea.val(val);
+                if (Math.ceil(len) >= maxlength) {
+                    textarea.val(val).focus();
 
                     // Call the onlimit handler within the scope of the textarea
                     jQuery.proxy(settings.onLimit, this)();
