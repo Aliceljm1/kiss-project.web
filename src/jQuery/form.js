@@ -1004,11 +1004,11 @@ function handleException(result) {
             onEdit: function () { }
         }, options);
 
-        var textarea = jQuery(this);
-        var maxlength = parseInt(textarea.data("maxlength"));
-
         // Event handler to limit the textarea
         var onEdit = function () {
+            var textarea = jQuery(this);
+            var maxlength = parseInt(textarea.data("maxlength"));
+
             var text = textarea.val();
             var len = 0;
             var val = '';
@@ -1039,6 +1039,18 @@ function handleException(result) {
         }
 
         this.each(onEdit);
+
+        var obj_interval;
+
+        if (jQuery.browser.msie && jQuery.browser.version < 10) {
+            this.bind('focus', function () {
+                var tb = $(this);
+                obj_interval = setInterval(function () { tb.trigger('change'); }, 50);
+            }).bind('blur', function () {
+                if (obj_interval != null)
+                    clearInterval(obj_interval);
+            });
+        }
 
         return this.keyup(onEdit)
                     .keydown(onEdit)

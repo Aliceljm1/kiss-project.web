@@ -234,10 +234,10 @@ namespace Kiss.Web.Mvc
 
             if (string.IsNullOrEmpty(returnurl))
             {
-                DictSchema schema = DictSchema.GetByName(jc.SiteId, "users_options", "defaultUrl");
+                DictSchema schema = DictSchema.GetByName(0, "users", "config");
 
-                if (schema != null && !string.IsNullOrEmpty(schema["value"]))
-                    returnurl = schema["value"];
+                if (schema != null && !string.IsNullOrEmpty(schema["defaultUrl"]))
+                    returnurl = schema["defaultUrl"];
             }
 
             if (string.IsNullOrEmpty(returnurl))

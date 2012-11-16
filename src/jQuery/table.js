@@ -111,7 +111,7 @@
                 thIndex = th.index(),
                 inverse = true;
 
-                th.html('<div>' + th.html() + '<span></span></div>');
+                th.html('<div>' + th.html() + '<span title="排序"></span></div>');
 
                 // 修复宽度缩小问题
                 if (th.attr('width'))
@@ -293,7 +293,7 @@
             }
         };
 
-        if (rowId.constructor.toString().indexOf("Array") == -1)
+        if (!rowId || rowId.constructor.toString().indexOf("Array") == -1)
             redirect(1);
         else {
             redirect(rowId.length);
