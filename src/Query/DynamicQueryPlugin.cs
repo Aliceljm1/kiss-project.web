@@ -184,6 +184,17 @@ namespace Kiss.Web.Query
 
                 string sql = Regex.Replace(writer.GetStringBuilder().ToString(), @"\s{1,}|\t|\r|\n", " ");
 
+                q.Parameters.Clear();
+
+                Match m = Regex.Match(sql, @"@\w+(\s)");
+                while (m.Success)
+                {
+                    string param_name = m.Value.Substring(1).Trim();
+
+                    q.Parameters[param_name] = q[param_name];
+                    m = m.NextMatch();
+                }
+
                 if (StringUtil.HasText(sql))
                     q.WhereClause = sql;
             }

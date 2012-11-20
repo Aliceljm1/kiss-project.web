@@ -113,7 +113,8 @@ namespace Kiss.Web.Resources
             output = ResourceUtil.LoadBufferFromAssembly(resourceAssembly, resource);
 
             // Add into the cache
-            HttpRuntime.Cache.Insert(CacheKey, output, null, DateTime.MaxValue, Cache.NoSlidingExpiration);
+            if (output != null)
+                HttpRuntime.Cache.Insert(CacheKey, output, null, DateTime.MaxValue, Cache.NoSlidingExpiration);
 
             return output;
         }

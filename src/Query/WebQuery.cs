@@ -1,7 +1,7 @@
-﻿using System.Collections.Specialized;
-using Kiss.Query;
+﻿using Kiss.Query;
 using Kiss.Utils;
 using System;
+using System.Collections.Specialized;
 
 namespace Kiss.Web
 {
@@ -51,11 +51,7 @@ namespace Kiss.Web
                 string val = base[key];
                 if (val == null && param != null)// get from context
                 {
-                    val = param[key];
-
-                    val = string.IsNullOrEmpty(val) ? string.Empty : val.Replace("'", "''").Replace("%", "");
-
-                    base[key] = val.Trim().Trim('+').Replace('+', ' ');
+                    return base[key] = param[key];
                 }
 
                 return val;
