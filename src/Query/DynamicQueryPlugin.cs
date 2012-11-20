@@ -186,7 +186,7 @@ namespace Kiss.Web.Query
 
                 q.Parameters.Clear();
 
-                Match m = Regex.Match(sql, @"@\w+(\s)");
+                Match m = Regex.Match(sql, @"@\w+");
                 while (m.Success)
                 {
                     string param_name = m.Value.Substring(1).Trim();
