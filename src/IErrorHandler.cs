@@ -93,7 +93,7 @@ namespace Kiss.Web
                 }
                 else
                 {
-                    HttpContext.Current.Response.Write("您的访问出错了");
+                    HttpContext.Current.Response.Write("<h1>:(</h1>您的访问出错了");
                 }
             }
             else
