@@ -259,7 +259,7 @@ namespace Kiss.Web.Controls
                     datasource.Add(new { pageindex = i, type = "item", href = FormatUrl(i, null, jc.IsAjaxRequest) });
                 }
                 if (numEdge < interval[0])
-                    datasource.Add(new { type = "ellipsis" });
+                    datasource.Add(new { pageindex = -1, type = "ellipsis" });
             }
 
             for (int i = interval[0]; i < interval[1]; i++)
@@ -271,7 +271,7 @@ namespace Kiss.Web.Controls
             {
                 if (np - numEdge > interval[1])
                 {
-                    datasource.Add(new { type = "ellipsis" });
+                    datasource.Add(new { pageindex = -1, type = "ellipsis" });
                 }
 
                 var begin = Math.Max(np - numEdge, interval[1]);

@@ -1,10 +1,10 @@
-﻿using System.Collections;
+﻿using Kiss.Utils;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Web;
 using System.Web.UI;
-using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
@@ -56,7 +56,10 @@ namespace Kiss.Web.Controls
 
         private void RenderHtml(HtmlTextWriter writer)
         {
-            writer.WriteLine("<head data-vp='{0}'>", StringUtil.CombinUrl(Context.Request.ApplicationPath, "/"));
+            writer.WriteLine("<head data-vp='{0}' data-vp2='{1}'>",
+                StringUtil.CombinUrl(Context.Request.ApplicationPath, "/"),
+                JContext.Current.url("/"));
+
             if (!UseCustomSettings)
                 writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />");
 
@@ -127,7 +130,7 @@ namespace Kiss.Web.Controls
                 if (si.Position != position) continue;
 
                 if (!si.Site.CombineCss || !si.ForceCombin)
-                    writer.WriteLine(si.StyleTag);
+                    writer.Write(si.StyleTag);
                 else if (si.Site.CombineCss)
                 {
                     string url = si.Url;

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Kiss.Utils;
+using System;
 using System.ComponentModel;
 using System.Web;
 using System.Web.UI;
-using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
@@ -91,8 +91,6 @@ namespace Kiss.Web.Controls
                 _enqueue = value;
             }
         }
-
-        const string linkFormat = "<link rel=\"stylesheet\" href=\"{0}\" type=\"text/css\" media=\"{1}\" />";
 
         protected override void OnLoad(EventArgs e)
         {

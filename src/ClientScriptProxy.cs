@@ -1,8 +1,8 @@
+using Kiss.Utils;
+using Kiss.Web.Controls;
 using System;
 using System.Web;
 using System.Web.UI;
-using Kiss.Utils;
-using Kiss.Web.Controls;
 
 namespace Kiss.Web
 {
@@ -57,7 +57,7 @@ namespace Kiss.Web
 
             SetScriptRended(url);
 
-            writer.Write("<script src='{0}' type='text/javascript'></script>", url);
+            writer.WriteLine("<script src='{0}' type='text/javascript'></script>", url);
         }
 
         public void RegisterJsResource(HtmlTextWriter writer, string resourceName)

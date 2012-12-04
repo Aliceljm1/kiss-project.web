@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Kiss.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.UI;
-using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
@@ -27,8 +27,6 @@ namespace Kiss.Web.Controls
             RenderScripts(writer);
 
             writer.Write("$!jc.render_lazy_include()");
-
-            base.Render(writer);
         }
 
         /// <summary>
