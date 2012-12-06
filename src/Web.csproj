@@ -175,12 +175,11 @@
     <EmbeddedResource Include="jQuery\cp\open.png" />
     <EmbeddedResource Include="jQuery\dialogutil.js" />
     <EmbeddedResource Include="jQuery\flash.js" />
-    <EmbeddedResource Include="jQuery\form.css" />
     <EmbeddedResource Include="jQuery\form.js" />
     <EmbeddedResource Include="jQuery\json.js" />
     <EmbeddedResource Include="jQuery\qs.js" />
     <EmbeddedResource Include="jQuery\swfobject.js" />
-    <EmbeddedResource Include="jQuery\table.css" />
+    <EmbeddedResource Include="jQuery\common.css" />
     <EmbeddedResource Include="jQuery\table.js" />
     <EmbeddedResource Include="jQuery\UI\effects.blind.js" />
     <EmbeddedResource Include="jQuery\UI\effects.bounce.js" />

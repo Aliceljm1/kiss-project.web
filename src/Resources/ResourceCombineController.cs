@@ -117,7 +117,7 @@ namespace Kiss.Web.Resources
 
             if (content == null)
             {
-                logger.Error("file: {0} is not null.", virtualPath);
+                logger.Error("file: {0} is null.", virtualPath);
                 return null;
             }
 

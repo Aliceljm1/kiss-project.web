@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Kiss.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
@@ -197,7 +197,7 @@ namespace Kiss.Web.Controls
                     JContext jc = JContext.Current;
                     if (!string.Equals(jc.DefaultSite["mode"], "custom", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Include() { Js = "lazyinclude" });
+                        masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Include() { Js = "lazyinclude", Css = "common" });
 
                         masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new UIBase() { ThemeStyleUrl = jc.DefaultSite["jqueryui_theme"] });
 
