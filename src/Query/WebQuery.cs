@@ -49,9 +49,9 @@ namespace Kiss.Web
             get
             {
                 string val = base[key];
-                if (val == null && param != null)// get from context
+                if (val == null && param != null && param[key] != null)// get from context
                 {
-                    return base[key] = param[key];
+                    return base[key] = param[key].Trim();
                 }
 
                 return val;
