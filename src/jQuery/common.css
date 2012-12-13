@@ -1,104 +1,105 @@
-﻿.gform {
+﻿.clearfix {
+    clear: both;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    height: 0;
+    line-height: 0;
+}
+
+.gform {
     overflow: hidden !important;
 }
 
     .gform .gformbox {
         float: left;
-        width: 260px;
-        overflow: hidden;
+        width: 350px;
+        margin-bottom: 10px;
+        line-height: 27px;
     }
 
-    .gform label, .gform select, .gform input, .gform .l {
+    .gform.full .gformbox {
+        width: 100%;
+    }
+
+    .gform label {
+        display: block;
         float: left;
+        margin-left: 10px;
+        font-size: 12px;
     }
 
-    .gform input, .gform textarea {
-        padding: 2px;
-        margin: 12px 0 0 0;
-        float: left;
-    }
-
-    .gform .flow {
-        float: left;
-    }
-
-        .gform .flow * {
-            float: none;
-            display: inline;
-        }
-
-        .gform .flow label {
-            width: 60px;
-            font-weight: normal;
-        }
-
-    .gform table label {
-        font-weight: normal;
-        text-align: left;
-        width: 60px;
-    }
-
-    .gform select {
-        margin: 12px 0 0 0;
+    .gform input, .gform textarea, .gform select {
+        padding: 3px;
+        margin: 0;
+        vertical-align: middle;
     }
 
     .gform textarea {
         font: 12px Verdana, Arial, Helvetica, sans-serif;
         overflow: auto;
-        width: 300px;
         height: 40px;
+        line-height: 15px;
     }
 
-    .gform label {
+    .gform .gbtn {
+        margin: 0 10px 10px;
+        float: right;
+    }
+
+    .gform .gbtn2 {
+        float: left;
+        margin-left: 73px;
+    }
+
+    .gform .close {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        line-height: 15px;
+        width: 15px;
+        height: 15px;
         display: block;
-        margin: 14px 0 0;
-        text-align: right;
-        padding: 0 10px 0 0;
-        font-weight: normal;
-        font-size: 12px;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: middle;
+        text-decoration: none;
+    }
+
+        .gform .close:hover {
+            text-decoration: none;
+        }
+
+    .gform .g1 {
+        float: left;
+        display: block;
         width: 60px;
+        text-align: right;
+        margin-right: 3px;
+        line-height: 25px;
+    }
+
+        .gform .g1 em {
+            font-style: normal;
+            color: red;
+        }
+
+    .gform .g2 {
+        margin-left: 10px;
+        line-height: 27px;
+        position: relative;
+        display: block;
         float: left;
     }
 
-    .gform .buttons {
-        padding: 16px 0 0 70px;
-        display: block;
-    }
-
-    .gform br {
-        clear: both;
-        float: none;
+    .gform .red, .gform .error {
+        color: red;
+        margin: 5px;
     }
 
     .gform .tip {
-        margin: 0 0 0 30px;
+        margin: 5px;
     }
-
-    .gform .clearContainer {
-        margin: 11px 0 0;
-        vertical-align: middle;
-        float: left;
-        padding: 1px 16px 1px 1px;
-        position: relative;
-    }
-
-        .gform .clearContainer input, .gform .clearContainer textarea {
-            border: 0;
-            outline: 0;
-            padding: 1px;
-            margin: 0;
-            float: none;
-        }
-
-        .gform .clearContainer .clearlink {
-            position: absolute;
-            right: 2px;
-            top: 2px;
-        }
-
-            .gform .clearContainer .clearlink span {
-                cursor: pointer;
-            }
 
 .gloading {
     z-index: 9999;

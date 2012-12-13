@@ -1075,18 +1075,9 @@ function handleException(result) {
 				.bind('blur', function () { $(this).removeClass('focus'); })
 				.each(function () {
 				    if (!$(this).data('clearable')) return true;
-				    $(this).bind('focus', function () { $(this).parent().addClass('focus'); })
-						.bind('blur', function () { $(this).parent().removeClass('focus'); })
-						.bind('change keyup', function () {
-						    if ((this.nodeName == 'INPUT' && $(this).val()) || (this.nodeName == "TEXTAREA" && $(this).text()))
-						        $(this).next().css('visibility', 'visible');
-						    else
-						        $(this).next().css('visibility', 'hidden');
-						})
-						.wrap('<div style="float:left;" class="clearContainer ui-widget-content ui-corner-all"></div>')
-						.parent()
-						.append('<div style="visibility:hidden" class="clearlink ui-state-disabled"><span title="清空" class="ui-icon ui-icon-circle-close"></span></div>')
-						.find('.clearlink')
+				    $(this).bind('focus', function () { $(this).next().hide(); })
+						.bind('blur', function () { if ($(this).val()) $(this).next().show(); })                        
+						.after('<a title="清空" href="#" class="close" style="display:none;">×</a>').parent().find('.close')
 						.bind('click', function () {
 						    var ele = $(this).prev();
 						    if (ele[0].nodeName == 'INPUT')
@@ -1100,11 +1091,12 @@ function handleException(result) {
 						            func.apply(null, [ele]);
 						    }
 
-						    $(this).css('visibility', 'hidden');
-						})
-						.hover(function () { $(this).removeClass('ui-state-disabled'); }, function () { $(this).addClass('ui-state-disabled'); });
+						    $(this).hide();
 
-				    $(this).trigger('change');
+						    return false;
+						});
+
+				    $(this).trigger('blur');
 				});
 
             // default value
@@ -1141,9 +1133,7 @@ function handleException(result) {
                     return $(this).attr('minlength') !== undefined && parseInt($(this).attr('minlength'), 10) > 0;
                 });
                 $.each(inputs, function (i, v) {
-                    var id = $(v).attr('id');
-                    if (id)
-                        $('label[for=' + id + ']', f).prepend('<span style="color: red;">*</span>');
+                    var id = $(v).parents('label:first').find('.g1').prepend('<em>*</em>');
                 });
             }
 
@@ -1220,7 +1210,7 @@ function handleException(result) {
         var _getTitle = function (ele) {
             var title = ele.attr('key');
             if (!title)
-                title = $('label[for=' + ele.attr('id') + ']', $this).text();
+                title = ele.parents('label:first').find('.g1').text();
             if (!title)
                 title = ele.prev().text();
             return $.trim(title).replace(':', '').replace('：', '').replace('*', '');
