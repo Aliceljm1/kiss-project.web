@@ -16,10 +16,12 @@
         width: 350px;
         margin-bottom: 10px;
         line-height: 27px;
+        height: 27px;
     }
 
     .gform.full .gformbox {
         width: 100%;
+        height: auto;
     }
 
     .gform label {
@@ -33,10 +35,6 @@
         padding: 3px;
         margin: 0;
         vertical-align: middle;
-    }
-
-    .gform select {
-        padding: 2px 3px 3px 3px;
     }
 
     .gform textarea {
