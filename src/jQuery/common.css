@@ -35,6 +35,10 @@
         vertical-align: middle;
     }
 
+    .gform select {
+        padding: 2px 3px 3px 3px;
+    }
+
     .gform textarea {
         font: 12px Verdana, Arial, Helvetica, sans-serif;
         overflow: auto;

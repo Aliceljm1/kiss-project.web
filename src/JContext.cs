@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Kiss.Security;
+using Kiss.Utils;
+using Kiss.Web.Mvc;
+using Kiss.Web.UrlMapping;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 using System.Threading;
 using System.Web;
-using Kiss.Security;
-using Kiss.Utils;
-using Kiss.Web.Mvc;
-using Kiss.Web.UrlMapping;
 
 namespace Kiss.Web
 {
@@ -53,10 +53,24 @@ namespace Kiss.Web
         {
             this._httpContext = context;
 
-            this._form = new NameValueCollection(context.Request.Form);
+            this._form = new NameValueCollection();
+
+            // trim form and querystring
+            foreach (string key in context.Request.Form)
+            {
+                if (!string.IsNullOrEmpty(context.Request.Form[key]))
+                    this._form[key] = context.Request.Form[key].Trim();
+            }
+
+            NameValueCollection qs = new NameValueCollection();
+            foreach (string key in context.Request.QueryString)
+            {
+                if (!string.IsNullOrEmpty(context.Request.QueryString[key]))
+                    qs[key] = context.Request.QueryString[key].Trim();
+            }
 
             if (includeQS)
-                Initialize(new NameValueCollection(context.Request.QueryString), context.Request.RawUrl);
+                Initialize(qs, context.Request.RawUrl);
             else
                 Initialize(null, context.Request.RawUrl);
         }
@@ -145,45 +159,6 @@ namespace Kiss.Web
         #endregion
 
         #region Helpers
-
-        // *********************************************************************
-        //  GetGuidFromQueryString
-        //
-        /// <summary>
-        /// Retrieves a value from the query string and returns it as an int.
-        /// </summary>
-        // ***********************************************************************/
-        public Guid GetGuidFromQueryString(string key)
-        {
-            Guid returnValue = Guid.Empty;
-            string queryStringValue;
-
-            // Attempt to get the value from the query string
-            //
-            queryStringValue = QueryString[key];
-
-            // If we didn't find anything, just return
-            //
-            if (queryStringValue == null)
-                return returnValue;
-
-            // Found a value, attempt to conver to integer
-            //
-            try
-            {
-
-                // Special case if we find a # in the value
-                //
-                if (queryStringValue.IndexOf("#") > 0)
-                    queryStringValue = queryStringValue.Substring(0, queryStringValue.IndexOf("#"));
-
-                returnValue = new Guid(queryStringValue);
-            }
-            catch { }
-
-            return returnValue;
-
-        }
 
         // *********************************************************************
         //  GetIntFromQueryString
@@ -799,7 +774,7 @@ namespace Kiss.Web
                     for (int i = hrefs.Count - 1; i >= 0; i--)
                     {
                         string href = hrefs[i];
-                        
+
                         if (jsfiles.ContainsKey(href))
                         {
                             jsfiles[href] = includes[item].Join(";");
