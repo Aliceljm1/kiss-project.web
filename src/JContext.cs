@@ -58,14 +58,14 @@ namespace Kiss.Web
             // trim form and querystring
             foreach (string key in context.Request.Form)
             {
-                if (!string.IsNullOrEmpty(context.Request.Form[key]))
+                if (context.Request.Form[key] != null)
                     this._form[key] = context.Request.Form[key].Trim();
             }
 
             NameValueCollection qs = new NameValueCollection();
             foreach (string key in context.Request.QueryString)
             {
-                if (!string.IsNullOrEmpty(context.Request.QueryString[key]))
+                if (context.Request.QueryString[key] != null)
                     qs[key] = context.Request.QueryString[key].Trim();
             }
 
