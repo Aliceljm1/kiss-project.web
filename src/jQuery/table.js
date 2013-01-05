@@ -428,9 +428,11 @@ jQuery.fn.sortElements = (function () {
                     var form = $this.parents('form:first');
                     if (form.length == 0) return false;
 
-                    $('.pagination a', form).click(function () {
+                    $('.pagination a', form).click(function () {                       
                         var p = 1;
                         var ts = $(this);
+                        var _form = ts.parents('form:first');
+
                         if (ts.hasClass('next'))
                             p = parseInt(ts.parents('.pagination:first').find('.current:last').text()) + 1;
                         else if (ts.hasClass('prev'))
@@ -442,13 +444,13 @@ jQuery.fn.sortElements = (function () {
                         else
                             p = parseInt(ts.text());
 
-                        var cp = $('input[name=page]', form);
+                        var cp = $('input[name=page]', _form);
                         if (cp.length == 0)
-                            form.append('<input type="hidden" name="page"/>');
+                            _form.append('<input type="hidden" name="page"/>');
 
-                        $('input[name=page]', form).val(p);
+                        $('input[name=page]', _form).val(p);
 
-                        form.submit();
+                        _form.submit();
 
                         return false;
                     });

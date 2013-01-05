@@ -60,7 +60,7 @@ namespace Kiss.Web
         [ConfigProp("favIcon", ConfigPropAttribute.DataType.String, Desc = "fav icon")]
         public string FavIcon { get; private set; }
 
-        [ConfigProp("generator", ConfigPropAttribute.DataType.String, DefaultValue = "TXTEK.com", Desc = "generator")]
+        [ConfigProp("generator", ConfigPropAttribute.DataType.String, DefaultValue = "TXTEK", Desc = "generator")]
         public string Generator { get; private set; }
 
         [ConfigProp("rawAdditionalHeader", ConfigPropAttribute.DataType.String, Desc = "任意的http头")]

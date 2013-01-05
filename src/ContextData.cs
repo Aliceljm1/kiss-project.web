@@ -77,10 +77,11 @@ namespace Kiss.Web
             return StringUtil.Trim(str, maxlength);
         }
 
-        public static StringUtil str()
-        {
-            return new StringUtil();
-        }
+        private static readonly StringUtil _str = new StringUtil();
+        public static StringUtil str { get { return _str; } }
+
+        private static readonly DictSchema _schema = new DictSchema();
+        public static DictSchema schema { get { return _schema; } }
 
         public static DateTime now { get { return DateTime.Now; } }
 

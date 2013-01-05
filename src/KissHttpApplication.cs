@@ -92,7 +92,7 @@ namespace Kiss.Web
                 context.Items["SITE_KEY"] = jc.Site.SiteKey;
 
             if (!context.Response.IsRequestBeingRedirected)
-                context.Response.AddHeader("X-Powered-By", "TXTEK.COM");
+                context.Response.AddHeader("X-Powered-By", "TXTEK");
 
             context.Items["_PAGE_ID_"] = StringUtil.UniqueId();
         }

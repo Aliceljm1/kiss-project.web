@@ -44,14 +44,14 @@ namespace Kiss.Web
             }
         }
 
-        public override string this[string key]
+        public override object this[string key]
         {
             get
             {
-                string val = base[key];
+                object val = base[key];
                 if (val == null && param != null && param[key] != null)// get from context
                 {
-                    return base[key] = param[key].Trim();
+                    return base[key] = param[key];
                 }
 
                 return val;
