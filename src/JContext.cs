@@ -425,7 +425,7 @@ namespace Kiss.Web
             get
             {
                 if (_isdesignMode == null || !_isdesignMode.HasValue)
-                    _isdesignMode = QueryString["edit"] != null && (User == null || User.HasPermission("menu:widget_home"));
+                    _isdesignMode = QueryString["edit"] != null && (User == null || User.HasPermission("menu:widget_widgetdesign"));
                 return _isdesignMode.Value;
             }
         }

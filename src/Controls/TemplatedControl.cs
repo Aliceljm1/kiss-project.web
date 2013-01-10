@@ -1,7 +1,7 @@
-﻿using System.Web;
-using System.Web.UI;
-using Kiss.Utils;
+﻿using Kiss.Utils;
 using System.IO;
+using System.Web;
+using System.Web.UI;
 
 namespace Kiss.Web.Controls
 {
@@ -139,16 +139,25 @@ namespace Kiss.Web.Controls
 
             // 加载自定义ThemeName,lang的skin
             if (File.Exists(ServerUtil.MapPath(skinFile)))
+            {
+                jc.ViewData["_skinfile_"] = skinFile;
                 loaded = LoadSkin(skinFile);
+            }
 
             string defaultlang_skinFile = GetSkinFileFullPath(GetSkinFolder(ThemeName, false), skinFilename);
 
             if (!loaded && File.Exists(ServerUtil.MapPath(defaultlang_skinFile)))
+            {
+                jc.ViewData["_skinfile_"] = defaultlang_skinFile;
                 loaded = LoadSkin(defaultlang_skinFile);
+            }
 
             string default_skinFile = GetSkinFileFullPath(GetSkinFolder("default", false), skinFilename);
             if (!loaded && File.Exists(ServerUtil.MapPath(default_skinFile)))
+            {
+                jc.ViewData["_skinfile_"] = default_skinFile;
                 loaded = LoadSkin(default_skinFile);
+            }
 
             if (!loaded && ThrowExceptionOnSkinFileNotFound)
                 throw new WebException("Skin file not found in " + skinFile + " nor in " + defaultlang_skinFile + " nor in " + default_skinFile);
