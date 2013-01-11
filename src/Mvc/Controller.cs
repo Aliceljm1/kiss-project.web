@@ -1,12 +1,10 @@
 ﻿using Kiss.Query;
-using Kiss.Security;
 using Kiss.Utils;
 using Kiss.Web.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
-using System.Web.Security;
 
 namespace Kiss.Web.Mvc
 {
@@ -200,53 +198,6 @@ namespace Kiss.Web.Mvc
                        jc.Navigation.Id,
                        jc.Navigation.Action,
                        ex.Message), ex);
-        }
-
-        public string GetReturnUrl(IUser user)
-        {
-            string returnurl = jc.Params["returnurl"];
-
-            if (string.Equals(returnurl, "/", StringComparison.InvariantCultureIgnoreCase))
-                returnurl = string.Empty;
-
-            if (string.IsNullOrEmpty(returnurl))
-                returnurl = jc.ReferrerQueryString["returnurl"];
-
-            if (string.Equals(returnurl, "/", StringComparison.InvariantCultureIgnoreCase))
-                returnurl = string.Empty;
-
-            if (user != null && string.IsNullOrEmpty(returnurl))
-                returnurl = user.DefaultUrl;
-
-            if (user != null && string.IsNullOrEmpty(returnurl))
-            {
-                IUserService us = ServiceLocator.Instance.Resolve<IUserService>();
-
-                foreach (var role in us.GetsRoleByUserId(user.Id))
-                {
-                    if (!string.IsNullOrEmpty(role.DefaultUrl))
-                    {
-                        returnurl = role.DefaultUrl;
-                        break;
-                    }
-                }
-            }
-
-            if (string.IsNullOrEmpty(returnurl))
-            {
-                DictSchema schema = DictSchema.GetByName(0, "users", "config");
-
-                if (schema != null && !string.IsNullOrEmpty(schema["defaultUrl"]))
-                    returnurl = schema["defaultUrl"];
-            }
-
-            if (string.IsNullOrEmpty(returnurl))
-                returnurl = FormsAuthentication.DefaultUrl;
-
-            if (string.IsNullOrEmpty(returnurl))
-                returnurl = jc.Site.VirtualPath;
-
-            return returnurl;
-        }
+        }        
     }
 }

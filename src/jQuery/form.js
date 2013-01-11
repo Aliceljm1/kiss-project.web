@@ -1076,7 +1076,7 @@ function handleException(result) {
 				.each(function () {
 				    if (!$(this).data('clearable')) return true;
 				    $(this).bind('focus', function () { $(this).next().hide(); })
-						.bind('blur', function () { if ($(this).val()) $(this).next().show(); })                        
+						.bind('blur', function () { if ($(this).val()) $(this).next().show(); })
 						.after('<a title="清空" href="#" class="close" style="display:none;">×</a>').parent().find('.close')
 						.bind('click', function () {
 						    var ele = $(this).prev();
@@ -1140,6 +1140,10 @@ function handleException(result) {
             $(':text:enabled:visible,:password:enabled:visible,textarea:enabled:visible', f).filter(function () {
                 return !$(this).attr('readonly') && $(this).parent(':hidden').size() == 0;
             }).placeholder();
+
+            $(':text:enabled,:password:enabled,textarea:enabled', f).filter(function () {
+                return !$(this).attr('readonly') && $(this).data('maxlength');
+            }).maxlength();
         };
 
         bind();
