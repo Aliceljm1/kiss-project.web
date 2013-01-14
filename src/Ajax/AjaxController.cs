@@ -116,7 +116,11 @@ namespace Kiss.Web.Ajax
 
                 try
                 {
-                    AjaxClass c = config.FindClass(classId, jc.Navigation.Id);
+                    string id = jc.Navigation.Id;
+                    if (id.Contains(":"))
+                        id = id.Substring(id.IndexOf(":") + 1);
+
+                    AjaxClass c = config.FindClass(classId, id);
 
                     m = config.FindMethod(c, methodName);
 

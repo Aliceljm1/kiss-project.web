@@ -159,7 +159,11 @@ namespace Kiss.Web
                     else if (StringUtil.IsNullOrEmpty(Url.Action))
                     {
                         string url = Url.UrlTemplate;
-                        int index = url.IndexOf(Id, StringComparison.InvariantCultureIgnoreCase);
+                        int index = -1;
+                        if (Id.Contains(":"))
+                            index = url.IndexOf(Id.Substring(Id.IndexOf(":") + 1), StringComparison.InvariantCultureIgnoreCase);
+                        else
+                            index = url.IndexOf(Id, StringComparison.InvariantCultureIgnoreCase);
 
                         if (index == -1)
                         {
@@ -171,7 +175,10 @@ namespace Kiss.Web
                         }
                         else
                         {
-                            url = url.Substring(index + Id.Length).Trim('/');
+                            if (Id.Contains(":"))
+                                url = url.Substring(index + Id.Substring(Id.IndexOf(":") + 1).Length).Trim('/');
+                            else
+                                url = url.Substring(index + Id.Length).Trim('/');
                         }
 
                         index = url.IndexOf("/");
@@ -399,7 +406,11 @@ namespace Kiss.Web
 
         public override string ToString()
         {
-            return string.Format("{0}.{1}", Id, Action);
+            string id = Id;
+            if (Id.Contains(":"))
+                id = Id.Substring(Id.IndexOf(":") + 1);
+
+            return string.Format("{0}.{1}", id, Action);
         }
     }
 }

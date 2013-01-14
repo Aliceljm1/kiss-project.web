@@ -194,10 +194,14 @@ namespace Kiss.Web.Mvc
 
         protected internal virtual void OnException(Exception ex)
         {
+            string id = jc.Navigation.Id;
+            if (id.Contains(":"))
+                id = id.Substring(id.IndexOf(":") + 1);
+
             throw new MvcException(string.Format("execute {0}.{1} failed. {2}",
-                       jc.Navigation.Id,
+                       id,
                        jc.Navigation.Action,
                        ex.Message), ex);
-        }        
+        }
     }
 }

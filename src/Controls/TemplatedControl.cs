@@ -88,7 +88,11 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return UsedInMvc ? string.Format("{0}{1}/", skinFilenamePrefix, jc.Navigation.Id) :
+                string id = jc.Navigation.Id;
+                if (id.Contains(":"))
+                    id = id.Substring(id.IndexOf(":") + 1);
+
+                return UsedInMvc ? string.Format("{0}{1}/", skinFilenamePrefix, id) :
                     skinFilenamePrefix;
             }
             set
