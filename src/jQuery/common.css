@@ -270,7 +270,7 @@ http://yuilibrary.com/license/
     }
 
 .gloading {
-    z-index: 9999;
+    z-index: 999999;
     background-color: #FBF2B0;
     display: inline-block;
     padding: 6px 18px;

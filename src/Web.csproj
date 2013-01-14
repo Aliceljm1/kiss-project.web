@@ -71,6 +71,8 @@
     <Compile Include="Cache\WebCacheProvider.cs" />
     <Compile Include="Controls\IContextAwaredControl.cs" />
     <Compile Include="Controls\Layout.cs" />
+    <Compile Include="Dynamic\DynamicPageController.cs" />
+    <Compile Include="Dynamic\DynamicPageInitializer.cs" />
     <Compile Include="ExportHelper.cs" />
     <Compile Include="ITextProcesser.cs" />
     <Compile Include="IErrorHandler.cs" />
@@ -239,6 +241,7 @@
   <ItemGroup>
     <EmbeddedResource Include="jQuery\hash.js" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

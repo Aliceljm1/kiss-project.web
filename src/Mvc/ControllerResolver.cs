@@ -178,6 +178,13 @@ namespace Kiss.Web.Mvc
 
             string sitekey = JContext.Current.Site.SiteKey;
 
+            if (key.Contains(":"))
+            {
+                string[] ar = StringUtil.Split(key, ":", true, true);
+                sitekey = ar[0];
+                key = ar[1];
+            }
+
             if (controllerTypes.ContainsKey(sitekey))
             {
                 Dictionary<string, Type> types = controllerTypes[sitekey];
