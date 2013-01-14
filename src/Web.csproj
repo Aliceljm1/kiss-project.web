@@ -71,8 +71,6 @@
     <Compile Include="Cache\WebCacheProvider.cs" />
     <Compile Include="Controls\IContextAwaredControl.cs" />
     <Compile Include="Controls\Layout.cs" />
-    <Compile Include="Dynamic\DynamicPageController.cs" />
-    <Compile Include="Dynamic\DynamicPageInitializer.cs" />
     <Compile Include="ExportHelper.cs" />
     <Compile Include="ITextProcesser.cs" />
     <Compile Include="IErrorHandler.cs" />
