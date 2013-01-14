@@ -110,22 +110,33 @@ namespace Kiss.Web.Query
             Qc qc = null;
 
             string qId = q.Id;
+            string sitekey = jc.Site.SiteKey;
+
             if (qId == null)
                 qId = jc.Navigation.ToString();
+            else
+            {
+                if (qId.Contains(":"))
+                {
+                    string[] ar = StringUtil.Split(qId, ":", true, true);
+                    sitekey = ar[0];
+                    qId = ar[1];
+                }
+            }
 
             if (string.IsNullOrEmpty(qId))
                 return;
 
-            qc = GetById(jc.Site, string.Format("{0}.{1}.{2}", qId, e.Method, e.DbProviderName));
+            qc = GetById(sitekey, string.Format("{0}.{1}.{2}", qId, e.Method, e.DbProviderName));
 
             if (qc == null)
-                qc = GetById(jc.Site, string.Format("{0}.{1}", qId, e.Method));
+                qc = GetById(sitekey, string.Format("{0}.{1}", qId, e.Method));
 
             if (qc == null)
-                qc = GetById(jc.Site, string.Format("{0}.{1}", qId, e.DbProviderName));
+                qc = GetById(sitekey, string.Format("{0}.{1}", qId, e.DbProviderName));
 
             if (qc == null)
-                qc = GetById(jc.Site, qId);
+                qc = GetById(sitekey, qId);
 
             if (qc == null)
                 return;
@@ -200,12 +211,12 @@ namespace Kiss.Web.Query
             }
         }
 
-        Qc GetById(ISite site, string id)
+        Qc GetById(string siteKey, string id)
         {
             if (HttpContext.Current.Cache[kCACHE_KEY] == null)
                 Refresh();
 
-            string key = string.Format(FORMAT, site.SiteKey, id.ToLower());
+            string key = string.Format(FORMAT, siteKey, id.ToLower());
 
             if (qc_dict.ContainsKey(key))
                 return qc_dict[key];
