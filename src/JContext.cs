@@ -530,15 +530,7 @@ namespace Kiss.Web
 
         public string GetUrlBySite(string siteKey, string name)
         {
-            ISite site = null;
-
-            foreach (var item in Host.AllSites)
-            {
-                if (!item.SiteKey.Equals(siteKey, StringComparison.InvariantCultureIgnoreCase))
-                    continue;
-
-                site = item;
-            }
+            ISite site = Host.GetBySiteKey(siteKey);
 
             if (site == null)
                 return string.Empty;
@@ -575,7 +567,7 @@ namespace Kiss.Web
         /// <returns></returns>
         public string GetUrl(string name)
         {
-            return GetUrlBySite(Host.CurrentSite.SiteKey, name);
+            return GetUrl(name, string.Empty);
         }
 
         /// <summary>
@@ -586,20 +578,33 @@ namespace Kiss.Web
         /// <returns></returns>
         public string GetUrl(string name, string replace)
         {
-            return GetUrlBySite(Host.CurrentSite.SiteKey, name, replace);
-        }
+            string urltemplate = string.Empty;
 
-        /// <summary>
-        /// get url by UrlMapping name
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="withDomain"></param>
-        /// <returns></returns>
-        public string GetUrl(string name, bool withDomain)
-        {
-            if (UrlMapping.Urls.ContainsKey(name))
-                return withDomain ? Utility.FormatUrlWithDomain(Site, UrlMapping.Urls[name]) : UrlMapping.Urls[name];
-            return string.Empty;
+            foreach (ISite site in Host.AllSites)
+            {
+                Dictionary<string, string> urls = UrlMapping.GetUrlsBySite(site);
+
+                if (urls.Count == 0)
+                    continue;
+
+                if (urls.ContainsKey(name))
+                {
+                    urltemplate = StringUtil.CombinUrl(site.VirtualPath, urls[name]);
+                    break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(replace) && !string.IsNullOrEmpty(urltemplate))
+            {
+                NameValueCollection nv = StringUtil.CommaDelimitedEquation2NVCollection(replace);
+
+                foreach (string key in nv.Keys)
+                {
+                    urltemplate = urltemplate.Replace("[" + key + "]", nv[key]);
+                }
+            }
+
+            return urltemplate;
         }
 
         /// <summary>
