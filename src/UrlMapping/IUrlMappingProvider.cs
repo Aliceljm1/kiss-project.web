@@ -25,17 +25,7 @@ namespace Kiss.Web.UrlMapping
         /// <returns></returns>
         Dictionary<int, NavigationItem> GetMenuItemsBySite(ISite site);
 
-        /// <summary>
-        /// get urls by site
-        /// </summary>
-        /// <param name="site"></param>
-        /// <returns></returns>
-        Dictionary<string, string> GetUrlsBySite(ISite site);
-
-        /// <summary>
-        /// url mapping name, template dictionary
-        /// </summary>
-        Dictionary<string, string> Urls { get; }
+        UrlMappingItemCollection GetUrlsBySite(ISite site);
 
         /// <summary>
         /// refresh settings

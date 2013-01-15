@@ -535,13 +535,13 @@ namespace Kiss.Web
             if (site == null)
                 return string.Empty;
 
-            Dictionary<string, string> urls = UrlMapping.GetUrlsBySite(site);
-
-            if (urls.Count == 0)
-                return string.Empty;
-
-            if (urls.ContainsKey(name))
-                return StringUtil.CombinUrl(site.VirtualPath, urls[name]);
+            foreach (var item in UrlMapping.GetUrlsBySite(site))
+            {
+                if (string.Equals(item.Name, name, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return StringUtil.CombinUrl(site.VirtualPath, item.UrlTemplate);
+                }
+            }
 
             return string.Empty;
         }
@@ -582,15 +582,13 @@ namespace Kiss.Web
 
             foreach (ISite site in Host.AllSites)
             {
-                Dictionary<string, string> urls = UrlMapping.GetUrlsBySite(site);
-
-                if (urls.Count == 0)
-                    continue;
-
-                if (urls.ContainsKey(name))
+                foreach (var item in UrlMapping.GetUrlsBySite(site))
                 {
-                    urltemplate = StringUtil.CombinUrl(site.VirtualPath, urls[name]);
-                    break;
+                    if (string.Equals(item.Name, name, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        urltemplate = StringUtil.CombinUrl(site.VirtualPath, item.UrlTemplate);
+                        break;
+                    }
                 }
             }
 

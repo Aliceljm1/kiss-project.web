@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Kiss.Utils;
+using System;
 using System.Collections.Generic;
 using System.Configuration.Provider;
 using System.IO;
 using System.Web;
 using System.Web.Caching;
 using System.Xml;
-using Kiss.Utils;
 
 namespace Kiss.Web.UrlMapping
 {
@@ -35,7 +35,7 @@ namespace Kiss.Web.UrlMapping
         /// in an XML file.
         /// </summary>
         /// <returns>The collection of URL redirection mappings</returns>
-        UrlMappingItemCollection IUrlMappingProvider.UrlMappings
+        public UrlMappingItemCollection UrlMappings
         {
             get
             {
@@ -108,15 +108,9 @@ namespace Kiss.Web.UrlMapping
             return MenuItems;
         }
 
-        public Dictionary<string, string> GetUrlsBySite(ISite site)
+        public UrlMappingItemCollection GetUrlsBySite(ISite site)
         {
-            return Urls;
-        }
-
-        private Dictionary<string, string> _urls = new Dictionary<string, string>();
-        public Dictionary<string, string> Urls
-        {
-            get { return _urls; }
+            return UrlMappings;
         }
 
         #endregion
@@ -136,7 +130,7 @@ namespace Kiss.Web.UrlMapping
 
             string file = HttpContext.Current.Server.MapPath(config.UrlMappingFile);
 
-            ParseXml(file, _coll, MenuItems, Urls, config.IncomingQueryStringBehavior);
+            ParseXml(file, _coll, MenuItems, config.IncomingQueryStringBehavior);
 
             _coll.Merge(_manualAdded);
 
@@ -172,7 +166,7 @@ namespace Kiss.Web.UrlMapping
             _coll.Merge(item);
         }
 
-        public static void ParseXml(string file, UrlMappingItemCollection routes, Dictionary<int, NavigationItem> menuItems, Dictionary<string, string> urls, IncomingQueryStringBehavior incomingQueryStringBehavior)
+        public static void ParseXml(string file, UrlMappingItemCollection routes, Dictionary<int, NavigationItem> menuItems, IncomingQueryStringBehavior incomingQueryStringBehavior)
         {
             if (!File.Exists(file))
                 return;
@@ -188,7 +182,6 @@ namespace Kiss.Web.UrlMapping
             }
 
             menuItems.Clear();
-            urls.Clear();
 
             for (int i = 0; i < xml.DocumentElement.ChildNodes.Count; i++)
             {
@@ -221,8 +214,6 @@ namespace Kiss.Web.UrlMapping
                                     UrlMappingItem url = getUrlInfo(subsubNode, sub_menuItem, i, j, -1, incomingQueryStringBehavior);
 
                                     routes.Add(url);
-                                    if (StringUtil.HasText(url.Name))
-                                        urls[url.Name] = url.UrlTemplate;
                                 }
                                 else if (subsubNode.Name == "menu")
                                 {
@@ -236,8 +227,6 @@ namespace Kiss.Web.UrlMapping
                                             UrlMappingItem url = getUrlInfo(last_node, subsub_menuItem, i, j, k, incomingQueryStringBehavior);
 
                                             routes.Add(url);
-                                            if (StringUtil.HasText(url.Name))
-                                                urls[url.Name] = url.UrlTemplate;
                                         }
                                     }
                                 }
@@ -249,8 +238,6 @@ namespace Kiss.Web.UrlMapping
                             UrlMappingItem url = getUrlInfo(subNode, menuItem, i, -1, -1, incomingQueryStringBehavior);
 
                             routes.Add(url);
-                            if (StringUtil.HasText(url.Name))
-                                urls[url.Name] = url.UrlTemplate;
                         }
                     }
                 }
@@ -259,8 +246,6 @@ namespace Kiss.Web.UrlMapping
                     UrlMappingItem url = getUrlInfo(node, new NavigationItem(), -1, -1, -1, incomingQueryStringBehavior);
 
                     routes.Add(url);
-                    if (StringUtil.HasText(url.Name))
-                        urls[url.Name] = url.UrlTemplate;
                 }
             }
         }

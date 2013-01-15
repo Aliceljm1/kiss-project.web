@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Kiss.Utils;
+using Kiss.Web.UrlMapping;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Caching;
-using Kiss.Utils;
-using Kiss.Web.UrlMapping;
 
 namespace Kiss.Web.Area
 {
@@ -14,7 +14,6 @@ namespace Kiss.Web.Area
         private UrlMappingConfig config;
         private Dictionary<string, UrlMappingItemCollection> _urlMappings = new Dictionary<string, UrlMappingItemCollection>();
         private Dictionary<string, Dictionary<int, NavigationItem>> _menuItems = new Dictionary<string, Dictionary<int, NavigationItem>>();
-        private Dictionary<string, Dictionary<string, string>> _urls = new Dictionary<string, Dictionary<string, string>>();
         private UrlMappingItemCollection _manualGlobalRoutes = new UrlMappingItemCollection();
         private Dictionary<string, UrlMappingItemCollection> _manualItems = new Dictionary<string, UrlMappingItemCollection>();
         private static readonly object _synclock = new object();
@@ -89,20 +88,18 @@ namespace Kiss.Web.Area
             return _menuItems[site.SiteKey];
         }
 
-        public Dictionary<string, string> GetUrlsBySite(ISite site)
+        public UrlMappingItemCollection GetUrlsBySite(ISite site)
         {
             RefreshUrlMappingData();
 
-            if (!_urls.ContainsKey(site.SiteKey))
+            if (!_urlMappings.ContainsKey(site.SiteKey))
             {
                 logger.Info("url not exist! site={0}", site.VirtualPath);
-                return new Dictionary<string, string>();
+                return new UrlMappingItemCollection();
             }
 
-            return _urls[site.SiteKey];
+            return _urlMappings[site.SiteKey];
         }
-
-        public Dictionary<string, string> Urls { get { return GetUrlsBySite(JContext.Current.Site); } }
 
         protected void RefreshUrlMappingData()
         {
@@ -115,7 +112,6 @@ namespace Kiss.Web.Area
 
                 _urlMappings.Clear();
                 _menuItems.Clear();
-                _urls.Clear();
 
                 // clear url mapping cache
                 UrlMappingModule.Instance._caches.Clear();
@@ -146,14 +142,12 @@ namespace Kiss.Web.Area
                     ISite site = AreaInitializer.Areas[vp];
 
                     UrlMappingItemCollection routes = new UrlMappingItemCollection();
-                    Dictionary<string, string> urls = new Dictionary<string, string>();
                     Dictionary<int, NavigationItem> menus = new Dictionary<int, NavigationItem>();
 
-                    XmlUrlMappingProvider.ParseXml(item, routes, menus, urls, IncomingQueryStringBehavior.PassThrough);
+                    XmlUrlMappingProvider.ParseXml(item, routes, menus, IncomingQueryStringBehavior.PassThrough);
 
                     _urlMappings[site.SiteKey] = routes;
                     _menuItems[site.SiteKey] = menus;
-                    _urls[site.SiteKey] = urls;
                 }
 
                 _fileDependency = new CacheDependency(Path.Combine(root, "App_Data" + Path.DirectorySeparatorChar + "routes.config"));
