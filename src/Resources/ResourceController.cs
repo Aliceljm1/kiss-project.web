@@ -40,7 +40,7 @@ namespace Kiss.Web.Resources
                 if (contentType == "0")
                     contentType = "text/css";
                 else if (contentType == "1")
-                    contentType = "application/x-javascript";
+                    contentType = "text/javascript";
 
                 // Write out to Response object with appropriate Client Cache settings
                 SendOutput(response, contentType, output);

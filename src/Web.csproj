@@ -52,6 +52,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -98,6 +99,21 @@
     <Compile Include="Mvc\ViewResult\FilePathResult.cs" />
     <Compile Include="Mvc\ViewResult\FileResult.cs" />
     <Compile Include="Mvc\ViewResult\FileStreamResult.cs" />
+    <Compile Include="Optimization\compress\CompressingFilter.cs" />
+    <Compile Include="Optimization\compress\DeflateFilter.cs" />
+    <Compile Include="Optimization\compress\Enums.cs" />
+    <Compile Include="Optimization\compress\GZipFilter.cs" />
+    <Compile Include="Optimization\css sprite\ImageOptimizations.cs" />
+    <Compile Include="Optimization\css sprite\ImageSettings.cs" />
+    <Compile Include="Optimization\HttpOutputFilter.cs" />
+    <Compile Include="Optimization\minify\HtmlMinifierStream.cs" />
+    <Compile Include="Optimization\minify\InlineJavascriptMiniferStream.cs" />
+    <Compile Include="Optimization\minify\InlineStyleMiniferStream.cs" />
+    <Compile Include="Optimization\minify\JavascriptMiniferStream.cs" />
+    <Compile Include="Optimization\minify\ReplaceFilterStream.cs" />
+    <Compile Include="Optimization\minify\StyleMiniferStream.cs" />
+    <Compile Include="Optimization\OptimizationInitializer.cs" />
+    <Compile Include="Optimization\OptimizationModule.cs" />
     <Compile Include="Query\DynamicQueryInitializer.cs" />
     <Compile Include="Query\DynamicQueryPlugin.cs" />
     <Compile Include="Site.cs" />

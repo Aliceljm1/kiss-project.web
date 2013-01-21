@@ -90,7 +90,7 @@ namespace Kiss.Web.Resources
             // short the url
             if (contentType == "text/css")
                 contentType = "0";
-            else if (contentType == "application/x-javascript")
+            else if (contentType == "text/javascript")
                 contentType = "1";
 
             url += ("&z=" + contentType);

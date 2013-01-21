@@ -19,7 +19,6 @@ namespace Kiss.Web.Mvc
             }
 
             HttpResponse response = jc.Context.Response;
-            //response.ContentType = "application/x-javascript";
 
             if (Script != null)
             {

@@ -24,7 +24,7 @@ namespace Kiss.Web.Utils
         {
             contentType.Add("csv", "application/vnd.ms-excel");
             contentType.Add("css", "text/css");
-            contentType.Add("js", "application/x-javascript");
+            contentType.Add("js", "text/javascript");
             contentType.Add("doc", "application/msword");
             contentType.Add("gif", "image/gif");
             contentType.Add("bmp", "image/bmp");
