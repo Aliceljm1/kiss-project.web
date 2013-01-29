@@ -417,6 +417,7 @@ namespace Kiss.Web.UrlMapping
         {
             JContext jc = JContext.Current;
             jc.ViewData["jc"] = jc;
+
             foreach (string key in ContextData.Datas.Keys)
             {
                 jc.ViewData[key] = ContextData.Datas[key];

@@ -21,7 +21,7 @@ namespace Kiss.Web
                 {
                     if (datas == null)
                     {
-                        datas = new Dictionary<string, object>();
+                        Dictionary<string, object> di = new Dictionary<string, object>();
 
                         foreach (var item in Plugins.GetPlugins<ContextDataAttribute>())
                         {
@@ -29,9 +29,10 @@ namespace Kiss.Web
                             if (context == null)
                                 continue;
 
-                            datas[item.Key] = context;
+                            di[item.Key] = context;
                         }
 
+                        datas = di;
                     }
                 }
 
