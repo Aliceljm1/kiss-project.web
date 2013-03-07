@@ -152,8 +152,6 @@ namespace Kiss.Web.Mvc
                 if (ex is TargetInvocationException)
                     ex = ex.InnerException;
 
-                jc.Controller.logger.Error(ExceptionUtil.WriteException(ex));
-
                 jc.Controller.OnException(ex);
             }
 

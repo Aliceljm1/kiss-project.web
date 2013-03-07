@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Web;
-using Kiss.Utils;
 
 namespace Kiss.Web.Mvc
 {
@@ -30,14 +29,7 @@ namespace Kiss.Web.Mvc
                 if (!jc.IsAsync)
                     invoker.InvokeAction(jc);
             }
-            catch (ThreadAbortException) { }// ignore this exception
-            catch (Exception ex)
-            {
-                LogManager.GetLogger<MvcModule>().Fatal(ExceptionUtil.WriteException(ex));
-
-                if (jc.Context.IsDebuggingEnabled)
-                    throw ex;
-            }
+            catch (ThreadAbortException) { }// ignore this exception            
         }
 
         public virtual void Start()
