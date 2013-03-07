@@ -1,10 +1,7 @@
-﻿using System;
-using System.Configuration;
-using System.IO;
+﻿using Kiss.Utils;
+using System;
 using System.Reflection;
 using System.Web;
-using Kiss.Utils;
-using System.Text;
 
 namespace Kiss.Web
 {
@@ -25,20 +22,9 @@ namespace Kiss.Web
             {
                 sl.AddComponent("Kiss.webcontext", typeof(IWebContext), typeof(WebRequestContext));
                 sl.AddComponent("Kiss.typeFinder", typeof(ITypeFinder), typeof(WebAppTypeFinder));
-
-                if (!Context.IsCustomErrorEnabled && !Context.IsDebuggingEnabled)
-                {
-                    ErrorHandler eh = new ErrorHandler();
-                    eh.Start();
-                    sl.AddComponentInstance<IErrorHandler>(eh);
-                }
             });
 
             LogManager.GetLogger<KissHttpApplication>().Debug("ALL components initialized.");
-
-            // check if system is deploying
-            if (Context != null && File.Exists(ServerUtil.MapPath("~/deploying.html")) && Directory.Exists(ServerUtil.MapPath("~/setup")))
-                deploying = true;
 
             EventBroker.Instance.BeginRequest += onBeginRequest;
         }
@@ -63,30 +49,6 @@ namespace Kiss.Web
             if (context.Request.Url.AbsolutePath.IndexOf("_res.aspx", StringComparison.InvariantCultureIgnoreCase) != -1
                 || context.Request.Url.AbsolutePath.IndexOf("_resc.aspx", StringComparison.InvariantCultureIgnoreCase) != -1)
                 return;
-
-            if (deploying)
-            {
-                if (!context.Response.IsRequestBeingRedirected
-                    && jc.Site.AreaKey != "setup")
-                {
-                    string filename = ServerUtil.MapPath("~/deploying.html");
-                    if (File.Exists(filename))
-                    {
-                        using (StreamReader rdr = new StreamReader(filename, Encoding.UTF8))
-                        {
-                            HttpCookie cookie = context.Request.Cookies["deploy"];
-                            string username = rdr.ReadLine();
-                            if (cookie == null || !string.Equals(cookie.Value, username))
-                            {
-                                context.Response.Write(rdr.ReadToEnd());
-                                context.Response.End();
-
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
 
             if (jc.Site != null)
                 context.Items["SITE_KEY"] = jc.Site.AreaKey;
