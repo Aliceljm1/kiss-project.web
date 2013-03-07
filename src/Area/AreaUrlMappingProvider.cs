@@ -58,47 +58,47 @@ namespace Kiss.Web.Area
             {
                 RefreshUrlMappingData();
 
-                ISite site = JContext.Current.Site;
+                IArea site = JContext.Current.Site;
 
-                if (!_urlMappings.ContainsKey(site.SiteKey))
+                if (!_urlMappings.ContainsKey(site.AreaKey))
                 {
                     logger.Info("routes not exist! site={0}", site.VirtualPath);
                     return new UrlMappingItemCollection();
                 }
 
-                if (_manualItems.ContainsKey(site.SiteKey))
-                    return UrlMappingItemCollection.Combin(_manualGlobalRoutes, UrlMappingItemCollection.Combin(_manualItems[site.SiteKey], _urlMappings[site.SiteKey]));
+                if (_manualItems.ContainsKey(site.AreaKey))
+                    return UrlMappingItemCollection.Combin(_manualGlobalRoutes, UrlMappingItemCollection.Combin(_manualItems[site.AreaKey], _urlMappings[site.AreaKey]));
 
-                return UrlMappingItemCollection.Combin(_manualGlobalRoutes, _urlMappings[site.SiteKey]);
+                return UrlMappingItemCollection.Combin(_manualGlobalRoutes, _urlMappings[site.AreaKey]);
             }
         }
 
         public Dictionary<int, NavigationItem> MenuItems { get { return GetMenuItemsBySite(JContext.Current.Site); } }
 
-        public Dictionary<int, NavigationItem> GetMenuItemsBySite(ISite site)
+        public Dictionary<int, NavigationItem> GetMenuItemsBySite(IArea site)
         {
             RefreshUrlMappingData();
 
-            if (!_menuItems.ContainsKey(site.SiteKey))
+            if (!_menuItems.ContainsKey(site.AreaKey))
             {
                 logger.Info("menu not exist! site={0}", site.VirtualPath);
                 return new Dictionary<int, NavigationItem>();
             }
 
-            return _menuItems[site.SiteKey];
+            return _menuItems[site.AreaKey];
         }
 
-        public UrlMappingItemCollection GetUrlsBySite(ISite site)
+        public UrlMappingItemCollection GetUrlsBySite(IArea site)
         {
             RefreshUrlMappingData();
 
-            if (!_urlMappings.ContainsKey(site.SiteKey))
+            if (!_urlMappings.ContainsKey(site.AreaKey))
             {
                 logger.Info("url not exist! site={0}", site.VirtualPath);
                 return new UrlMappingItemCollection();
             }
 
-            return _urlMappings[site.SiteKey];
+            return _urlMappings[site.AreaKey];
         }
 
         protected void RefreshUrlMappingData()
@@ -139,15 +139,15 @@ namespace Kiss.Web.Area
                     if (!AreaInitializer.Areas.ContainsKey(vp))
                         throw new WebException("virtual path not found: {0}", vp);
 
-                    ISite site = AreaInitializer.Areas[vp];
+                    IArea site = AreaInitializer.Areas[vp];
 
                     UrlMappingItemCollection routes = new UrlMappingItemCollection();
                     Dictionary<int, NavigationItem> menus = new Dictionary<int, NavigationItem>();
 
                     XmlUrlMappingProvider.ParseXml(item, routes, menus, IncomingQueryStringBehavior.PassThrough);
 
-                    _urlMappings[site.SiteKey] = routes;
-                    _menuItems[site.SiteKey] = menus;
+                    _urlMappings[site.AreaKey] = routes;
+                    _menuItems[site.AreaKey] = menus;
                 }
 
                 _fileDependency = new CacheDependency(Path.Combine(root, "App_Data" + Path.DirectorySeparatorChar + "routes.config"));

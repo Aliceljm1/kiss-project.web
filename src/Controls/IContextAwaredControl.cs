@@ -6,6 +6,6 @@ namespace Kiss.Web.Controls
     /// </summary>
     public interface IContextAwaredControl
     {
-        ISite CurrentSite { get; set; }
+        IArea CurrentSite { get; set; }
     }
 }

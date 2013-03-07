@@ -120,8 +120,8 @@ namespace Kiss.Web.Controls
         {
         }
 
-        private ISite _site;
-        public ISite CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
+        private IArea _site;
+        public IArea CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
     }
 
     /// <summary>
@@ -151,10 +151,10 @@ namespace Kiss.Web.Controls
         public StyleRelativePosition Position;
         public string StyleTag;
         public string Url { get; set; }
-        public ISite Site { get; set; }
+        public IArea Site { get; set; }
         public bool ForceCombin { get; set; }
 
-        public StyleQueueItem(ISite site, string styleTag, StyleRelativePosition position, string url, bool forceCombin)
+        public StyleQueueItem(IArea site, string styleTag, StyleRelativePosition position, string url, bool forceCombin)
         {
             Site = site;
             StyleTag = styleTag;

@@ -3,9 +3,9 @@
 namespace Kiss.Web
 {
     /// <summary>
-    /// site info
+    /// area info
     /// </summary>
-    public interface ISite
+    public interface IArea
     {
         string VirtualPath { get; }
         bool CombineJs { get; }
@@ -35,11 +35,7 @@ namespace Kiss.Web
 
         string this[string key] { get; }
 
-        List<DictSchema> GetSchema(string type);
-
-        DictSchema GetSchema(string type, string name);
-
-        string SiteKey { get; }
+        string AreaKey { get; }
 
         /// <summary>
         /// 当前主题

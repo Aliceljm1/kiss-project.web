@@ -49,7 +49,7 @@ namespace Kiss.Web.Optimization
             {
                 var inner = m.Value.Substring(1, m.Value.Length - 2);
 
-                builder.Append(CssMinifier.CssMinify(inner));
+                builder.Append(new Kiss.Web.Utils.ajaxmin.Minifier().MinifyStyleSheet(inner));
             }
             catch (Exception ex)
             {

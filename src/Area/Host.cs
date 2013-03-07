@@ -7,7 +7,7 @@ namespace Kiss.Web.Area
 {
     public class Host : IHost
     {
-        public ISite CurrentSite
+        public IArea CurrentArea
         {
             get
             {
@@ -18,7 +18,7 @@ namespace Kiss.Web.Area
                 if (AreaInitializer.Areas.ContainsKey(virtualPath))
                     return AreaInitializer.Areas[virtualPath];
 
-                return SiteConfig.Instance;
+                return AreaConfig.Instance;
             }
         }
 
@@ -53,11 +53,11 @@ namespace Kiss.Web.Area
             return vp;
         }
 
-        public IList<ISite> AllSites
+        public IList<IArea> AllAreas
         {
             get
             {
-                List<ISite> list = new List<ISite>();
+                List<IArea> list = new List<IArea>();
 
                 foreach (var item in AreaInitializer.Areas)
                 {
@@ -68,10 +68,10 @@ namespace Kiss.Web.Area
             }
         }
 
-        public ISite GetBySiteKey(string siteKey)
+        public IArea GetByAreaKey(string siteKey)
         {
-            return (from q in AllSites
-                    where q.SiteKey == siteKey
+            return (from q in AllAreas
+                    where q.AreaKey == siteKey
                     select q).FirstOrDefault();
         }
     }

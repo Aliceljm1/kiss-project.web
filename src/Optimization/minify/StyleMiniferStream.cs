@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Web;
-using Kiss.Web.Utils;
-using System.Text.RegularExpressions;
 
 namespace Kiss.Web.Optimization
 {
@@ -21,16 +19,7 @@ namespace Kiss.Web.Optimization
             {
                 try
                 {
-                    content = content.Replace("\n", "");
-                    content = Regex.Replace(content, @"\s+", " ");
-                    content = Regex.Replace(content, @"\s*:\s*", ":");
-                    content = Regex.Replace(content, @"\s*\,\s*", ",");
-                    content = Regex.Replace(content, @"\s*\{\s*", "{");
-                    content = Regex.Replace(content, @"\s*\}\s*", "}");
-                    content = Regex.Replace(content, @"\s*\;\s*", ";");
-
-                    return content;
-                    //return CssMinifier.CssMinify(content);
+                    return new Kiss.Web.Utils.ajaxmin.Minifier().MinifyStyleSheet(content);
                 }
                 catch (Exception ex)
                 {

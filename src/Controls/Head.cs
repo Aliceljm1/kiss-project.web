@@ -28,8 +28,8 @@ namespace Kiss.Web.Controls
 
         #endregion
 
-        private ISite _site;
-        public ISite CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
+        private IArea _site;
+        public IArea CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
 
         /// <summary>
         /// page title
@@ -121,7 +121,7 @@ namespace Kiss.Web.Controls
             if (queue == null || queue.Count == 0)
                 return;
 
-            Dictionary<ISite, Dictionary<string, List<string>>> di = new Dictionary<ISite, Dictionary<string, List<string>>>();
+            Dictionary<IArea, Dictionary<string, List<string>>> di = new Dictionary<IArea, Dictionary<string, List<string>>>();
 
             List<string> otherurls = new List<string>();
 
@@ -152,7 +152,7 @@ namespace Kiss.Web.Controls
                 }
             }
 
-            foreach (ISite s in di.Keys)
+            foreach (IArea s in di.Keys)
             {
                 if (!s.CombineCss)
                     continue;
@@ -219,7 +219,7 @@ namespace Kiss.Web.Controls
             }
         }
 
-        protected virtual void RenderTitle(ISite site, HtmlTextWriter writer)
+        protected virtual void RenderTitle(IArea site, HtmlTextWriter writer)
         {
             string title = Title ?? "$!jc.navigation.Title - $!jc.site.title";
 
@@ -307,7 +307,7 @@ namespace Kiss.Web.Controls
             AddStyle(JContext.Current.Site, url, media, context, StyleRelativePosition.Unspecified, enqueue);
         }
 
-        public static void AddStyle(ISite site, string url, string media, HttpContext context, StyleRelativePosition position, bool enqueue)
+        public static void AddStyle(IArea site, string url, string media, HttpContext context, StyleRelativePosition position, bool enqueue)
         {
             Queue styleQueue = context.Items[styleKey] as Queue;
             if (styleQueue == null)

@@ -30,8 +30,8 @@ namespace Kiss.Web.Controls
 
         JContext jc = JContext.Current;
 
-        private ISite _site;
-        public ISite CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
+        private IArea _site;
+        public IArea CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
 
         #region props
 

@@ -22,7 +22,7 @@ namespace Kiss.Web.UrlMapping
         {
             get
             {
-                string siteKey = JContext.Current.Site.SiteKey;
+                string siteKey = JContext.Current.Site.AreaKey;
                 if (_caches.ContainsKey(siteKey))
                     return _caches[siteKey];
 

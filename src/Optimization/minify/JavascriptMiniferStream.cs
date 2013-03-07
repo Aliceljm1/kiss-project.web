@@ -1,4 +1,5 @@
-﻿using Kiss.Web.Utils;
+﻿using Kiss.Utils;
+using Kiss.Web.Utils;
 using System;
 using System.IO;
 using System.Web;
@@ -20,11 +21,13 @@ namespace Kiss.Web.Optimization
             {
                 try
                 {
-                    return new JsMin().MinifyString(content);
+                    return new Kiss.Web.Utils.ajaxmin.Minifier().MinifyJavaScript(content);
                 }
                 catch (Exception ex)
                 {
-                    LogManager.GetLogger<JavascriptMinifierStream>().Error("error minify script:{0}. Exception:{1}", HttpContext.Current.Request.RawUrl, ex.Message);
+                    ILogger logger = LogManager.GetLogger<JavascriptMinifierStream>();
+                    logger.Error("error minify script:{0}.", HttpContext.Current.Request.RawUrl);
+                    logger.Error(ExceptionUtil.WriteException(ex));
                 }
 
                 return content;

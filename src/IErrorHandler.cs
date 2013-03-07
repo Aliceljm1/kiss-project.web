@@ -1,6 +1,7 @@
 ﻿using Kiss.Utils;
 using System;
 using System.IO;
+using System.Text;
 using System.Web;
 
 namespace Kiss.Web
@@ -56,7 +57,7 @@ namespace Kiss.Web
 
             logger.Error(HttpContext.Current.Request.RawUrl + ExceptionUtil.WriteException(ex));
 
-            int statusCode = HttpContext.Current.Response.StatusCode;            
+            int statusCode = HttpContext.Current.Response.StatusCode;
 
             while (ex != null)
             {
@@ -78,6 +79,7 @@ namespace Kiss.Web
             JContext jc = JContext.Current;
 
             HttpContext.Current.Response.StatusCode = 200;
+            HttpContext.Current.Response.ContentEncoding = Encoding.UTF8;
 
             if (!File.Exists(HttpContext.Current.Server.MapPath("~/error.htm")))
             {

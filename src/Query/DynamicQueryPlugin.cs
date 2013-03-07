@@ -33,13 +33,13 @@ namespace Kiss.Web.Query
 
                     List<string> filenames = new List<string>();
 
-                    foreach (ISite site in ServiceLocator.Instance.Resolve<IHost>().AllSites)
+                    foreach (IArea site in ServiceLocator.Instance.Resolve<IHost>().AllAreas)
                     {
                         string dir;
                         string filename;
                         List<string> files = new List<string>();
 
-                        if (site.SiteKey == SiteConfig.Instance.SiteKey)// default site
+                        if (site.AreaKey == AreaConfig.Instance.AreaKey)// default site
                             dir = ServerUtil.MapPath("~/App_Data");
                         else
                             dir = ServerUtil.MapPath(site.VirtualPath);
@@ -71,7 +71,7 @@ namespace Kiss.Web.Query
                                 if (string.IsNullOrEmpty(id))
                                     continue;
 
-                                id = string.Format(FORMAT, site.SiteKey, id.ToLower());
+                                id = string.Format(FORMAT, site.AreaKey, id.ToLower());
 
                                 _logger.Debug("RESULT: query id:{0}", id);
 
@@ -110,7 +110,7 @@ namespace Kiss.Web.Query
             Qc qc = null;
 
             string qId = q.Id;
-            string sitekey = jc.Site.SiteKey;
+            string sitekey = jc.Site.AreaKey;
 
             if (qId == null)
                 qId = jc.Navigation.ToString();

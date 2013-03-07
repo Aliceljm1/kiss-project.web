@@ -1,21 +1,20 @@
-﻿using System;
+﻿using Kiss.Config;
+using Kiss.Utils;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Xml;
-using Kiss.Config;
-using Kiss.Utils;
-using Kiss.Web.Utils;
 
 namespace Kiss.Web
-{
+{    
     [ConfigNode("site", Desc = "站点")]
-    public class SiteConfig : ConfigBase, ISite
+    public class AreaConfig : ConfigBase, IArea
     {
-        public static SiteConfig Instance { get { return GetConfig<SiteConfig>(); } }
+        public static AreaConfig Instance { get { return GetConfig<AreaConfig>(); } }
 
-        public static SiteConfig GetConfig(XmlNode node)
+        public static AreaConfig GetConfig(XmlNode node)
         {
-            return GetConfig<SiteConfig>(node, false);
+            return GetConfig<AreaConfig>(node, false);
         }
 
         #region props
@@ -73,7 +72,7 @@ namespace Kiss.Web
         public string SearchMetaDescription { get; private set; }
 
         [ConfigProp("siteKey", ConfigPropAttribute.DataType.String, DefaultValue = "default")]
-        public string SiteKey { get; set; }
+        public string AreaKey { get; set; }
 
         public string ErrorPage { get; private set; }
 

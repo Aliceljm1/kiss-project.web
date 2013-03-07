@@ -1357,7 +1357,7 @@ function handleException(result) {
         onSuccess: null,
         submitFunc: null,
         autoAddRedStar: true,
-        focus_first_input: true,
+        focus_first_input: false,
         enter_to_submit: false
     };
 

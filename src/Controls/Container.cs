@@ -26,14 +26,14 @@ namespace Kiss.Web.Controls
         /// </summary>
         public string ThemeMasterFile { get { return _themeMasterFile; } set { _themeMasterFile = value; } }
 
-        private ISite _site;
-        public ISite CurrentSite { get { if (_site == null)_site = JContext.Current.Site; return _site; } set { _site = value; } }
+        private IArea _site;
+        public IArea CurrentSite { get { if (_site == null)_site = JContext.Current.Site; return _site; } set { _site = value; } }
 
         /// <summary>
         /// Folder which contains the master files
         /// </summary>        
         private string themeFolder = null;
-        private ISite container_site = null;
+        private IArea container_site = null;
         public string ThemeFolder
         {
             get
@@ -43,10 +43,10 @@ namespace Kiss.Web.Controls
 
                 if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    container_site = SiteConfig.Instance;
+                    container_site = AreaConfig.Instance;
 
                     if (themeFolder != "~")
-                        container_site = JContext.Current.Host.GetBySiteKey(themeFolder.Substring(1));
+                        container_site = JContext.Current.Host.GetByAreaKey(themeFolder.Substring(1));
 
                     if (container_site == null)
                         throw new WebException("site:{0} not exist!", themeFolder.Substring(1));

@@ -103,12 +103,12 @@ namespace Kiss.Web.UrlMapping
             }
         }
 
-        public Dictionary<int, NavigationItem> GetMenuItemsBySite(ISite site)
+        public Dictionary<int, NavigationItem> GetMenuItemsBySite(IArea site)
         {
             return MenuItems;
         }
 
-        public UrlMappingItemCollection GetUrlsBySite(ISite site)
+        public UrlMappingItemCollection GetUrlsBySite(IArea site)
         {
             return UrlMappings;
         }
@@ -157,7 +157,7 @@ namespace Kiss.Web.UrlMapping
 
         public void AddMapping(UrlMappingItem item)
         {
-            AddMapping(SiteConfig.Instance.SiteKey, item);
+            AddMapping(AreaConfig.Instance.AreaKey, item);
         }
 
         public void AddMapping(string siteKey, UrlMappingItem item)

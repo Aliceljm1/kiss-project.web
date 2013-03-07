@@ -58,7 +58,7 @@ namespace Kiss.Web.Resources
             string url = null;
             string version = string.Empty;
 
-            ISite site = SiteConfig.Instance;
+            IArea site = AreaConfig.Instance;
 
             switch (extension)
             {

@@ -15,8 +15,8 @@ namespace Kiss.Web.Controls
     {
         const string ScriptKey = "__scripts__";
 
-        private ISite _site;
-        public ISite CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
+        private IArea _site;
+        public IArea CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
 
         /// <summary>
         /// 重载Control的Render方法
@@ -85,7 +85,7 @@ namespace Kiss.Web.Controls
                     }
 
                     writer.Write(string.Format("<script src='{0}' type='text/javascript'></script>",
-                        Utility.FormatJsUrl(SiteConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
+                        Utility.FormatJsUrl(AreaConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(list)),
                                                             CurrentSite.JsVersion))));
                 }

@@ -77,7 +77,7 @@ namespace Kiss.Web.Mvc
                 }
             }
 
-            SetSiteControllers(SiteConfig.Instance.SiteKey, types);
+            SetSiteControllers(AreaConfig.Instance.AreaKey, types);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Kiss.Web.Mvc
 
             key = key.ToLowerInvariant();
 
-            string sitekey = JContext.Current.Site.SiteKey;
+            string sitekey = JContext.Current.Site.AreaKey;
 
             if (key.Contains(":"))
             {
@@ -194,8 +194,8 @@ namespace Kiss.Web.Mvc
                 {
                     // get controller from root site
                     Dictionary<string, Type> defaultControllers = null;
-                    if (controllerTypes.ContainsKey(SiteConfig.Instance.SiteKey))
-                        defaultControllers = controllerTypes[SiteConfig.Instance.SiteKey];
+                    if (controllerTypes.ContainsKey(AreaConfig.Instance.AreaKey))
+                        defaultControllers = controllerTypes[AreaConfig.Instance.AreaKey];
 
                     if (defaultControllers != null && defaultControllers.ContainsKey(key))
                         return defaultControllers[key];

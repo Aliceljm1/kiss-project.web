@@ -16,7 +16,7 @@ namespace Kiss.Web.Area
     public class AreaInitializer : IPluginInitializer
     {
         const string kCACHE_KEY = "__AreaInitializer_cache_key__";
-        internal static readonly Dictionary<string, SiteConfig> Areas = new Dictionary<string, SiteConfig>();
+        internal static readonly Dictionary<string, AreaConfig> Areas = new Dictionary<string, AreaConfig>();
         private static readonly ILogger logger = LogManager.GetLogger<AreaInitializer>();
         private static readonly List<string> IGNORES_DIR = new List<string>() { "app_data", "bin", "app_browser", "app_code", "app_globalresources", "app_localresources", "app_themes", "app_webreferences" };
 
@@ -35,7 +35,7 @@ namespace Kiss.Web.Area
             sl.AddComponent("kiss.Areahost", typeof(IHost), typeof(Host));
             sl.AddComponent("kiss.AreaUrlMappingProvider", typeof(IUrlMappingProvider), typeof(AreaUrlMappingProvider));
 
-            Areas.Add(@"/", SiteConfig.Instance);
+            Areas.Add(@"/", AreaConfig.Instance);
 
             ControllerResolver resolver = ControllerResolver.Instance;
 
@@ -77,9 +77,9 @@ namespace Kiss.Web.Area
                 XmlDocument xml = new XmlDocument();
                 xml.Load(configfile);
 
-                SiteConfig config = SiteConfig.GetConfig(xml.DocumentElement);
+                AreaConfig config = AreaConfig.GetConfig(xml.DocumentElement);
                 config.VP = "/" + areaName;
-                config.SiteKey = areaName;
+                config.AreaKey = areaName;
 
                 Areas.Add(@"/" + areaName, config);
 

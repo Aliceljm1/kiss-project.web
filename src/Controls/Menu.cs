@@ -17,7 +17,7 @@ namespace Kiss.Web.Controls
 
             public MenuType Type { get; internal set; }
 
-            public ISite Site { get; internal set; }
+            public IArea Site { get; internal set; }
 
             public List<NavigationItem> Items { get; set; }
         }
@@ -76,7 +76,7 @@ namespace Kiss.Web.Controls
             return GetDataSource(CurrentSite, type, key);
         }
 
-        public static List<NavigationItem> GetDataSource(ISite site, MenuType type, string key)
+        public static List<NavigationItem> GetDataSource(IArea site, MenuType type, string key)
         {
             JContext jc = JContext.Current;
 
@@ -88,10 +88,10 @@ namespace Kiss.Web.Controls
 
             Dictionary<int, NavigationItem> Items = UrlMappingModule.Instance.Provider.GetMenuItemsBySite(site);
 
-            string currentSiteKey = jc.Site.SiteKey;
+            string currentSiteKey = jc.Site.AreaKey;
 
             // set menu index of root site
-            if (site.SiteKey != currentSiteKey)
+            if (site.AreaKey != currentSiteKey)
             {
                 foreach (var k in Items.Keys)
                 {
@@ -279,7 +279,7 @@ namespace Kiss.Web.Controls
             return e.Items;
         }
 
-        private static string GetUrl(ISite site, string url)
+        private static string GetUrl(IArea site, string url)
         {
             if (StringUtil.IsNullOrEmpty(url))
                 return "#";

@@ -145,7 +145,7 @@ namespace Kiss.Web
 
             SetScriptRended(url);
 
-            ISite site = JContext.Current.Site;
+            IArea site = JContext.Current.Site;
 
             if (!site.CombineCss)
             {

@@ -73,7 +73,7 @@ namespace Kiss.Web.Resources
             try
             {
                 JContext jc = JContext.Current;
-                ISite site = jc.Site;
+                IArea site = jc.Site;
 
                 string path = virtualPath;
 

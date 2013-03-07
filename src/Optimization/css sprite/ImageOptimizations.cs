@@ -33,7 +33,7 @@ namespace Kiss.Web.Optimization
         {
             IHost host = ServiceLocator.Instance.Resolve<IHost>();
 
-            foreach (ISite site in host.AllSites)
+            foreach (IArea site in host.AllAreas)
             {
                 string themes_path = ServerUtil.MapPath(StringUtil.CombinUrl(site.VirtualPath, site.ThemeRoot));
 

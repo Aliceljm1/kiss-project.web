@@ -407,12 +407,27 @@ namespace Kiss.Web
         /// <summary>
         /// 站点Id，用于站点群
         /// </summary>
-        public int SiteId { get; set; }
+        public string SiteId { get; set; }
 
+        private Kiss.Security.ISite _siteConfig = null;
         /// <summary>
-        /// 站点群配置
+        /// 站点配置
         /// </summary>
-        public Site SiteConfig { get; set; }
+        public Kiss.Security.ISite SiteConfig
+        {
+            get
+            {
+                if (_siteConfig == null && !string.IsNullOrEmpty(SiteId))
+                {
+                    _siteConfig = ServiceLocator.Instance.Resolve<IUserService>().GetSiteBySiteId(SiteId);
+
+                    if (_siteConfig != null)
+                        Site.Theme = _siteConfig[string.Concat(Site.AreaKey, "_theme")] ?? "default";
+                }
+
+                return _siteConfig;
+            }
+        }
 
         #region Design
 
@@ -530,7 +545,7 @@ namespace Kiss.Web
 
         public string GetUrlBySite(string siteKey, string name)
         {
-            ISite site = Host.GetBySiteKey(siteKey);
+            IArea site = Host.GetByAreaKey(siteKey);
 
             if (site == null)
                 return string.Empty;
@@ -580,7 +595,7 @@ namespace Kiss.Web
         {
             string urltemplate = string.Empty;
 
-            foreach (ISite site in Host.AllSites)
+            foreach (IArea site in Host.AllAreas)
             {
                 foreach (var item in UrlMapping.GetUrlsBySite(site))
                 {
@@ -662,17 +677,17 @@ namespace Kiss.Web
 
         #region Engine
 
-        private ISite _site;
+        private IArea _site;
         /// <summary>
         /// get current site
         /// </summary>
-        public ISite Site
+        public IArea Site
         {
             get
             {
                 if (_site == null)
                 {
-                    _site = Host.CurrentSite;
+                    _site = Host.CurrentArea;
                 }
 
                 return _site;
@@ -681,7 +696,7 @@ namespace Kiss.Web
 
         public IHost Host { get { return ServiceLocator.Instance.Resolve<IHost>(); } }
 
-        public ISite DefaultSite { get { return Kiss.Web.SiteConfig.Instance; } }
+        public IArea DefaultSite { get { return Kiss.Web.AreaConfig.Instance; } }
 
         #endregion
 
@@ -790,7 +805,7 @@ namespace Kiss.Web
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
                                                                 Site.CssVersion));
                     else if (!is_css)
-                        url = Utility.FormatJsUrl(Kiss.Web.SiteConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
+                        url = Utility.FormatJsUrl(Kiss.Web.AreaConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
                                                             Site.JsVersion));
                     else
@@ -891,7 +906,7 @@ namespace Kiss.Web
         {
             get
             {
-                ISite site = Kiss.Web.SiteConfig.Instance;
+                IArea site = Kiss.Web.AreaConfig.Instance;
 
                 string baseurl = string.Format("/themes/{0}", site.Theme);
 

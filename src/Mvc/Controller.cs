@@ -179,7 +179,7 @@ namespace Kiss.Web.Mvc
         /// <returns></returns>
         public bool hasMenu(string menu)
         {
-            return hasMenu(jc.Site.SiteKey, menu);
+            return hasMenu(jc.Site.AreaKey, menu);
         }
 
         public bool hasMenu(string siteKey, string menu)

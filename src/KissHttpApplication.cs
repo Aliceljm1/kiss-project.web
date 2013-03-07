@@ -67,7 +67,7 @@ namespace Kiss.Web
             if (deploying)
             {
                 if (!context.Response.IsRequestBeingRedirected
-                    && jc.Site.SiteKey != "setup")
+                    && jc.Site.AreaKey != "setup")
                 {
                     string filename = ServerUtil.MapPath("~/deploying.html");
                     if (File.Exists(filename))
@@ -89,7 +89,7 @@ namespace Kiss.Web
             }
 
             if (jc.Site != null)
-                context.Items["SITE_KEY"] = jc.Site.SiteKey;
+                context.Items["SITE_KEY"] = jc.Site.AreaKey;
 
             if (!context.Response.IsRequestBeingRedirected)
                 context.Response.AddHeader("X-Powered-By", "TXTEK");

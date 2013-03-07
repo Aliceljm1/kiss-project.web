@@ -48,7 +48,7 @@ namespace Kiss.Web.Optimization
             try
             {
                 var inner = m.Value.Substring(1, m.Value.Length - 2);
-                builder.Append(new JsMin().MinifyString((inner)));
+                builder.Append(new Kiss.Web.Utils.ajaxmin.Minifier().MinifyJavaScript((inner)));
             }
             catch (Exception ex)
             {
