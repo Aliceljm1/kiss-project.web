@@ -176,7 +176,7 @@ namespace Kiss.Web.Mvc
 
             key = key.ToLowerInvariant();
 
-            string sitekey = JContext.Current.Site.AreaKey;
+            string sitekey = JContext.Current.Area.AreaKey;
 
             if (key.Contains(":"))
             {

@@ -29,7 +29,7 @@ namespace Kiss.Web.Controls
         #endregion
 
         private IArea _site;
-        public IArea CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
+        public IArea CurrentSite { get { return _site ?? JContext.Current.Area; } set { _site = value; } }
 
         /// <summary>
         /// page title
@@ -221,7 +221,7 @@ namespace Kiss.Web.Controls
 
         protected virtual void RenderTitle(IArea site, HtmlTextWriter writer)
         {
-            string title = Title ?? "$!jc.navigation.Title - $!jc.site.title";
+            string title = Title ?? "$!jc.navigation.Title - $!jc.area.title";
 
             if (StringUtil.HasText(title))
                 writer.WriteLine("<title>{0}</title>", title);
@@ -304,7 +304,7 @@ namespace Kiss.Web.Controls
         /// </summary>
         public static void AddStyle(string url, string media, HttpContext context, bool enqueue)
         {
-            AddStyle(JContext.Current.Site, url, media, context, StyleRelativePosition.Unspecified, enqueue);
+            AddStyle(JContext.Current.Area, url, media, context, StyleRelativePosition.Unspecified, enqueue);
         }
 
         public static void AddStyle(IArea site, string url, string media, HttpContext context, StyleRelativePosition position, bool enqueue)

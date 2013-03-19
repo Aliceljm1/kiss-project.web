@@ -127,7 +127,7 @@ namespace Kiss.Web.Controls
                 className,
                 m.MethodName,
                 m.AjaxType,
-                StringUtil.CombinUrl(JContext.Current.Site.VirtualPath, "ajax.aspx"));
+                StringUtil.CombinUrl(JContext.Current.Area.VirtualPath, "ajax.aspx"));
             script.Append("}");
         }
 

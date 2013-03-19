@@ -422,7 +422,7 @@ namespace Kiss.Web
                     _siteConfig = ServiceLocator.Instance.Resolve<IUserService>().GetSiteBySiteId(SiteId);
 
                     if (_siteConfig != null)
-                        Site.Theme = _siteConfig[string.Concat(Site.AreaKey, "_theme")] ?? "default";
+                        Area.Theme = _siteConfig[string.Concat(Area.AreaKey, "_theme")] ?? "default";
                 }
 
                 return _siteConfig;
@@ -630,13 +630,13 @@ namespace Kiss.Web
             string url;
 
             if (StringUtil.IsNullOrEmpty(baseurl))
-                url = Site.VirtualPath;
+                url = Area.VirtualPath;
             else if (baseurl.StartsWith("~"))
                 url = ServerUtil.ResolveUrl(baseurl);
             else if (baseurl.StartsWith("."))
-                url = StringUtil.CombinUrl(Site.VirtualPath, baseurl.Substring(1)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
+                url = StringUtil.CombinUrl(Area.VirtualPath, baseurl.Substring(1)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
             else
-                url = StringUtil.CombinUrl(Site.VirtualPath, baseurl);
+                url = StringUtil.CombinUrl(Area.VirtualPath, baseurl);
 
             url = HttpUtility.UrlPathEncode(url);
 
@@ -677,26 +677,26 @@ namespace Kiss.Web
 
         #region Engine
 
-        private IArea _site;
+        private IArea _area;
         /// <summary>
         /// get current site
         /// </summary>
-        public IArea Site
+        public IArea Area
         {
             get
             {
-                if (_site == null)
+                if (_area == null)
                 {
-                    _site = Host.CurrentArea;
+                    _area = Host.CurrentArea;
                 }
 
-                return _site;
+                return _area;
             }
         }
 
         public IHost Host { get { return ServiceLocator.Instance.Resolve<IHost>(); } }
 
-        public IArea DefaultSite { get { return Kiss.Web.AreaConfig.Instance; } }
+        public IArea DefaultArea { get { return Kiss.Web.AreaConfig.Instance; } }
 
         #endregion
 
@@ -783,7 +783,7 @@ namespace Kiss.Web
 
                         csp.SetScriptRended(href);
 
-                        if (is_css && !Site.CombineCss)
+                        if (is_css && !Area.CombineCss)
                             cssfiles.Add(href);
                         else
                             hrefs.Add(href);
@@ -800,14 +800,14 @@ namespace Kiss.Web
                     }
 
                     // comine url
-                    if (is_css && Site.CombineCss)
-                        url = Utility.FormatCssUrl(Site, string.Format("_resc.aspx?f={0}&t=text/css&v={1}",
+                    if (is_css && Area.CombineCss)
+                        url = Utility.FormatCssUrl(Area, string.Format("_resc.aspx?f={0}&t=text/css&v={1}",
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
-                                                                Site.CssVersion));
+                                                                Area.CssVersion));
                     else if (!is_css)
                         url = Utility.FormatJsUrl(Kiss.Web.AreaConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
-                                                            Site.JsVersion));
+                                                            Area.JsVersion));
                     else
                         continue;
                 }
@@ -884,7 +884,7 @@ namespace Kiss.Web
         {
             get
             {
-                return url(string.Format("/themes/{0}", Site.Theme));
+                return url(string.Format("/themes/{0}", Area.Theme));
             }
         }
 
@@ -895,7 +895,7 @@ namespace Kiss.Web
         {
             get
             {
-                return url(string.Format("/themes/{0}/skins", Site.Theme)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
+                return url(string.Format("/themes/{0}/skins", Area.Theme)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
             }
         }
 

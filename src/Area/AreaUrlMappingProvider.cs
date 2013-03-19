@@ -58,11 +58,11 @@ namespace Kiss.Web.Area
             {
                 RefreshUrlMappingData();
 
-                IArea site = JContext.Current.Site;
+                IArea site = JContext.Current.Area;
 
                 if (!_urlMappings.ContainsKey(site.AreaKey))
                 {
-                    logger.Info("routes not exist! site={0}", site.VirtualPath);
+                    logger.Info("routes not exist! area={0}", site.VirtualPath);
                     return new UrlMappingItemCollection();
                 }
 
@@ -73,7 +73,7 @@ namespace Kiss.Web.Area
             }
         }
 
-        public Dictionary<int, NavigationItem> MenuItems { get { return GetMenuItemsBySite(JContext.Current.Site); } }
+        public Dictionary<int, NavigationItem> MenuItems { get { return GetMenuItemsBySite(JContext.Current.Area); } }
 
         public Dictionary<int, NavigationItem> GetMenuItemsBySite(IArea site)
         {
@@ -81,7 +81,7 @@ namespace Kiss.Web.Area
 
             if (!_menuItems.ContainsKey(site.AreaKey))
             {
-                logger.Info("menu not exist! site={0}", site.VirtualPath);
+                logger.Info("menu not exist! area={0}", site.VirtualPath);
                 return new Dictionary<int, NavigationItem>();
             }
 
@@ -94,7 +94,7 @@ namespace Kiss.Web.Area
 
             if (!_urlMappings.ContainsKey(site.AreaKey))
             {
-                logger.Info("url not exist! site={0}", site.VirtualPath);
+                logger.Info("url not exist! area={0}", site.VirtualPath);
                 return new UrlMappingItemCollection();
             }
 

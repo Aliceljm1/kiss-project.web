@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kiss.Utils;
+using System;
 using System.Collections.Generic;
 using System.Web.UI;
 
@@ -9,11 +10,13 @@ namespace Kiss.Web.Controls
         public ControlPanel()
         {
             JContext jc = JContext.Current;
-            if (jc.User != null)
-                isSiteAdmin = jc.User.HasPermission("site.control_panel");
+            if (jc.User == null) return;
+
+            isSiteAdmin = jc.User.HasPermission("site.control_panel")
+                && (!jc.Area["support_mulit_site"].ToBoolean() || jc.User.IsInSite(jc.SiteId));
         }
 
-        private bool isSiteAdmin = true;
+        private bool isSiteAdmin = false;
 
         private List<IControlPanelItemRenderer> renderers = new List<IControlPanelItemRenderer>();
 
@@ -46,7 +49,7 @@ namespace Kiss.Web.Controls
         {
             if (!isSiteAdmin || renderers.Count == 0) { base.Render(writer); return; }
 
-            writer.Write("<div id='_g_sc' class='sc opened' path='{0}'><div class='scContent'><div class='controlPanel'><div class='plugins'>", JContext.Current.Site.VirtualPath);
+            writer.Write("<div id='_g_sc' class='sc opened' path='{0}'><div class='scContent'><div class='controlPanel'><div class='plugins'>", JContext.Current.Area.VirtualPath);
 
             foreach (var renderer in renderers)
             {

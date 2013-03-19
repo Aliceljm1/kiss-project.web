@@ -22,7 +22,7 @@ namespace Kiss.Web.UrlMapping
         {
             get
             {
-                string siteKey = JContext.Current.Site.AreaKey;
+                string siteKey = JContext.Current.Area.AreaKey;
                 if (_caches.ContainsKey(siteKey))
                     return _caches[siteKey];
 
@@ -382,7 +382,7 @@ namespace Kiss.Web.UrlMapping
 
         internal static string GetUrlRequested(string url)
         {
-            string virtualPath = JContext.Current.Site.VirtualPath;
+            string virtualPath = JContext.Current.Area.VirtualPath;
             string urlRequested = string.Empty;
             if (virtualPath != "/")
             {

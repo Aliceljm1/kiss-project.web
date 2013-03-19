@@ -50,8 +50,8 @@ namespace Kiss.Web
                 || context.Request.Url.AbsolutePath.IndexOf("_resc.aspx", StringComparison.InvariantCultureIgnoreCase) != -1)
                 return;
 
-            if (jc.Site != null)
-                context.Items["SITE_KEY"] = jc.Site.AreaKey;
+            if (jc.Area != null)
+                context.Items["SITE_KEY"] = jc.Area.AreaKey;
 
             if (!context.Response.IsRequestBeingRedirected)
                 context.Response.AddHeader("X-Powered-By", "TXTEK");

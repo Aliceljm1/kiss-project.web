@@ -107,6 +107,6 @@ namespace Kiss.Web.Controls
         }
 
         private IArea _site;
-        public IArea CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
+        public IArea CurrentSite { get { return _site ?? JContext.Current.Area; } set { _site = value; } }
     }
 }

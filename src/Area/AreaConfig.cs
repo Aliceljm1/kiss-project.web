@@ -1,13 +1,12 @@
 ﻿using Kiss.Config;
 using Kiss.Utils;
-using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Xml;
 
 namespace Kiss.Web
 {    
-    [ConfigNode("site", Desc = "站点")]
+    [ConfigNode("area", Desc = "组件")]
     public class AreaConfig : ConfigBase, IArea
     {
         public static AreaConfig Instance { get { return GetConfig<AreaConfig>(); } }
@@ -71,7 +70,7 @@ namespace Kiss.Web
         [ConfigProp("searchMetaDescription", ConfigPropAttribute.DataType.String, Desc = "meta description")]
         public string SearchMetaDescription { get; private set; }
 
-        [ConfigProp("siteKey", ConfigPropAttribute.DataType.String, DefaultValue = "default")]
+        [ConfigProp("key", ConfigPropAttribute.DataType.String, DefaultValue = "default")]
         public string AreaKey { get; set; }
 
         public string ErrorPage { get; private set; }
@@ -94,16 +93,6 @@ namespace Kiss.Web
         public string Authority
         {
             get { return string.Empty; }
-        }
-
-        public List<DictSchema> GetSchema(string type)
-        {
-            throw new NotSupportedException("single site doesn't support dict schema!");
-        }
-
-        public DictSchema GetSchema(string type, string name)
-        {
-            throw new NotSupportedException("single site doesn't support dict schema!");
         }
 
         private string _virtualPath;
@@ -132,7 +121,7 @@ namespace Kiss.Web
         {
             get
             {
-                string t = JContext.Current.Items["SiteConfig.Theme"] as string;
+                string t = JContext.Current.Items["AreaConfig.Theme"] as string;
 
                 if (string.IsNullOrEmpty(t))
                     t = DefaultTheme;
@@ -141,7 +130,7 @@ namespace Kiss.Web
             }
             set
             {
-                JContext.Current.Items["SiteConfig.Theme"] = value;
+                JContext.Current.Items["AreaConfig.Theme"] = value;
             }
         }
     }

@@ -110,7 +110,7 @@ namespace Kiss.Web.Query
             Qc qc = null;
 
             string qId = q.Id;
-            string sitekey = jc.Site.AreaKey;
+            string sitekey = jc.Area.AreaKey;
 
             if (qId == null)
                 qId = jc.Navigation.ToString();

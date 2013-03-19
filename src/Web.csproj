@@ -113,6 +113,7 @@
     <Compile Include="Optimization\minify\StyleMiniferStream.cs" />
     <Compile Include="Optimization\OptimizationInitializer.cs" />
     <Compile Include="Optimization\OptimizationModule.cs" />
+    <Compile Include="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="Query\DynamicQueryInitializer.cs" />
     <Compile Include="Query\DynamicQueryPlugin.cs" />
     <Compile Include="Mvc\ActionResult.cs" />
@@ -147,13 +148,10 @@
     <Compile Include="JContext.cs" />
     <Compile Include="NavigationInfo.cs" />
     <Compile Include="NavigationItem.cs" />
-    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Utility.cs" />
     <Compile Include="Resources\ResourceInitializer.cs" />
-    <Compile Include="AreaConfig.cs" />
+    <Compile Include="Area\AreaConfig.cs" />
     <Compile Include="UrlMapping\UrlAttribute.cs" />
     <Compile Include="UrlMapping\UrlMappingInitializer.cs" />
     <Compile Include="Utility.cs" />

@@ -88,7 +88,7 @@ namespace Kiss.Web.Controls
 
             Dictionary<int, NavigationItem> Items = UrlMappingModule.Instance.Provider.GetMenuItemsBySite(site);
 
-            string currentSiteKey = jc.Site.AreaKey;
+            string currentSiteKey = jc.Area.AreaKey;
 
             // set menu index of root site
             if (site.AreaKey != currentSiteKey)

@@ -16,7 +16,7 @@ namespace Kiss.Web.Controls
         const string ScriptKey = "__scripts__";
 
         private IArea _site;
-        public IArea CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
+        public IArea CurrentSite { get { return _site ?? JContext.Current.Area; } set { _site = value; } }
 
         /// <summary>
         /// 重载Control的Render方法

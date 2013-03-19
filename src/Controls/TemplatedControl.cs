@@ -31,7 +31,7 @@ namespace Kiss.Web.Controls
         JContext jc = JContext.Current;
 
         private IArea _site;
-        public IArea CurrentSite { get { return _site ?? JContext.Current.Site; } set { _site = value; } }
+        public IArea CurrentSite { get { return _site ?? JContext.Current.Area; } set { _site = value; } }
 
         #region props
 
@@ -237,7 +237,7 @@ namespace Kiss.Web.Controls
 
         private string GetSkinFolder(string theme, bool lang)
         {
-            CurrentSite = CurrentSite ?? jc.Site;
+            CurrentSite = CurrentSite ?? jc.Area;
 
             return string.Format(SkinFolderFormat,
                 StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),

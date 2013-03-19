@@ -27,7 +27,7 @@ namespace Kiss.Web.Controls
         public string ThemeMasterFile { get { return _themeMasterFile; } set { _themeMasterFile = value; } }
 
         private IArea _site;
-        public IArea CurrentSite { get { if (_site == null)_site = JContext.Current.Site; return _site; } set { _site = value; } }
+        public IArea CurrentSite { get { if (_site == null)_site = JContext.Current.Area; return _site; } set { _site = value; } }
 
         /// <summary>
         /// Folder which contains the master files
@@ -195,11 +195,11 @@ namespace Kiss.Web.Controls
                 lock (masterPage.Controls.SyncRoot)
                 {
                     JContext jc = JContext.Current;
-                    if (!string.Equals(jc.DefaultSite["mode"], "custom", StringComparison.InvariantCultureIgnoreCase))
+                    if (!string.Equals(jc.DefaultArea["mode"], "custom", StringComparison.InvariantCultureIgnoreCase))
                     {
                         masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Include() { Js = "lazyinclude", Css = "common" });
 
-                        masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new UIBase() { ThemeStyleUrl = jc.DefaultSite["jqueryui_theme"] });
+                        masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new UIBase() { ThemeStyleUrl = jc.DefaultArea["jqueryui_theme"] });
 
                         masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new ControlPanel());
                     }

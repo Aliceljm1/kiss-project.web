@@ -101,7 +101,7 @@ namespace Kiss.Web
 
             SetScriptRended(url);
 
-            Scripts.AddRes(url, !noCombine && JContext.Current.Site.CombineJs);
+            Scripts.AddRes(url, !noCombine && JContext.Current.Area.CombineJs);
         }
 
         public void RegisterJsBlock(HtmlTextWriter writer, string key, string script, bool addScriptTags)
@@ -121,7 +121,7 @@ namespace Kiss.Web
 
             if (addScriptTags)
             {
-                if (!noCombin && JContext.Current.Site.CombineJs)
+                if (!noCombin && JContext.Current.Area.CombineJs)
                 {
                     Scripts.AddBlock(script);
                     return;
@@ -145,7 +145,7 @@ namespace Kiss.Web
 
             SetScriptRended(url);
 
-            IArea site = JContext.Current.Site;
+            IArea site = JContext.Current.Area;
 
             if (!site.CombineCss)
             {
