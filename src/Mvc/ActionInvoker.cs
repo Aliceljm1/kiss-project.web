@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Kiss.Security;
+using Kiss.Utils;
+using Kiss.Web.Controls;
+using Kiss.Web.Utils;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Threading;
-using Kiss.Security;
-using Kiss.Utils;
-using Kiss.Web.Controls;
-using Kiss.Web.Utils;
 
 namespace Kiss.Web.Mvc
 {
@@ -15,7 +15,6 @@ namespace Kiss.Web.Mvc
     /// </summary>
     public class ActionInvoker : IActionInvoker
     {
-        private readonly SingleEntryGate _executeWasCalledGate = new SingleEntryGate();
         private Dictionary<Type, Dictionary<string, MethodInfo>> _mis = new Dictionary<Type, Dictionary<string, MethodInfo>>();
 
         public bool IsAsync(JContext jc)
@@ -204,54 +203,58 @@ namespace Kiss.Web.Mvc
         {
             Type t = jc.Controller.GetType();
 
-            Dictionary<string, MethodInfo> mis;
-
-            if (_mis.ContainsKey(t))
+            if (!_mis.ContainsKey(t))
             {
-                mis = _mis[t];
-            }
-            else
-            {
-                mis = new Dictionary<string, MethodInfo>();
-                _mis[t] = mis;
+                lock (_mis)
+                {
+                    if (!_mis.ContainsKey(t))
+                    {
+                        _mis[t] = new Dictionary<string, MethodInfo>();
+                    }
+                }
             }
 
-            MethodInfo mi = null;
+            Dictionary<string, MethodInfo> mis = _mis[t];
 
             string action = jc.Navigation.Action + ":" + jc.IsPost;
 
-            if (mis.ContainsKey(action))
-                mi = mis[action];
-            else
+            if (!mis.ContainsKey(action))
             {
-                List<MethodInfo> methods = new List<MethodInfo>(t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-                methods.Sort((x, y) =>
+                lock (mis)
                 {
-                    bool hasPostAttr = x.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
-                    bool hasPostAttr_2 = y.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
-
-                    return hasPostAttr_2.CompareTo(hasPostAttr);
-                });
-
-                foreach (MethodInfo m in methods)
-                {
-                    bool hasPostAttr = m.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
-                    bool hasGetAttr = m.GetCustomAttributes(typeof(HttpGetAttribute), false).Length == 1;
-                    bool hasAjaxAttr = m.GetCustomAttributes(typeof(Ajax.AjaxMethodAttribute), true).Length > 0;
-
-                    if (!m.ContainsGenericParameters &&
-                        m.Name.Equals(jc.Navigation.Action, StringComparison.InvariantCultureIgnoreCase) &&
-                         !hasAjaxAttr &&
-                        ((jc.IsPost && hasPostAttr) || (!jc.IsPost && hasGetAttr) || (!hasPostAttr && !hasGetAttr)))
+                    if (!mis.ContainsKey(action))
                     {
-                        mi = m;
-                        mis[action] = mi;
-                        break;
+                        List<MethodInfo> methods = new List<MethodInfo>(t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+                        methods.Sort((x, y) =>
+                        {
+                            bool hasPostAttr = x.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
+                            bool hasPostAttr_2 = y.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
+
+                            return hasPostAttr_2.CompareTo(hasPostAttr);
+                        });
+
+                        foreach (MethodInfo m in methods)
+                        {
+                            bool hasPostAttr = m.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
+                            bool hasGetAttr = m.GetCustomAttributes(typeof(HttpGetAttribute), false).Length == 1;
+                            bool hasAjaxAttr = m.GetCustomAttributes(typeof(Ajax.AjaxMethodAttribute), true).Length > 0;
+
+                            if (!m.ContainsGenericParameters &&
+                                m.Name.Equals(jc.Navigation.Action, StringComparison.InvariantCultureIgnoreCase) &&
+                                 !hasAjaxAttr &&
+                                ((jc.IsPost && hasPostAttr) || (!jc.IsPost && hasGetAttr) || (!hasPostAttr && !hasGetAttr)))
+                            {
+                                mis[action] = m;
+                                break;
+                            }
+
+                            mis[action] = null;
+                        }
                     }
-                    mis[action] = null;
                 }
             }
-            return mi;
+
+            return mis[action];
         }
     }
 }
