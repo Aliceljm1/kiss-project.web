@@ -10,8 +10,6 @@ namespace Kiss.Web
     /// </summary>
     public class KissHttpApplication : System.Web.HttpApplication
     {
-        private static bool deploying = false;
-
         protected void Application_Start(object sender, EventArgs e)
         {
             StopAppDomainRestart();

@@ -10,7 +10,5 @@
         /// </summary>
         /// <returns></returns>
         bool InvokeAction(JContext jc);
-
-        bool IsAsync(JContext jc);
     }
 }

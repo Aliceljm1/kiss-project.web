@@ -17,15 +17,6 @@ namespace Kiss.Web.Mvc
     {
         private Dictionary<Type, Dictionary<string, MethodInfo>> _mis = new Dictionary<Type, Dictionary<string, MethodInfo>>();
 
-        public bool IsAsync(JContext jc)
-        {
-            MethodInfo mi = getActionMethod(jc);
-            if (mi == null)
-                return false;
-
-            return mi.GetCustomAttributes(typeof(AsyncAttribute), true).Length > 0;
-        }
-
         public bool InvokeAction(JContext jc)
         {
             MethodInfo mi = getActionMethod(jc);

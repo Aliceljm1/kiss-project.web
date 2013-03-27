@@ -24,10 +24,7 @@ namespace Kiss.Web.Mvc
                 jc.Controller.jc = jc;
                 jc.ViewData["this"] = jc.Controller;
 
-                jc.IsAsync = invoker.IsAsync(jc);
-
-                if (!jc.IsAsync)
-                    invoker.InvokeAction(jc);
+                invoker.InvokeAction(jc);
             }
             catch (ThreadAbortException) { }// ignore this exception            
         }

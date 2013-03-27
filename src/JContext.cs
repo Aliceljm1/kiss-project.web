@@ -378,8 +378,6 @@ namespace Kiss.Web
         /// </summary>
         public bool IsAjaxRequest { get { if (_isAjaxRequest == null) _isAjaxRequest = Context.Request.Headers["X-Requested-With"] == "XMLHttpRequest"; return _isAjaxRequest.Value; } internal set { _isAjaxRequest = value; } }
 
-        public bool IsAsync { get; internal set; }
-
         private bool? _isEmbed;
 
         /// <summary>
