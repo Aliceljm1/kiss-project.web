@@ -5,7 +5,7 @@ using System.Web;
 using System.Xml;
 
 namespace Kiss.Web
-{    
+{
     [ConfigNode("area", Desc = "组件")]
     public class AreaConfig : ConfigBase, IArea
     {
@@ -121,7 +121,7 @@ namespace Kiss.Web
         {
             get
             {
-                string t = JContext.Current.Items["AreaConfig.Theme"] as string;
+                string t = JContext.Current.Items[AreaKey + "AreaConfig.Theme"] as string;
 
                 if (string.IsNullOrEmpty(t))
                     t = DefaultTheme;
@@ -130,7 +130,7 @@ namespace Kiss.Web
             }
             set
             {
-                JContext.Current.Items["AreaConfig.Theme"] = value;
+                JContext.Current.Items[AreaKey + "AreaConfig.Theme"] = value;
             }
         }
     }

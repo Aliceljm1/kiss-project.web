@@ -402,30 +402,38 @@ namespace Kiss.Web
             }
         }
 
+        private string _siteId = null;
         /// <summary>
         /// 站点Id，用于站点群
         /// </summary>
-        public string SiteId { get; set; }
+        public string SiteId
+        {
+            get { return _siteId; }
+            set
+            {
+                if (_siteId != value)
+                {
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        SiteConfig = null;
+                    }
+                    else
+                    {
+                        SiteConfig = ServiceLocator.Instance.Resolve<IUserService>().GetSiteBySiteId(value);
 
-        private Kiss.Security.ISite _siteConfig = null;
+                        if (SiteConfig != null)
+                            Area.Theme = SiteConfig[string.Concat(Area.AreaKey, "_theme")] ?? "default";
+                    }
+
+                    _siteId = value;
+                }
+            }
+        }
+
         /// <summary>
         /// 站点配置
         /// </summary>
-        public Kiss.Security.ISite SiteConfig
-        {
-            get
-            {
-                if (_siteConfig == null && !string.IsNullOrEmpty(SiteId))
-                {
-                    _siteConfig = ServiceLocator.Instance.Resolve<IUserService>().GetSiteBySiteId(SiteId);
-
-                    if (_siteConfig != null)
-                        Area.Theme = _siteConfig[string.Concat(Area.AreaKey, "_theme")] ?? "default";
-                }
-
-                return _siteConfig;
-            }
-        }
+        public Kiss.Security.ISite SiteConfig { get; private set; }
 
         #region Design
 

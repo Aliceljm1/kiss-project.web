@@ -473,7 +473,10 @@ namespace Kiss.Web.UrlMapping
                         // add to cache if urltemplate is paramless
                         if (!item.UrlTemplate.Contains("["))
                         {
-                            siteCache[urlRequested] = item;
+                            lock (siteCache)
+                            {
+                                siteCache[urlRequested] = item;
+                            }
                         }
 
                         // temp use

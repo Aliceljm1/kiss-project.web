@@ -311,20 +311,6 @@
     <EmbeddedResource Include="jQuery\swfobject.js" />
     <EmbeddedResource Include="jQuery\common.css" />
     <EmbeddedResource Include="jQuery\table.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.blind.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.bounce.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.clip.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.core.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.drop.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.explode.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.fade.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.fold.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.highlight.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.pulsate.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.scale.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.shake.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.slide.js" />
-    <EmbeddedResource Include="jQuery\UI\effects.transfer.js" />
     <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
     <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -379,7 +365,26 @@
   <ItemGroup>
     <EmbeddedResource Include="jQuery\hash.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\animated-overlay.gif" />
+    <EmbeddedResource Include="jQuery\UI\ui.tooltip.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.spinner.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-blind.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-bounce.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-clip.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-drop.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-explode.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-fade.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-fold.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-highlight.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-pulsate.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-scale.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-shake.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-slide.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect-transfer.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.effect.js" />
+    <EmbeddedResource Include="jQuery\UI\ui.menu.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
