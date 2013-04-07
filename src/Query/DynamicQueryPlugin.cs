@@ -139,7 +139,10 @@ namespace Kiss.Web.Query
                 qc = GetById(sitekey, qId);
 
             if (qc == null)
+            {
+                _logger.Warn("query:{0} not found!", q.Id);
                 return;
+            }
 
             if (qc.PageSize > -1 && q.PageSize == -1)
                 q.PageSize = qc.PageSize;

@@ -18,6 +18,9 @@ namespace Kiss.Web
         public IDictionary<string, object> Get(IEnumerable<string> keys)
         {
             Dictionary<string, object> di = new Dictionary<string, object>();
+
+            if (HttpContext.Current == null) return di;
+
             foreach (string key in keys)
             {
                 object obj = Get(key);
@@ -35,8 +38,10 @@ namespace Kiss.Web
         public object Get(string key)
         {
             HttpContext context = HttpContext.Current;
+            if (context == null) return null;
+
             if (context.Items.Contains(key))
-                return HttpContext.Current.Items[key];
+                return context.Items[key];
             return null;
         }
 
@@ -48,6 +53,8 @@ namespace Kiss.Web
         /// <param name="validFor">useless</param>
         public void Insert(string key, object obj, TimeSpan validFor)
         {
+            if (HttpContext.Current == null) return;
+
             HttpContext.Current.Items[key] = obj;
         }
 
@@ -57,6 +64,8 @@ namespace Kiss.Web
         /// <param name="key"></param>
         public void Remove(string key)
         {
+            if (HttpContext.Current == null) return;
+
             HttpContext.Current.Items.Remove(key);
         }
     }

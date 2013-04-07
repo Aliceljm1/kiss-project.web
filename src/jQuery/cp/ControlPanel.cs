@@ -13,7 +13,7 @@ namespace Kiss.Web.Controls
             if (jc.User == null) return;
 
             isSiteAdmin = jc.User.HasPermission("site.control_panel")
-                && (!jc.Area["support_mulit_site"].ToBoolean() || jc.User.IsInSite(jc.SiteId));
+                && (!jc.Area["support_multi_site"].ToBoolean() || jc.User.IsInSite(jc.SiteId));
         }
 
         private bool isSiteAdmin = false;
