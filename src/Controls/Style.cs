@@ -57,7 +57,7 @@ namespace Kiss.Web.Controls
             }
         }
 
-        private StyleRelativePosition _relativePosition = StyleRelativePosition.First;
+        private StyleRelativePosition _relativePosition = StyleRelativePosition.Unspecified;
         /// <summary>
         /// Property RelativePosition (StyleRelativePosition) 
         /// This is used when enqueue for rendering in the CS Head

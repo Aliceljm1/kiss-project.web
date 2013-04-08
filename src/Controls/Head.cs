@@ -304,7 +304,7 @@ namespace Kiss.Web.Controls
         /// </summary>
         public static void AddStyle(string url, string media, HttpContext context, bool enqueue)
         {
-            AddStyle(JContext.Current.Area, url, media, context, StyleRelativePosition.Unspecified, enqueue);
+            AddStyle(JContext.Current.Area, url, media, context, StyleRelativePosition.First, enqueue);
         }
 
         public static void AddStyle(IArea site, string url, string media, HttpContext context, StyleRelativePosition position, bool enqueue)
