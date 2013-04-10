@@ -1217,7 +1217,7 @@ function handleException(result) {
                 if (url && ix != -1) {
 
                     if (isEmbed)
-                        url = ulr.substr(ix + 1);
+                        url = url.substr(ix + 1);
                     else
                         url = url.substr(0, ix);
                 }
