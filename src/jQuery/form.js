@@ -1061,291 +1061,180 @@ function handleException(result) {
 
 (function ($) {
     $.fn.gform = function (opts) {
-        var $this = $(this);
-
         opts = $.extend(true, {}, $.fn.gform.defaults, opts);
 
-        var isEmbed = ($this.data('embed') == 'True');
+        $(this).each(function (i, v) {
+            var $this = $(v);
 
-        var bind = function () {
-            var f = $this;
-            $('select', f).addClass('ui-widget-content');
-            $(':text,:password,textarea', f).addClass('ui-widget-content ui-corner-all')
-				.bind('focus', function () { $(this).addClass('focus'); })
-				.bind('blur', function () { $(this).removeClass('focus'); })
-				.each(function () {
-				    if (!$(this).data('clearable')) return true;
-				    $(this).bind('focus', function () { $(this).next().hide(); })
-						.bind('blur', function () { if ($(this).val()) $(this).next().show(); })
-						.after('<a title="清空" href="#" class="close" style="display:none;">×</a>').parent().find('.close')
-						.bind('click', function () {
-						    var ele = $(this).prev();
-						    if (ele[0].nodeName == 'INPUT')
-						        ele.val('');
-						    else
-						        ele.text('');
+            var isEmbed = ($this.data('embed') == 'True');
 
-						    if (ele.data('clearcallback')) {
-						        var func = eval(ele.data('clearcallback'));
-						        if (func && jQuery.isFunction(func))
-						            func.apply(null, [ele]);
-						    }
+            var bind = function () {
+                var f = $this;
+                $('select', f).addClass('ui-widget-content');
+                $(':text,:password,textarea', f).addClass('ui-widget-content ui-corner-all')
+                    .bind('focus', function () { $(this).addClass('focus'); })
+                    .bind('blur', function () { $(this).removeClass('focus'); })
+                    .each(function () {
+                        if (!$(this).data('clearable')) return true;
+                        $(this).bind('focus', function () { $(this).next().hide(); })
+                            .bind('blur', function () { if ($(this).val()) $(this).next().show(); })
+                            .after('<a title="清空" href="#" class="close" style="display:none;">×</a>').parent().find('.close')
+                            .bind('click', function () {
+                                var ele = $(this).prev();
+                                if (ele[0].nodeName == 'INPUT')
+                                    ele.val('');
+                                else
+                                    ele.text('');
 
-						    $(this).hide();
+                                if (ele.data('clearcallback')) {
+                                    var func = eval(ele.data('clearcallback'));
+                                    if (func && jQuery.isFunction(func))
+                                        func.apply(null, [ele]);
+                                }
 
-						    return false;
-						});
+                                $(this).hide();
 
-				    $(this).trigger('blur');
-				});
+                                return false;
+                            });
 
-            // default value
-            $('select[selected]', f).each(function (i, v) {
-                var val = v.getAttribute('selected');
-                $.fn.gform.set_select_val($(v), $(v).attr('multiple') == 'multiple' ? val.split(',') : val, true);
-            });
-
-            window.setTimeout(function () {
-                $(':checkbox[selected],:radio[selected]', f).each(function (i, v) {
-                    var $o = $(v);
-                    $o.prop('checked', v.getAttribute('selected') == $o.val());
-                });
-
-                // focus first input
-                if (!opts.bindOnly && opts.focus_first_input) {
-                    var inputs = $(':text:enabled:visible,textarea:enabled:visible', f).filter(function () {
-                        return !$(this).attr('readonly') && $(this).parent(':hidden').size() == 0;
+                        $(this).trigger('blur');
                     });
-                    if (inputs.length > 0) {
-                        inputs[0].focus();
+
+                // default value
+                $('select[selected]', f).each(function (i, v) {
+                    var val = v.getAttribute('selected');
+                    $.fn.gform.set_select_val($(v), $(v).attr('multiple') == 'multiple' ? val.split(',') : val, true);
+                });
+
+                window.setTimeout(function () {
+                    $(':checkbox[selected],:radio[selected]', f).each(function (i, v) {
+                        var $o = $(v);
+                        $o.prop('checked', v.getAttribute('selected') == $o.val());
+                    });
+
+                    // focus first input
+                    if (!opts.bindOnly && opts.focus_first_input) {
+                        var inputs = $(':text:enabled:visible,textarea:enabled:visible', f).filter(function () {
+                            return !$(this).attr('readonly') && $(this).parent(':hidden').size() == 0;
+                        });
+                        if (inputs.length > 0) {
+                            inputs[0].focus();
+                        }
                     }
-                }
-            }, 100);
+                }, 100);
 
-            if (opts.enter_to_submit) {
-                $('input:enabled', f).bind('keypress', function (e) {
-                    if (e.keyCode == 13) f.submit();
-                });
-            }
-
-            if (opts.autoAddRedStar) {
-                var inputs = $('input:enabled,textarea:enabled', f).filter(function () {
-                    return $(this).attr('minlength') !== undefined && parseInt($(this).attr('minlength'), 10) > 0;
-                });
-                $.each(inputs, function (i, v) {
-                    var id = $(v).parents('label:first').find('.g1').prepend('<em>*</em>');
-                });
-            }
-
-            $(':text:enabled:visible,:password:enabled:visible,textarea:enabled:visible', f).filter(function () {
-                return !$(this).attr('readonly') && $(this).parent(':hidden').size() == 0;
-            }).placeholder();
-
-            $(':text:enabled,:password:enabled,textarea:enabled', f).filter(function () {
-                return !$(this).attr('readonly') && $(this).data('maxlength');
-            }).maxlength();
-        };
-
-        bind();
-
-        if (opts.bindOnly) return;
-
-        var beforeSubmit = function (formData, jqForm, options) {
-            if ($.fn.gform.working)
-                return false;
-
-            var valid = true;
-
-            try {
-                // clean up
-                var elems = $(':input', $this).removeClass('ui-state-error');
-                $.each(elems, function (i, v) {
-                    var ele = $(v);
-
-                    if (ele.parent(':hidden').size() > 0)
-                        return true;
-
-                    valid = checkLength(ele);
-                    if (valid) valid = checkValue(ele);
-                    if (valid) valid = checkClasses(ele);
-                    if (valid) valid = checkRegexp(ele);
-                    if (valid) valid = checkFunction(ele);
-
-                    if (!valid)
-                        return false;
-                });
-
-                if (valid && opts.submitFunc && $.isFunction(opts.submitFunc)) {
-                    var qs = $.param(formData);
-                    opts.submitFunc.apply(jqForm, [qs]);
-                    return false;
+                if (opts.enter_to_submit) {
+                    $('input:enabled', f).bind('keypress', function (e) {
+                        if (e.keyCode == 13) f.submit();
+                    });
                 }
 
-                return valid;
-            }
-            catch (e) {
-                $.fn.gform.working = false;
-                alert(e.message || '出错了!');
-                return false;
+                if (opts.autoAddRedStar) {
+                    var inputs = $('input:enabled,textarea:enabled', f).filter(function () {
+                        return $(this).attr('minlength') !== undefined && parseInt($(this).attr('minlength'), 10) > 0;
+                    });
+                    $.each(inputs, function (i, v) {
+                        var id = $(v).parents('label:first').find('.g1').prepend('<em>*</em>');
+                    });
+                }
+
+                $(':text:enabled:visible,:password:enabled:visible,textarea:enabled:visible', f).filter(function () {
+                    return !$(this).attr('readonly') && $(this).parent(':hidden').size() == 0;
+                }).placeholder();
+
+                $(':text:enabled,:password:enabled,textarea:enabled', f).filter(function () {
+                    return !$(this).attr('readonly') && $(this).data('maxlength');
+                }).maxlength();
             };
-        };
 
-        var updateTips = function (t) {
-            if (t) window.alert(t);
-        };
+            bind();
 
-        var onSuccess = function (data, status) {
-            $.fn.gform.working = false;
+            if (opts.bindOnly) return;
 
-            var r;
-            try {
-                r = jQuery.parseJSON(data);
-            } catch (e) {
-                r = data;
-            }
-            if (r != null && r.__AjaxException) {
-                r = handleException(r);
-            }
-            if (r != undefined && opts.onSuccess && $.isFunction(opts.onSuccess)) {
-                opts.onSuccess.apply($this, [r, status]);
-            }
-        };
-
-        var _getTitle = function (ele) {
-            var title = ele.attr('key');
-            if (!title)
-                title = ele.parents('label:first').find('.g1').text();
-            if (!title)
-                title = ele.prev().text();
-            return $.trim(title).replace(':', '').replace('：', '').replace('*', '');
-        };
-        var checkLength = function (ele) {
-            var minlen = parseInt(ele.attr('minlength'), 10);
-            if (!isNaN(minlen) && minlen > -1) {
-                var value = $.trim(ele.val().toString());
-                if (value == '' || ele.val().toString() === ele.attr('title')) {
-                    ele.addClass('ui-state-error').focus();
-                    updateTips(_getTitle(ele) + "不能为空!");
+            var beforeSubmit = function (formData, jqForm, options) {
+                if ($.fn.gform.working)
                     return false;
-                }
-                else if (value.length < minlen) {
-                    ele.addClass('ui-state-error').focus();
-                    updateTips(_getTitle(ele) + "的长度必须大于或等于" + minlen);
-                    return false;
-                }
-            }
 
-            var maxlen = parseInt(ele.attr('maxlength'), 10);
-            if (!isNaN(maxlen) && maxlen > -1) {
-                var value = $.trim(ele.val().toString());
-                if (value.length > maxlen) {
-                    ele.addClass('ui-state-error').focus();
-                    updateTips(_getTitle(ele) + "的长度不能超过" + maxlen);
-                    return false;
-                }
-            }
+                var valid = true;
 
-            return true;
-        };
-        var checkValue = function (ele) {
-            if (ele.val() == null || $.trim(ele.val().toString()) == '') return true;
-            var min = parseFloat(ele.attr('min'));
-            var max = parseFloat(ele.attr('max'));
-            if (!isNaN(min) || !isNaN(max)) {
-                var fv = parseFloat(ele.val().toString());
-                if (isNaN(fv)) {
-                    ele.addClass('ui-state-error').focus();
-                    updateTips(_getTitle(ele) + '必须是一个数字！');
-                    return false;
-                }
-                else {
-                    if (fv < min) {
-                        ele.addClass('ui-state-error').focus();
-                        updateTips(_getTitle(ele) + '必须大于等于' + min + '！');
-                        return false;
-                    } else if (fv > max) {
-                        ele.addClass('ui-state-error').focus();
-                        updateTips(_getTitle(ele) + '必须小于等于' + max + '！');
+                try {
+                    // clean up
+                    var elems = $(':input', $this).removeClass('ui-state-error');
+                    $.each(elems, function (i, v) {
+                        var ele = $(v);
+
+                        if (ele.parent(':hidden').size() > 0)
+                            return true;
+
+                        valid = $.fn.gform.checkLength(ele);
+                        if (valid) valid = $.fn.gform.checkValue(ele);
+                        if (valid) valid = $.fn.gform.checkClasses(ele);
+                        if (valid) valid = $.fn.gform.checkRegexp(ele);
+                        if (valid) valid = $.fn.gform.checkFunction(ele);
+
+                        if (!valid)
+                            return false;
+                    });
+
+                    if (valid && opts.submitFunc && $.isFunction(opts.submitFunc)) {
+                        var qs = $.param(formData);
+                        opts.submitFunc.apply(jqForm, [qs]);
                         return false;
                     }
-                }
-                return true;
-            }
 
-            return true;
-        };
-        var checkRegexp = function (o) {
-            if (o.val() == null || $.trim(o.val().toString()) == '') return true;
-            var reg = o.attr('reg');
-            if (!reg)
-                return true;
-            reg = eval(reg);
-            if (!(reg.test($.trim(o.val().toString())))) {
-                o.addClass('ui-state-error').focus();
-                updateTips(_getTitle(o) + '的格式不正确!');
-                return false;
-            }
-            return true;
-        };
-        var checkClasses = function (o) {
-            if (o.val() == null || $.trim(o.val().toString()) == '') return true;
-            var reg = null;
-            var cls = o.attr('class');
-            if (!cls) return true;
-            $.each(cls.split(' '), function (i, v) {
-                if (!v) return true;
-                var r = $.fn.gform.commonregs[v];
-                if (r == undefined) return true;
-                reg = r;
-                return false;
-            });
-            if (!reg) return true;
-            if (!(reg.test($.trim(o.val().toString())))) {
-                o.addClass('ui-state-error').focus();
-                updateTips(_getTitle(o) + '的格式不正确!');
-                return false;
-            }
-            return true;
-        };
-        var checkFunction = function (ele) {
-            var func = ele.attr('func');
-            if (!func)
-                return true;
-            func = eval(func);
-            if ($.isFunction(func)) {
-                var ret = func.apply(ele, [$.trim(ele.val().toString())]);
-                if (!ret || !ret.ok) {
+                    return valid;
+                }
+                catch (e) {
+                    $.fn.gform.working = false;
+                    alert(e.message || '出错了!');
                     return false;
+                };
+            };
+
+            var onSuccess = function (data, status) {
+                $.fn.gform.working = false;
+
+                var r;
+                try {
+                    r = jQuery.parseJSON(data);
+                } catch (e) {
+                    r = data;
                 }
+                if (r != null && r.__AjaxException) {
+                    r = handleException(r);
+                }
+                if (r != undefined && opts.onSuccess && $.isFunction(opts.onSuccess)) {
+                    opts.onSuccess.apply($this, [r, status]);
+                }
+            };
+
+            if (opts.ajax) {
+                var url = opts.url;
+                if (!url)
+                    url = $this.attr('action') || window.location.toString();
+
+                var ix = url.indexOf('#');
+                if (url && ix != -1) {
+
+                    if (isEmbed)
+                        url = ulr.substr(ix + 1);
+                    else
+                        url = url.substr(0, ix);
+                }
+                if (opts.submitFunc == null && !url) {
+                    alert('表单提交的url不能为空'); return;
+                }
+                $this.ajaxForm({
+                    beforeSubmit: beforeSubmit,
+                    success: onSuccess,
+                    url: url
+                });
+            } else {
+                $this.submit(beforeSubmit);
             }
-            return true;
-        };
+        });
 
-        if (opts.ajax) {
-            if (!opts.url)
-                opts.url = $this.attr('action') || window.location.toString();
-
-            var ix = opts.url.indexOf('#');
-            if (opts.url && ix != -1) {
-
-                if (isEmbed)
-                    opts.url = opts.url.substr(ix + 1);
-                else
-                    opts.url = opts.url.substr(0, ix);
-            }
-            if (opts.submitFunc == null && !opts.url) {
-                alert('url不能为空'); return;
-            }
-            $this.ajaxForm({
-                beforeSubmit: beforeSubmit,
-                success: onSuccess,
-                url: opts.url
-            });
-        } else {
-            $this.submit(beforeSubmit);
-        }
-
-        return $this;
+        return $(this);
     };
 
     $.fn.gform.working = false;
@@ -1359,6 +1248,125 @@ function handleException(result) {
         autoAddRedStar: true,
         focus_first_input: false,
         enter_to_submit: false
+    };
+
+    $.fn.gform.updateTips = function (t) {
+        if (t) window.alert(t);
+    };
+
+    $.fn.gform._getTitle = function (ele) {
+        var title = ele.attr('key');
+        if (!title)
+            title = ele.parents('label:first').find('.g1').text();
+        if (!title)
+            title = ele.prev().text();
+        return $.trim(title).replace(':', '').replace('：', '').replace('*', '');
+    };
+
+    $.fn.gform.checkLength = function (ele) {
+        var minlen = parseInt(ele.attr('minlength'), 10);
+        if (!isNaN(minlen) && minlen > -1) {
+            var value = $.trim(ele.val().toString());
+            if (value == '' || ele.val().toString() === ele.attr('title')) {
+                ele.addClass('ui-state-error').focus();
+                $.fn.gform.updateTips($.fn.gform._getTitle(ele) + "不能为空!");
+                return false;
+            }
+            else if (value.length < minlen) {
+                ele.addClass('ui-state-error').focus();
+                $.fn.gform.updateTips($.fn.gform._getTitle(ele) + "的长度必须大于或等于" + minlen);
+                return false;
+            }
+        }
+
+        var maxlen = parseInt(ele.attr('maxlength'), 10);
+        if (!isNaN(maxlen) && maxlen > -1) {
+            var value = $.trim(ele.val().toString());
+            if (value.length > maxlen) {
+                ele.addClass('ui-state-error').focus();
+                $.fn.gform.updateTips($.fn.gform._getTitle(ele) + "的长度不能超过" + maxlen);
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    $.fn.gform.checkValue = function (ele) {
+        if (ele.val() == null || $.trim(ele.val().toString()) == '') return true;
+        var min = parseFloat(ele.attr('min'));
+        var max = parseFloat(ele.attr('max'));
+        if (!isNaN(min) || !isNaN(max)) {
+            var fv = parseFloat(ele.val().toString());
+            if (isNaN(fv)) {
+                ele.addClass('ui-state-error').focus();
+                $.fn.gform.updateTips($.fn.gform._getTitle(ele) + '必须是一个数字！');
+                return false;
+            }
+            else {
+                if (fv < min) {
+                    ele.addClass('ui-state-error').focus();
+                    $.fn.gform.updateTips($.fn.gform._getTitle(ele) + '必须大于等于' + min + '！');
+                    return false;
+                } else if (fv > max) {
+                    ele.addClass('ui-state-error').focus();
+                    $.fn.gform.updateTips($.fn.gform._getTitle(ele) + '必须小于等于' + max + '！');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return true;
+    };
+
+    $.fn.gform.checkRegexp = function (o) {
+        if (o.val() == null || $.trim(o.val().toString()) == '') return true;
+        var reg = o.attr('reg');
+        if (!reg)
+            return true;
+        reg = eval(reg);
+        if (!(reg.test($.trim(o.val().toString())))) {
+            o.addClass('ui-state-error').focus();
+            $.fn.gform.updateTips($.fn.gform._getTitle(o) + '的格式不正确!');
+            return false;
+        }
+        return true;
+    };
+
+    $.fn.gform.checkClasses = function (o) {
+        if (o.val() == null || $.trim(o.val().toString()) == '') return true;
+        var reg = null;
+        var cls = o.attr('class');
+        if (!cls) return true;
+        $.each(cls.split(' '), function (i, v) {
+            if (!v) return true;
+            var r = $.fn.gform.commonregs[v];
+            if (r == undefined) return true;
+            reg = r;
+            return false;
+        });
+        if (!reg) return true;
+        if (!(reg.test($.trim(o.val().toString())))) {
+            o.addClass('ui-state-error').focus();
+            $.fn.gform.updateTips($.fn.gform._getTitle(o) + '的格式不正确!');
+            return false;
+        }
+        return true;
+    };
+
+    $.fn.gform.checkFunction = function (ele) {
+        var func = ele.attr('func');
+        if (!func)
+            return true;
+        func = eval(func);
+        if ($.isFunction(func)) {
+            var ret = func.apply(ele, [$.trim(ele.val().toString())]);
+            if (!ret || !ret.ok) {
+                return false;
+            }
+        }
+        return true;
     };
 
     $.fn.gform.set_select_val = function (select, value, triggerChange) {
