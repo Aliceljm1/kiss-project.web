@@ -186,7 +186,7 @@ new function (settings) {
                 var i = 0, queryString = [], chunks = [], self = this;
                 var encode = function (str) {
                     str = str + "";
-                    if ($spaces) str = str.replace(/ /g, "+");
+                    //if ($spaces) str = str.replace(/ /g, "+");
                     return encodeURIComponent(str);
                 };
                 var addFields = function (arr, key, value) {
@@ -221,4 +221,4 @@ new function (settings) {
 
         return new queryObject(location.search, location.hash);
     };
-} (jQuery.query || {});
+}(jQuery.query || {});
