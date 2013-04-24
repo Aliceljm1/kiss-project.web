@@ -578,6 +578,8 @@ namespace Kiss.Web
                 url = url.Replace("[" + key + "]", nv[key]);
             }
 
+            url = url.Replace("//", "/");
+
             return url;
         }
 
@@ -621,6 +623,8 @@ namespace Kiss.Web
                 {
                     urltemplate = urltemplate.Replace("[" + key + "]", nv[key]);
                 }
+
+                urltemplate = urltemplate.Replace("//", "/");
             }
 
             return urltemplate;
