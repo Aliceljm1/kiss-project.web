@@ -64,11 +64,11 @@ namespace Kiss.Web.Resources
             {
                 case ".css":
                     url = Web.Utility.FormatCssUrl(site, "_res.aspx?r=");
-                    version = site.CssVersion;
+                    version = AreaConfig.Instance.CssVersion;
                     break;
                 case ".js":
                     url = Web.Utility.FormatJsUrl(site, "_res.aspx?r=");
-                    version = site.JsVersion;
+                    version = AreaConfig.Instance.JsVersion;
                     break;
                 default:
                     url = StringUtil.CombinUrl(site.VirtualPath, "_res.aspx?r=");

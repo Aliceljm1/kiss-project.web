@@ -150,9 +150,9 @@ namespace Kiss.Web
             if (!site.CombineCss)
             {
                 if (url.Contains("?"))
-                    url += ("&v=" + site.CssVersion);
+                    url += ("&v=" + AreaConfig.Instance.CssVersion);
                 else
-                    url += ("?v=" + site.CssVersion);
+                    url += ("?v=" + AreaConfig.Instance.CssVersion);
             }
 
             Head.AddStyle(url);

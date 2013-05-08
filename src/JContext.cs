@@ -813,11 +813,11 @@ namespace Kiss.Web
                     if (is_css && Area.CombineCss)
                         url = Utility.FormatCssUrl(Area, string.Format("_resc.aspx?f={0}&t=text/css&v={1}",
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
-                                                                Area.CssVersion));
+                                                                AreaConfig.Instance.CssVersion));
                     else if (!is_css)
                         url = Utility.FormatJsUrl(Kiss.Web.AreaConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
-                                                            Area.JsVersion));
+                                                            AreaConfig.Instance.CssVersion));
                     else
                         continue;
                 }

@@ -102,9 +102,9 @@ namespace Kiss.Web.Controls
                 if (!CurrentSite.CombineCss)
                 {
                     if (href.Contains("?"))
-                        href += ("&v=" + CurrentSite.CssVersion);
+                        href += ("&v=" + AreaConfig.Instance.CssVersion);
                     else
-                        href += ("?v=" + CurrentSite.CssVersion);
+                        href += ("?v=" + AreaConfig.Instance.CssVersion);
                 }
 
                 Head.AddStyle(CurrentSite,
