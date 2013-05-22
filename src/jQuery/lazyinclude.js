@@ -2,6 +2,37 @@
 *JS文件动态加载工具
 */
 var LazyInclude = {
+    scripts: [],
+    loadScript: function (url, callback) {
+        var script = this.scripts[url] || (this.scripts[url] = {
+            loaded: false,
+            callbacks: []
+        });
+
+        if (script.loaded) {
+            return callback.apply();
+        }
+
+        script.callbacks.push({
+            fn: callback
+        });
+
+        if (script.callbacks.length == 1) {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: 'script',
+                cache: true,
+                success: function () {
+                    script.loaded = true;
+                    $.each(script.callbacks, function () {
+                        this.fn.apply();
+                    });
+                    script.callbacks.length = 0;
+                }
+            });
+        }
+    },
     call: (function () {
         function hasFile(tag, url) {
             var contains = false;
@@ -34,40 +65,23 @@ var LazyInclude = {
         }
 
         function loadScript(files) {
-            var urls = files && typeof (files) == "string" ? [files] : files;
 
-            $.ajaxSetup({ cache: true });
-
-            for (var i = 0; i < urls.length; i++) {
-                if (!hasFile("script", urls[i].url)) {
-                    var oScript = document.createElement('script');
-                    oScript.type = 'text/javascript';
-                    oScript.src = urls[i].url;
-
-                    // store callback function
-                    oScript.tmp = urls[i].cb;
-                    oScript.onload = oScript.onreadystatechange = function () {
-                        if (!this.readyState || /loaded|complete/.test(this.readyState)) {
-                            this.tmp();
-
-                            this.onload = this.onreadystatechange = this.tmp = null;
-                        }
-                    }
-
-                    document.getElementsByTagName('head')[0].appendChild(oScript);
-                }
-                else {
-                    urls[i].cb();
-                }
+            if (!$.isArray(files)) {
+                return LazyInclude.loadScript(files.url, files.cb);
             }
 
-            $.ajaxSetup({ cache: false });
+            var counter = 0;
+
+            // parallel loading
+            return $.each(files, function (i, v) {
+                LazyInclude.loadScript(v.url, v.cb);
+            });
         }
 
         function includeFile(opts) {
             //首先加载css
             loadCssFile(opts.cssFiles);
-            //加载js                                 
+            //加载js                 
             loadScript(opts.jsFiles);
         }
         return { include: includeFile };
