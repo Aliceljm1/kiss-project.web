@@ -85,69 +85,79 @@ namespace Kiss.Web
 
         protected void app_BeginRequest(object sender, EventArgs e)
         {
-            if (BeginRequest != null)
+            if (BeginRequest != null && !IsStaticResource(sender))
                 BeginRequest(sender, e);
         }
 
         void app_AuthenticateRequest(object sender, EventArgs e)
         {
-            if (AuthenticateRequest != null)
+            if (AuthenticateRequest != null && !IsStaticResource(sender))
                 AuthenticateRequest(sender, e);
         }
 
 
         protected void app_AuthorizeRequest(object sender, EventArgs e)
         {
-            if (AuthorizeRequest != null)
+            if (AuthorizeRequest != null && !IsStaticResource(sender))
                 AuthorizeRequest(sender, e);
         }
 
         void app_PostMapRequestHandler(object sender, EventArgs e)
         {
-            if (PostMapRequestHandler != null)
+            if (PostMapRequestHandler != null && !IsStaticResource(sender))
                 PostMapRequestHandler(sender, e);
         }
 
         protected void app_AcquireRequestState(object sender, EventArgs e)
         {
-            if (AcquireRequestState != null)
+            if (AcquireRequestState != null && !IsStaticResource(sender))
                 AcquireRequestState(sender, e);
         }
 
         void app_PostAcquireRequestStateHandler(object sender, EventArgs e)
         {
-            if (PostAcquireRequestState != null)
+            if (PostAcquireRequestState != null && !IsStaticResource(sender))
                 PostAcquireRequestState(sender, e);
         }
 
         void app_PreRequestHandlerExecute(object sender, EventArgs e)
         {
-            if (PreRequestHandlerExecute != null)
+            if (PreRequestHandlerExecute != null && !IsStaticResource(sender))
                 PreRequestHandlerExecute(sender, e);
         }
 
         protected void app_Error(object sender, EventArgs e)
         {
-            if (Error != null)
+            if (Error != null && !IsStaticResource(sender))
                 Error(sender, e);
         }
 
         protected void app_ReleaseRequestState(object sender, EventArgs e)
         {
-            if (ReleaseRequestState != null)
+            if (ReleaseRequestState != null && !IsStaticResource(sender))
                 ReleaseRequestState(sender, e);
         }
 
         protected void app_PreSendRequestHeaders(object sender, EventArgs e)
         {
-            if (PreSendRequestHeaders != null)
+            if (PreSendRequestHeaders != null && !IsStaticResource(sender))
                 PreSendRequestHeaders(sender, e);
         }
 
         protected void app_EndRequest(object sender, EventArgs e)
         {
-            if (EndRequest != null)
+            if (EndRequest != null && !IsStaticResource(sender))
                 EndRequest(sender, e);
+        }
+
+        protected static bool IsStaticResource(object sender)
+        {
+            HttpApplication application = sender as HttpApplication;
+            if (application != null)
+            {
+                return IsStaticResource(application.Request);
+            }
+            return false;
         }
 
         /// <summary>
@@ -170,24 +180,18 @@ namespace Kiss.Web
             {
                 string extension = VirtualPathUtility.GetExtension(request.Path);
 
-                if (extension == null) return false;
+                if (string.IsNullOrEmpty(extension)) return false;
 
-                switch (extension.ToLower())
-                {
-                    case ".css":
-                    case ".gif":
-                    case ".bmp":
-                    case ".png":
-                    case ".jpg":
-                    case ".jpeg":
-                    case ".js":
-                    case ".ico":
-                    case ".swf":
-                        return true;
-                }
+                extension = extension.ToLower();
+
+                if (extension == ".aspx") return false;
+
+                string allowExtensions = AreaConfig.Instance["allowExtensions"];
+                if (!string.IsNullOrEmpty(allowExtensions) && allowExtensions.Contains(extension))
+                    return false;
             }
 
-            return false;
+            return true;
         }
     }
 }
