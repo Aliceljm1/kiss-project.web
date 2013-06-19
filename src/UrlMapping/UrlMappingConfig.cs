@@ -40,13 +40,7 @@ namespace Kiss.Web.UrlMapping
 
         [ConfigProp("incomingQueryStringBehavior", DefaultValue = "PassThrough", Options = "PassThrough,Ingore,Include")]
         public string IncomingQueryStringBehaviorStr { get; protected set; }
-        public IncomingQueryStringBehavior IncomingQueryStringBehavior { get; private set; }
-
-        [ConfigProp("ignoreExtensions", DefaultValue = ".css .jpg .jpeg .gif .png .axd .htm .html .js .xml .swf .gallery .icon .ico .flv .zip .rar .txt")]
-        public string IgnoreExtensions { get; protected set; }
-
-        [ConfigProp("allowExtensions")]
-        public string AllowExtensions { get; protected set; }
+        public IncomingQueryStringBehavior IncomingQueryStringBehavior { get; private set; }        
 
         [ConfigProp("urlProcessingEvent", DefaultValue = "AuthorizeRequest", Options = "BeginRequest,AuthenticateRequest,AuthorizeRequest")]
         public string UrlProcessingEventStr { get; protected set; }

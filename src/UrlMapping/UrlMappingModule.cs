@@ -51,8 +51,6 @@ namespace Kiss.Web.UrlMapping
         private string _noMatchRedirectPage;
         private bool _automaticallyUpdateFormAction;
         private IncomingQueryStringBehavior _qsBehavior;
-        private List<string> _ignoreExtensions;
-        private List<string> _allowExtensions;
         private UrlProcessingEvent _processingEvent;
 
         readonly EventBroker broker;
@@ -166,13 +164,10 @@ namespace Kiss.Web.UrlMapping
         void ProcessUrl(object sender, EventArgs e)
         {
             HttpApplication app = (sender as HttpApplication);
-            if (app == null || !CheckExtension(app.Request.Path))
+            if (app == null)
                 return;
 
             string urlRequested = GetUrlRequested(app.Request);
-
-            if (!CheckExtension(urlRequested))
-                return;
 
             // inspect the request and perform redirection as necessary
             // start by getting the mapping items from the provider
@@ -297,18 +292,6 @@ namespace Kiss.Web.UrlMapping
             _qsBehavior = config.IncomingQueryStringBehavior;
             _processingEvent = config.UrlProcessingEvent;
 
-            _ignoreExtensions = new List<string>(config.IgnoreExtensions.Split(new char[] { ' ', ';', ',' }, StringSplitOptions.RemoveEmptyEntries));
-            for (int i = 0; i < _ignoreExtensions.Count; i++)
-            {
-                _ignoreExtensions[i] = _ignoreExtensions[i].Trim().ToLower();
-            }
-
-            _allowExtensions = new List<string>(config.AllowExtensions.Split(new char[] { ' ', ';', ',' }, StringSplitOptions.RemoveEmptyEntries));
-            for (int i = 0; i < _allowExtensions.Count; i++)
-            {
-                _allowExtensions[i] = _allowExtensions[i].Trim().ToLower();
-            }
-
             if (_provider != null)
             {
                 _provider.Initialize(config);
@@ -399,20 +382,6 @@ namespace Kiss.Web.UrlMapping
                 urlRequested += "default.aspx";
 
             return HttpUtility.UrlDecode(urlRequested.Trim('/'));
-        }
-
-        private bool CheckExtension(string url)
-        {
-            // should the module ignore this request, based on the extension?
-            string extension = StringUtil.GetExtension(url.ToLower());
-
-            if (StringUtil.IsNullOrEmpty(extension))
-                return true;
-
-            if (_allowExtensions.Count > 0)
-                return _allowExtensions.Contains(extension);
-            else
-                return !_ignoreExtensions.Contains(extension);
         }
 
         internal static void SetViewData()
