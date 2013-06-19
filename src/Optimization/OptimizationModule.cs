@@ -53,7 +53,7 @@ namespace Kiss.Web.Optimization
 
             contentType = contentType.ToLowerInvariant();
 
-            if (app.Context.AllErrors != null || !VALID_CONTENTTYPES.Contains(contentType))
+            if (app.Context.AllErrors != null || !VALID_CONTENTTYPES.Contains(contentType) || app.Context.Response.IsRequestBeingRedirected)
                 return;
 
             // only do this if we havn't already attempted an install.  This prevents PreSendRequestHeaders from

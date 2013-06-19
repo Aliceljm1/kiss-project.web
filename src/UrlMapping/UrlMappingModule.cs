@@ -386,7 +386,9 @@ namespace Kiss.Web.UrlMapping
             string urlRequested = string.Empty;
             if (virtualPath != "/")
             {
-                urlRequested = url.ToLower().Substring(virtualPath.Length);
+                if (url.Length >= virtualPath.Length)
+                    urlRequested = url.ToLower().Substring(virtualPath.Length);
+
                 if (string.IsNullOrEmpty(urlRequested))
                     urlRequested = "default.aspx";
             }
