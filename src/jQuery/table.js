@@ -59,7 +59,7 @@
 
         // click to select
         if (settings.clickToSelect) {
-            $('tbody tr', this).filter(':has(:checkbox:checked)').addClass('selected').end().click(function (event) {
+            $('tbody tr', this).filter('td:first-child :has(:checkbox:checked)').addClass('selected').end().click(function (event) {
                 if (event.target.type == 'checkbox')
                     $(this).toggleClass('selected');
                 else if (event.target.tagName == 'TD') {
