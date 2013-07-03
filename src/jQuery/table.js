@@ -277,7 +277,7 @@
             var form = t.parents('form:first');
             if (form.length == 1) {
                 if ($('tbody tr', t).length == len) {
-                    $('input[name=page]').val(Math.max(1, parseInt($('.pagination .current').text().trim(), 10) - 1));
+                    $('input[name=page]').val(Math.max(1, parseInt($.trim($('.pagination .current').text()), 10) - 1));
                 }
 
                 jQuery.fn.gform.working = false;

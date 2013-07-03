@@ -1071,7 +1071,8 @@ function handleException(result) {
             var bind = function () {
                 var f = $this;
                 $('select', f).addClass('ui-widget-content');
-                $(':text,:password,textarea', f).addClass('ui-widget-content ui-corner-all')
+                $(':text,:password,textarea', f)
+                    .addClass('ui-widget-content ui-corner-all')
                     .bind('focus', function () { $(this).addClass('focus'); })
                     .bind('blur', function () { $(this).removeClass('focus'); })
                     .each(function () {
