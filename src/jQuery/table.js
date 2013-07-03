@@ -265,7 +265,8 @@
 
     $.fn.getSelectedRowIds = function () {
         var ids = [];
-        $.each($("tbody :checkbox[checked]", this), function (i, v) {
+
+        $.each($("tbody tr td:first-child :checkbox[checked]", this), function (i, v) {
             ids.push(encodeURIComponent($(this).parents('tr:first').attr('id')));
         });
         return ids;
@@ -428,7 +429,7 @@ jQuery.fn.sortElements = (function () {
                     var form = $this.parents('form:first');
                     if (form.length == 0) return false;
 
-                    $('.pagination a', form).click(function () {                       
+                    $('.pagination a', form).click(function () {
                         var p = 1;
                         var ts = $(this);
                         var _form = ts.parents('form:first');

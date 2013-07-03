@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web;
 using Kiss.Plugin;
 using Kiss.Utils;
+using Kiss.Config;
 
 namespace Kiss.Web
 {
@@ -143,6 +144,11 @@ namespace Kiss.Web
         public int toInt(string str)
         {
             return str.ToInt();
+        }
+
+        public ConfigBase getconfig(string sectionName)
+        {
+            return ConfigBase.GetConfig(sectionName);
         }
     }
 }
