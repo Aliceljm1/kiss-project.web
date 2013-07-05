@@ -7,15 +7,6 @@ namespace Kiss.Web.Controls
 {
     public class ControlPanel : Control
     {
-        public ControlPanel()
-        {
-            JContext jc = JContext.Current;
-            if (jc.User == null) return;
-
-            isSiteAdmin = jc.User.HasPermission(string.Format("site.control_panel@{0}",
-                jc.Area["support_multi_site"].ToBoolean() ? jc.SiteId : string.Empty));
-        }
-
         private bool isSiteAdmin = false;
 
         private List<IControlPanelItemRenderer> renderers = new List<IControlPanelItemRenderer>();
@@ -23,6 +14,12 @@ namespace Kiss.Web.Controls
         protected override void CreateChildControls()
         {
             base.CreateChildControls();
+
+            JContext jc = JContext.Current;
+            if (jc.User == null) return;
+
+            isSiteAdmin = jc.User.HasPermission(string.Format("site.control_panel@{0}",
+                jc.Area["support_multi_site"].ToBoolean() ? jc.SiteId : string.Empty));
 
             if (!isSiteAdmin) return;
 
