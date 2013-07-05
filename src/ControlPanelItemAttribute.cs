@@ -1,8 +1,8 @@
-﻿using System;
-using System.Web.UI;
-using Kiss.Plugin;
+﻿using Kiss.Plugin;
 using Kiss.Security;
 using Kiss.Utils;
+using System;
+using System.Web.UI;
 
 namespace Kiss.Web
 {
@@ -11,8 +11,18 @@ namespace Kiss.Web
     {
         public override bool IsAuthorized(Principal user)
         {
-            if (user != null && StringUtil.HasText(Permission))
-                return user.HasPermission(Permission);
+            JContext jc = JContext.Current;
+            IArea area = jc.Area;
+
+            string per = Permission;
+
+            if (area["support_multi_site"].ToBoolean())
+            {
+                per = string.Format("{0}@{1}", per, jc.SiteId);
+            }
+
+            if (user != null && StringUtil.HasText(per))
+                return user.HasPermission(per);
 
             return true;
         }

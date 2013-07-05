@@ -12,15 +12,8 @@ namespace Kiss.Web.Controls
             JContext jc = JContext.Current;
             if (jc.User == null) return;
 
-            if (jc.Area["support_multi_site"].ToBoolean())
-            {
-                isSiteAdmin = jc.User.HasPermission("site.control_panel")
-                    || (jc.User.IsInSite(jc.SiteId) && jc.User.HasPermission(string.Format("site:{0}.control_panel", jc.SiteId)));
-            }
-            else
-            {
-                isSiteAdmin = jc.User.HasPermission("site.control_panel");
-            }
+            isSiteAdmin = jc.User.HasPermission(string.Format("site.control_panel@{0}",
+                jc.Area["support_multi_site"].ToBoolean() ? jc.SiteId : string.Empty));
         }
 
         private bool isSiteAdmin = false;
