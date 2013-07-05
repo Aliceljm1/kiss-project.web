@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Kiss.Query;
+using Kiss.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,8 +8,6 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.UI;
-using Kiss.Query;
-using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
@@ -294,9 +294,10 @@ namespace Kiss.Web.Controls
                 appendopts = new string[] { (page_id + 1).ToString(), "" };
             if (page_id == QueryCondition.PageIndex)
                 return string.Format("<span class='current {1}'>{0}</span>", appendopts[0], appendopts[1]);
-            return string.Format("<a href='{2}' {1}>{0}</a>", appendopts[0],
+            return string.Format("<a data-p='{3}' href='{2}' {1}>{0}</a>", appendopts[0],
                 StringUtil.HasText(appendopts[1]) ? string.Format("class='{0}'", appendopts[1]) : string.Empty,
-               FormatUrl(page_id, Url, _isAjaxRequest));
+                FormatUrl(page_id, Url, _isAjaxRequest),
+                page_id + 1);
         }
 
         private static string FormatUrl(int page_id, string Url, bool isAjaxRequest)
