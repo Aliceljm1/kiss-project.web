@@ -446,7 +446,9 @@ namespace Kiss.Web
             get
             {
                 if (_isdesignMode == null || !_isdesignMode.HasValue)
-                    _isdesignMode = QueryString["edit"] != null && (User == null || User.HasPermission("menu:widget_widgetdesign"));
+                {
+                    _isdesignMode = QueryString["edit"] != null && (User == null || User.HasPermission("menu:widget_widgetdesign@" + (Area["support_multi_site"].ToBoolean() ? SiteId : string.Empty)));
+                }
                 return _isdesignMode.Value;
             }
         }
