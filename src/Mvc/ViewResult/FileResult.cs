@@ -46,6 +46,7 @@ namespace Kiss.Web.Mvc
 
             HttpResponse response = jc.Context.Response;
             response.ContentType = ContentType;
+            response.ContentEncoding = Encoding.UTF8;
 
             if (!String.IsNullOrEmpty(FileDownloadName))
             {
@@ -54,7 +55,7 @@ namespace Kiss.Web.Mvc
                 // detached and stored in a separate file. If the receiving MUA writes
                 // the entity to a file, the suggested filename should be used as a
                 // basis for the actual filename, where possible.
-                string headerValue = ContentDispositionUtil.GetHeaderValue(FileDownloadName);
+                string headerValue = GetHeaderValue(FileDownloadName);
                 response.AddHeader("Content-Disposition", headerValue);
             }
 
@@ -65,95 +66,12 @@ namespace Kiss.Web.Mvc
 
         protected abstract void WriteFile(HttpResponse response);
 
-        private static class ContentDispositionUtil
+        public static string GetHeaderValue(string fileName)
         {
-            private const string _hexDigits = "0123456789ABCDEF";
+            if (HttpContext.Current.Request.Browser.Type.IndexOf("ie", StringComparison.InvariantCultureIgnoreCase) != -1)
+                fileName = HttpUtility.UrlPathEncode(fileName);
 
-            private static void AddByteToStringBuilder(byte b, StringBuilder builder)
-            {
-                builder.Append('%');
-
-                int i = b;
-                AddHexDigitToStringBuilder(i >> 4, builder);
-                AddHexDigitToStringBuilder(i % 16, builder);
-            }
-
-            private static void AddHexDigitToStringBuilder(int digit, StringBuilder builder)
-            {
-                builder.Append(_hexDigits[digit]);
-            }
-
-            private static string CreateRfc2231HeaderValue(string filename)
-            {
-                StringBuilder builder = new StringBuilder("attachment; filename*=UTF-8''");
-
-                byte[] filenameBytes = Encoding.UTF8.GetBytes(filename);
-                foreach (byte b in filenameBytes)
-                {
-                    if (IsByteValidHeaderValueCharacter(b))
-                    {
-                        builder.Append((char)b);
-                    }
-                    else
-                    {
-                        AddByteToStringBuilder(b, builder);
-                    }
-                }
-
-                return builder.ToString();
-            }
-
-            public static string GetHeaderValue(string fileName)
-            {
-                if (HttpContext.Current.Request.UserAgent.IndexOf("ie", StringComparison.InvariantCultureIgnoreCase) != -1)
-                    fileName = HttpUtility.UrlEncode(fileName);
-
-                try
-                {
-                    // first, try using the .NET built-in generator
-                    ContentDisposition disposition = new ContentDisposition() { FileName = fileName };
-                    return disposition.ToString();
-                }
-                catch (FormatException)
-                {
-                    // otherwise, fall back to RFC 2231 extensions generator
-                    return CreateRfc2231HeaderValue(fileName);
-                }
-            }
-
-            // Application of RFC 2231 Encoding to Hypertext Transfer Protocol (HTTP) Header Fields, sec. 3.2
-            // http://greenbytes.de/tech/webdav/draft-reschke-rfc2231-in-http-latest.html
-            private static bool IsByteValidHeaderValueCharacter(byte b)
-            {
-                if ((byte)'0' <= b && b <= (byte)'9')
-                {
-                    return true; // is digit
-                }
-                if ((byte)'a' <= b && b <= (byte)'z')
-                {
-                    return true; // lowercase letter
-                }
-                if ((byte)'A' <= b && b <= (byte)'Z')
-                {
-                    return true; // uppercase letter
-                }
-
-                switch (b)
-                {
-                    case (byte)'-':
-                    case (byte)'.':
-                    case (byte)'_':
-                    case (byte)'~':
-                    case (byte)':':
-                    case (byte)'!':
-                    case (byte)'$':
-                    case (byte)'&':
-                    case (byte)'+':
-                        return true;
-                }
-
-                return false;
-            }
+            return string.Format("attachment; filename=\"{0}\"", fileName);
         }
     }
 }
