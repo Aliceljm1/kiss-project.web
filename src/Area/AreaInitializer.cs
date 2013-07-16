@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Kiss.Plugin;
+using Kiss.Utils;
+using Kiss.Web.Mvc;
+using Kiss.Web.UrlMapping;
+using Kiss.XmlTransform;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Web;
 using System.Web.Caching;
 using System.Xml;
-using Kiss.Plugin;
-using Kiss.Utils;
-using Kiss.Web.Mvc;
-using Kiss.Web.UrlMapping;
 
 namespace Kiss.Web.Area
 {
@@ -74,10 +75,26 @@ namespace Kiss.Web.Area
                     continue;
 
                 // load area config
-                XmlDocument xml = new XmlDocument();
-                xml.Load(configfile);
+                XmlNode node = null;
 
-                AreaConfig config = AreaConfig.GetConfig(xml.DocumentElement);
+                using (XmlTransformableDocument x = new XmlTransformableDocument())
+                {
+                    x.Load(configfile);
+
+                    string localfile = Path.Combine(dir, "area.local.config");
+
+                    if (File.Exists(localfile))
+                    {
+                        using (XmlTransformation t = new XmlTransformation(localfile))
+                        {
+                            t.Apply(x);
+                        }
+                    }
+
+                    node = x.DocumentElement;
+                }
+
+                AreaConfig config = AreaConfig.GetConfig(node);
                 config.VP = "/" + areaName;
                 config.AreaKey = areaName;
 
