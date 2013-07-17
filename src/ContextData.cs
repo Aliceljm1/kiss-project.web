@@ -74,11 +74,6 @@ namespace Kiss.Web
             return StringUtil.Split(str, StringUtil.Comma, true, true);
         }
 
-        public static string trim(string str, int maxlength)
-        {
-            return StringUtil.Trim(str, maxlength);
-        }
-
         private static readonly StringUtil _str = new StringUtil();
         public static StringUtil str { get { return _str; } }
 
@@ -113,11 +108,6 @@ namespace Kiss.Web
             return new Url(HttpContext.Current.Request.Url.PathAndQuery).UpdateQuery(k, v);
         }
 
-        public static bool hasText(string str)
-        {
-            return StringUtil.HasText(str);
-        }
-
         public static DateTime toDateTime(string obj)
         {
             if (string.IsNullOrEmpty(obj)) return DateTime.Now;
@@ -139,16 +129,6 @@ namespace Kiss.Web
             }
 
             return valid;
-        }
-
-        public int toInt(string str)
-        {
-            return str.ToInt();
-        }
-
-        public ConfigBase getconfig(string sectionName)
-        {
-            return ConfigBase.GetConfig(sectionName);
-        }
+        }        
     }
 }
