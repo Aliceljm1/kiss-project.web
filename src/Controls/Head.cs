@@ -60,12 +60,12 @@ namespace Kiss.Web.Controls
                 StringUtil.CombinUrl(Context.Request.ApplicationPath, "/"),
                 JContext.Current.url("/"));
 
-            RenderTitle(CurrentSite, writer);
+            if (!UseCustomSettings)
+                writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />");
 
             writer.WriteLine("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">");
 
-            if (!UseCustomSettings)
-                writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />");
+            RenderTitle(CurrentSite, writer);
 
             writer.WriteLineNoTabs(string.Format(@"<meta name=""generator"" content=""KISS Projects v{0}"" />", Assembly.GetExecutingAssembly().GetName().Version.ToString()));
 
