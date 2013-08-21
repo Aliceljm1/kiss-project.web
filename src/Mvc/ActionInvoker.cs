@@ -177,6 +177,10 @@ namespace Kiss.Web.Mvc
 
                         p.Add(array);
                     }
+                    else if (item.ParameterType == typeof(MobileDetect))
+                    {
+                        p.Add(MobileDetect.Instance);
+                    }
                     else
                     {
                         string v = nv[item.Name];
@@ -207,7 +211,7 @@ namespace Kiss.Web.Mvc
 
             Dictionary<string, MethodInfo> mis = _mis[t];
 
-            string action = jc.Navigation.Action + ":" + jc.IsPost;
+            string action = string.Format("{0}:{1}:{2}", jc.Navigation.Action, jc.IsPost, MobileDetect.Instance.IsMobile);
 
             if (!mis.ContainsKey(action))
             {
@@ -221,7 +225,20 @@ namespace Kiss.Web.Mvc
                             bool hasPostAttr = x.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
                             bool hasPostAttr_2 = y.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
 
-                            return hasPostAttr_2.CompareTo(hasPostAttr);
+                            int v = hasPostAttr_2.CompareTo(hasPostAttr);
+
+                            if (v == 0)
+                            {
+                                ParameterInfo[] paras = x.GetParameters();
+                                bool hasMobileParam1 = paras.Length > 0 && paras[0].ParameterType == typeof(MobileDetect);
+
+                                paras = y.GetParameters();
+                                bool hasMobileParam2 = paras.Length > 0 && paras[0].ParameterType == typeof(MobileDetect);
+
+                                return hasMobileParam2.CompareTo(hasMobileParam1);
+                            }
+
+                            return v;
                         });
 
                         foreach (MethodInfo m in methods)
@@ -229,10 +246,13 @@ namespace Kiss.Web.Mvc
                             bool hasPostAttr = m.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
                             bool hasGetAttr = m.GetCustomAttributes(typeof(HttpGetAttribute), false).Length == 1;
                             bool hasAjaxAttr = m.GetCustomAttributes(typeof(Ajax.AjaxMethodAttribute), true).Length > 0;
+                            ParameterInfo[] paras = m.GetParameters();
+                            bool hasMobileParam = paras.Length > 0 && paras[0].ParameterType == typeof(MobileDetect);
 
                             if (!m.ContainsGenericParameters &&
                                 m.Name.Equals(jc.Navigation.Action, StringComparison.InvariantCultureIgnoreCase) &&
                                  !hasAjaxAttr &&
+                                 ((hasMobileParam && MobileDetect.Instance.IsMobile) || (!hasMobileParam)) &&
                                 ((jc.IsPost && hasPostAttr) || (!jc.IsPost && hasGetAttr) || (!hasPostAttr && !hasGetAttr)))
                             {
                                 mis[action] = m;

@@ -205,7 +205,7 @@ namespace Kiss.Web.Controls
             get
             {
                 if (StringUtil.IsNullOrEmpty(_themeName))
-                    _themeName = CurrentSite.Theme;
+                    _themeName = MobileDetect.Instance.GetRealThemeName(CurrentSite.Theme);
                 return _themeName;
             }
         }

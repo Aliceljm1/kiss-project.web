@@ -51,7 +51,7 @@ namespace Kiss.Web.Controls
                     if (container_site == null)
                         throw new WebException("site:{0} not exist!", themeFolder.Substring(1));
 
-                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot), container_site.Theme);
+                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot), MobileDetect.Instance.GetRealThemeName(container_site.Theme));
                 }
 
                 return themeFolder;
@@ -69,7 +69,7 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return CurrentSite.Theme;
+                return MobileDetect.Instance.GetRealThemeName(CurrentSite.Theme);
             }
         }
 
@@ -85,7 +85,25 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return string.Format("{0}/default/masters/{1}", StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot), ThemeMasterFile);
+                string path = themeFolder;
+
+                if (themeFolder == null)
+                    path = StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot);
+
+                if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    container_site = AreaConfig.Instance;
+
+                    if (themeFolder != "~")
+                        container_site = JContext.Current.Host.GetByAreaKey(themeFolder.Substring(1));
+
+                    if (container_site == null)
+                        throw new WebException("site:{0} not exist!", themeFolder.Substring(1));
+
+                    path = StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot);
+                }
+
+                return string.Format("{0}/default/masters/{1}", path, ThemeMasterFile);
             }
         }
 

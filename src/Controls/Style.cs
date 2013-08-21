@@ -46,7 +46,7 @@ namespace Kiss.Web.Controls
                     if (_href.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
                         return _href;
 
-                    return StringUtil.CombinUrl(Utility.FormatCssUrl(CurrentSite, string.Format(CurrentSite.CssRoot, CurrentSite.Theme)), _href);
+                    return StringUtil.CombinUrl(Utility.FormatCssUrl(CurrentSite, string.Format(CurrentSite.CssRoot, MobileDetect.Instance.GetRealThemeName(CurrentSite))), _href);
                 }
                 else
                     return string.Empty;

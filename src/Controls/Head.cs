@@ -37,11 +37,6 @@ namespace Kiss.Web.Controls
         public string Title { get; set; }
 
         /// <summary>
-        /// set to ture to use custom settings
-        /// </summary>
-        public bool UseCustomSettings { get; set; }
-
-        /// <summary>
         /// set to true to render with template engine
         /// </summary>
         public bool Templated { get; set; }
@@ -60,14 +55,15 @@ namespace Kiss.Web.Controls
                 StringUtil.CombinUrl(Context.Request.ApplicationPath, "/"),
                 JContext.Current.url("/"));
 
-            if (!UseCustomSettings)
-                writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />");
+            writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />");
 
             writer.WriteLine("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">");
 
             RenderTitle(CurrentSite, writer);
 
             writer.WriteLineNoTabs(string.Format(@"<meta name=""generator"" content=""KISS Projects v{0}"" />", Assembly.GetExecutingAssembly().GetName().Version.ToString()));
+
+            base.Render(writer);
 
             RenderMetaTags(writer);
             RenderLinkTags(writer);
@@ -79,8 +75,6 @@ namespace Kiss.Web.Controls
 
             RenderAdditionHeader(writer);
             RenderRawContent(writer);
-
-            base.Render(writer);
 
             // auto render jquery
             ClientScriptProxy.Current.LoadjQuery(writer);

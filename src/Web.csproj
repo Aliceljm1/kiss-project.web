@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="Area\IHost.cs" />
     <Compile Include="Area\IArea.cs" />
+    <Compile Include="MobileDetect.cs" />
     <Compile Include="Mvc\ViewResult\FileContentResult.cs" />
     <Compile Include="Mvc\ViewResult\FilePathResult.cs" />
     <Compile Include="Mvc\ViewResult\FileResult.cs" />
