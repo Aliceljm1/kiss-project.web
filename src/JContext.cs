@@ -896,7 +896,7 @@ namespace Kiss.Web
         {
             get
             {
-                return url(string.Format("/themes/{0}", MobileDetect.Instance.GetRealThemeName(Area.Theme)));
+                return url(string.Format("/themes/{0}", MobileDetect.Instance.GetRealThemeName(Area)));
             }
         }
 
@@ -907,7 +907,7 @@ namespace Kiss.Web
         {
             get
             {
-                return url(string.Format("/themes/{0}/skins", MobileDetect.Instance.GetRealThemeName(Area.Theme))).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
+                return url(string.Format("/themes/{0}/skins", MobileDetect.Instance.GetRealThemeName(Area))).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
             }
         }
 
@@ -920,7 +920,7 @@ namespace Kiss.Web
             {
                 IArea site = Kiss.Web.AreaConfig.Instance;
 
-                string baseurl = string.Format("/themes/{0}", MobileDetect.Instance.GetRealThemeName(site.Theme));
+                string baseurl = string.Format("/themes/{0}", MobileDetect.Instance.GetRealThemeName(site));
 
                 return StringUtil.CombinUrl(site.VirtualPath, baseurl);
             }

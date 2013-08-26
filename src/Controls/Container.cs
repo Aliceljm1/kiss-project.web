@@ -88,9 +88,10 @@ namespace Kiss.Web.Controls
                 string path = themeFolder;
 
                 if (themeFolder == null)
+                {
                     path = StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot);
-
-                if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
+                }
+                else if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
                 {
                     container_site = AreaConfig.Instance;
 
