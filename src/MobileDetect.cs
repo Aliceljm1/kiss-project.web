@@ -60,7 +60,7 @@ namespace Kiss.Web
 
         public string GetRealThemeName(IArea area, string theme)
         {
-            if (IsMobile && Directory.Exists(Path.Combine(ServerUtil.ResolveUrl(area.VirtualPath), "themes", string.Format("{0}_mobile", theme))))
+            if (IsMobile && Directory.Exists(Path.Combine(ServerUtil.MapPath(area.VirtualPath), "themes", string.Format("{0}_mobile", theme))))
                 return string.Format("{0}_mobile", theme);
 
             return theme;
