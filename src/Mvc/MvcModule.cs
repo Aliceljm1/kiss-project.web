@@ -21,6 +21,18 @@ namespace Kiss.Web.Mvc
                 if (jc.Controller == null)
                     return;
 
+                object[] attrs = jc.Controller.GetType().GetCustomAttributes(typeof(CheckLicenceAttribute), true);
+                if (attrs.Length == 1)
+                {
+                    ILicenceProvider lp = ServiceLocator.Instance.SafeResolve<ILicenceProvider>();
+
+                    if (lp != null && !lp.Check())
+                    {
+                        if (!lp.OnLicenceInvalid())
+                            return;
+                    }
+                }
+
                 jc.Controller.jc = jc;
                 jc.ViewData["this"] = jc.Controller;
 
