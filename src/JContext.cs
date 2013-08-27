@@ -889,6 +889,11 @@ namespace Kiss.Web
 
         #region utils
 
+        public void NoOptimization()
+        {
+            Optimization.OptimizationModule.SetOptimized(Context);
+        }
+
         /// <summary>
         /// 指向当前站点的主题目录
         /// </summary>

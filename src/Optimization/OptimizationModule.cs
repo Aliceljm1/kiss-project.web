@@ -39,6 +39,11 @@ namespace Kiss.Web.Optimization
             Stop();
         }
 
+        internal static void SetOptimized(HttpContext context)
+        {
+            context.Items[INSTALLED_KEY] = INSTALLED_TAG;
+        }
+
         /// <summary>
         /// EventHandler that gets ahold of the current request context and attempts to compress the output.
         /// </summary>
@@ -67,7 +72,7 @@ namespace Kiss.Web.Optimization
             // log the install attempt in the HttpContext
             // must do this first as several IF statements
             // below skip full processing of this method
-            app.Context.Items.Add(INSTALLED_KEY, INSTALLED_TAG);
+            SetOptimized(app.Context);
 
             addCompressFilter(app);
 
