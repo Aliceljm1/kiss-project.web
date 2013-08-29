@@ -29,7 +29,14 @@ namespace Kiss.Web
             get
             {
                 if (_ismobile == null)
-                    _ismobile = MobileBrowsers.IsMatch(HttpContext.Current.Request.ServerVariables["HTTP_USER_AGENT"]);
+                {
+                    string user_agent = HttpContext.Current.Request.ServerVariables["HTTP_USER_AGENT"];
+
+                    if (!string.IsNullOrEmpty(user_agent))
+                        _ismobile = MobileBrowsers.IsMatch(user_agent);
+                    else
+                        _ismobile = false;
+                }
 
                 return _ismobile.Value;
             }
