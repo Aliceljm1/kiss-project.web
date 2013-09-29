@@ -61,11 +61,8 @@ namespace Kiss.Web.Controls
 
             if (!jc.IsAjaxRequest)
             {
-                ClientScriptProxy.Current.RegisterJsResource(writer,
-                    "Kiss.Web.Ajax.js");
-
-                ClientScriptProxy.Current.RegisterJsResource(writer,
-                    "Kiss.Web.jQuery.json.js");
+                ClientScriptProxy.Current.RegisterJsResource(
+                    "Kiss.Web.jQuery.kiss.js");
             }
 
             StringBuilder sb = new StringBuilder();

@@ -212,16 +212,9 @@ namespace Kiss.Web.Controls
             {
                 // auto add some controls here
                 lock (masterPage.Controls.SyncRoot)
-                {
-                    JContext jc = JContext.Current;
-                    if (!string.Equals(jc.DefaultArea["mode"], "custom", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Include() { Js = "lazyinclude", Css = "common" });
-
-                        masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new UIBase() { ThemeStyleUrl = jc.DefaultArea["jqueryui_theme"] });
-
+                {                    
+                    if (!MobileDetect.Instance.IsMobile)
                         masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new ControlPanel());
-                    }
 
                     masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Scripts());
                 }

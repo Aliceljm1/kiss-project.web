@@ -637,18 +637,18 @@ namespace Kiss.Web
         /// </summary>
         /// <param name="baseurl"></param>
         /// <returns></returns>
-        public string CombinUrl(string baseurl, bool embable)
+        public string CombinUrl(IArea area, string baseurl, bool embable)
         {
             string url;
 
             if (StringUtil.IsNullOrEmpty(baseurl))
-                url = Area.VirtualPath;
+                url = area.VirtualPath;
             else if (baseurl.StartsWith("~"))
                 url = ServerUtil.ResolveUrl(baseurl);
             else if (baseurl.StartsWith("."))
-                url = StringUtil.CombinUrl(Area.VirtualPath, baseurl.Substring(1)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
+                url = StringUtil.CombinUrl(area.VirtualPath, baseurl.Substring(1)).Substring(HttpRuntime.AppDomainAppVirtualPath.Length);
             else
-                url = StringUtil.CombinUrl(Area.VirtualPath, baseurl);
+                url = StringUtil.CombinUrl(area.VirtualPath, baseurl);
 
             url = HttpUtility.UrlPathEncode(url);
 
@@ -672,6 +672,11 @@ namespace Kiss.Web
             embedUrl = ServerUtil.ResolveUrl(embedUrl);
 
             return url.StartsWith(embedUrl, StringComparison.InvariantCultureIgnoreCase) ? '#' + url : url;
+        }
+
+        public string CombinUrl(string baseurl, bool embable)
+        {
+            return CombinUrl(Area, baseurl, embable);
         }
 
         /// <summary>

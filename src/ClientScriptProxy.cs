@@ -40,61 +40,101 @@ namespace Kiss.Web
         {
         }
 
-        #region JS
         /// <summary>
-        /// Loads the appropriate jScript library out of the scripts directory
+        /// 依赖的资源名称，多个资源名称使用逗号分隔
         /// </summary>
-        /// <param name="control"></param>
-        public void LoadjQuery(HtmlTextWriter writer)
+        /// <param name="resourceName"></param>
+        public void Require(IArea area, string resourceName)
         {
-            if (JContext.Current.IsAjaxRequest)
-                return;
+            if (string.IsNullOrEmpty(resourceName)) return;
 
-            string url = Resources.Utility.GetResourceUrl(GetType(), "Kiss.Web.jQuery.js", true);
+            JContext jc = JContext.Current;
 
-            if (IsScriptRended(url))
-                return;
+            foreach (var res in StringUtil.Split(resourceName, StringUtil.Comma, true, true))
+            {
+                if (res == "jquery.js")
+                {
+                    Head.RequireJquery = true;
+                    continue;
+                }
 
-            SetScriptRended(url);
+                string resourceUrl = string.Empty;
 
-            writer.WriteLine("<script src='{0}' type='text/javascript'></script>", url);
+                string key = string.Format("define_{0}", res);
+
+                if (area != null && !string.IsNullOrEmpty(area[key]))
+                {
+                    resourceUrl = jc.CombinUrl(area, area[key], false);
+                }
+                else
+                {
+                    foreach (IArea item in jc.Host.AllAreas)
+                    {
+                        if (area != null && item.AreaKey == area.AreaKey) continue;
+
+                        if (!string.IsNullOrEmpty(item[key]))
+                        {
+                            resourceUrl = jc.CombinUrl(item, item[key], false);
+                            break;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(resourceUrl))
+                    {
+                        if (res == "kiss.js" || res == "kiss.css")
+                        {
+                            resourceUrl = Resources.Utility.GetResourceUrl(GetType(), "Kiss.Web.jQuery." + res, true);
+                        }
+                        else
+                        {
+                            throw new WebException("未找到{0}的定义。", res);
+                        }
+                    }
+                }
+
+                if (res.EndsWith(".js"))
+                    RegisterJs(resourceUrl);
+                else if (res.EndsWith(".css"))
+                    RegisterCss(resourceUrl);
+            }
         }
 
-        public void RegisterJsResource(HtmlTextWriter writer, string resourceName)
+        #region JS
+        public void RegisterJsResource(string resourceName)
         {
-            RegisterJsResource(writer, GetType(), resourceName, false);
+            RegisterJsResource(GetType(), resourceName, false);
         }
 
         /// <summary>
         /// Returns a WebResource or ScriptResource URL for script resources that are to be
         /// embedded as script includes.
         /// </summary>
-        public void RegisterJsResource(HtmlTextWriter writer, Type type, string resourceName)
+        public void RegisterJsResource(Type type, string resourceName)
         {
-            RegisterJsResource(writer, type, resourceName, false);
+            RegisterJsResource(type, resourceName, false);
         }
 
-        public void RegisterJsResource(HtmlTextWriter writer, string assemblyName, string resourceName)
+        public void RegisterJsResource(string assemblyName, string resourceName)
         {
-            RegisterJsResource(writer, assemblyName, resourceName, false);
+            RegisterJsResource(assemblyName, resourceName, false);
         }
 
-        public void RegisterJsResource(HtmlTextWriter writer, Type type, string resourceName, bool noCombine)
+        public void RegisterJsResource(Type type, string resourceName, bool noCombine)
         {
-            RegisterJsResource(writer, type.Assembly.GetName().Name, resourceName, noCombine);
+            RegisterJsResource(type.Assembly.GetName().Name, resourceName, noCombine);
         }
 
-        public void RegisterJsResource(HtmlTextWriter writer, string assemblyName, string resourceName, bool noCombin)
+        public void RegisterJsResource(string assemblyName, string resourceName, bool noCombin)
         {
-            RegisterJs(writer, Resources.Utility.GetResourceUrl(assemblyName, resourceName), noCombin);
+            RegisterJs(Resources.Utility.GetResourceUrl(assemblyName, resourceName), noCombin);
         }
 
-        public void RegisterJs(HtmlTextWriter writer, string url)
+        public void RegisterJs(string url)
         {
-            RegisterJs(writer, url, false);
+            RegisterJs(url, false);
         }
 
-        public void RegisterJs(HtmlTextWriter writer, string url, bool noCombine)
+        public void RegisterJs(string url, bool noCombine)
         {
             if (IsScriptRended(url))
                 return;

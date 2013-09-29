@@ -1,4 +1,5 @@
 ﻿using Kiss.Utils;
+using Kiss.Web.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -35,6 +36,8 @@ namespace Kiss.Web.Controls
         /// page title
         /// </summary>
         public string Title { get; set; }
+
+        public static bool RequireJquery { get { return HttpContext.Current.Items["_require_jquery_"].ToBoolean(); } set { HttpContext.Current.Items["_require_jquery_"] = value; } }
 
         /// <summary>
         /// set to true to render with template engine
@@ -76,8 +79,19 @@ namespace Kiss.Web.Controls
             RenderAdditionHeader(writer);
             RenderRawContent(writer);
 
-            // auto render jquery
-            ClientScriptProxy.Current.LoadjQuery(writer);
+            // 输出对jquery的引用
+            if (RequireJquery)
+            {
+                string jquery_definition = CurrentSite["define_jquery.js"];
+                if (string.IsNullOrEmpty(jquery_definition))
+                {
+                    writer.Write("<script src='{0}' type='text/javascript'></script>", Resources.Utility.GetResourceUrl(GetType(), "Kiss.Web.jQuery.jquery.js", true));
+                }
+                else
+                {
+                    writer.Write("<script src='{0}' type='text/javascript'></script>", JContext.Current.CombinUrl(CurrentSite, jquery_definition, false));
+                }
+            }
 
             writer.Write("</head>");
         }

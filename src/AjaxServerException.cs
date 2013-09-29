@@ -1,4 +1,4 @@
-﻿namespace Kiss.Web.Ajax
+﻿namespace Kiss.Web
 {
     public class AjaxServerException
     {

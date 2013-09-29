@@ -57,15 +57,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AjaxServerException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ajax\Ajax.cs" />
     <Compile Include="Ajax\AjaxClass.cs" />
     <Compile Include="Ajax\AjaxConfig.cs" />
-    <Compile Include="Ajax\AjaxException.cs" />
     <Compile Include="Ajax\AjaxController.cs" />
+    <Compile Include="Ajax\AjaxException.cs" />
     <Compile Include="Ajax\AjaxInitializer.cs" />
     <Compile Include="Ajax\AjaxMethod.cs" />
     <Compile Include="Ajax\AjaxMethodAttribute.cs" />
     <Compile Include="Ajax\AjaxParam.cs" />
-    <Compile Include="Ajax\AjaxServerException.cs" />
     <Compile Include="Area\AreaInitializer.cs" />
     <Compile Include="Area\AreaUrlMappingProvider.cs" />
     <Compile Include="Area\Host.cs" />
@@ -74,14 +77,8 @@
     <Compile Include="Controls\Layout.cs" />
     <Compile Include="ExportHelper.cs" />
     <Compile Include="ITextProcesser.cs" />
-    <Compile Include="Ajax\Ajax.cs" />
-    <Compile Include="jQuery\cp\ControlPanel.cs" />
-    <Compile Include="jQuery\Include.cs" />
-    <Compile Include="jQuery\UI\Button.cs" />
-    <Compile Include="jQuery\UI\Dialog.cs" />
-    <Compile Include="jQuery\UI\Sortable.cs" />
-    <Compile Include="jQuery\UI\Tabs.cs" />
-    <Compile Include="jQuery\UI\UIBase.cs" />
+    <Compile Include="Controls\ControlPanel.cs" />
+    <Compile Include="Controls\Include.cs" />
     <Compile Include="KissHttpApplication.cs" />
     <Compile Include="ControlPanelItemAttribute.cs" />
     <Compile Include="ClientScriptProxy.cs" />
@@ -297,52 +294,12 @@
     <Compile Include="WebAppTypeFinder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Ajax\js" />
-    <EmbeddedResource Include="jQuery\bgiframe.js" />
-    <EmbeddedResource Include="jQuery\cookie.js" />
     <EmbeddedResource Include="jQuery\cp\c.css" />
     <EmbeddedResource Include="jQuery\cp\close.png" />
     <EmbeddedResource Include="jQuery\cp\j.js" />
     <EmbeddedResource Include="jQuery\cp\open.png" />
-    <EmbeddedResource Include="jQuery\dialogutil.js" />
-    <EmbeddedResource Include="jQuery\flash.js" />
-    <EmbeddedResource Include="jQuery\form.js" />
-    <EmbeddedResource Include="jQuery\json.js" />
-    <EmbeddedResource Include="jQuery\qs.js" />
-    <EmbeddedResource Include="jQuery\swfobject.js" />
-    <EmbeddedResource Include="jQuery\common.css" />
-    <EmbeddedResource Include="jQuery\table.js" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_glass_75_dadada_1x400.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-icons_222222_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-icons_2e83ff_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-icons_454545_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-icons_888888_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\style.css" />
-    <EmbeddedResource Include="jQuery\UI\ui.accordion.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.autocomplete.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.button.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.core.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.datepicker.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.dialog.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.draggable.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.droppable.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.mouse.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.position.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.progressbar.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.resizable.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.selectable.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.slider.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.sortable.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.tabs.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.widget.js" />
+    <EmbeddedResource Include="jQuery\kiss.css" />
+    <EmbeddedResource Include="jQuery\kiss.js" />
     <EmbeddedResource Include="Utils\ajaxmin\Css\CssStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CssStrings.Designer.cs</LastGenOutput>
@@ -355,36 +312,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="jQuery\js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="jQuery\UI\addon.timepicker.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="jQuery\lazyinclude.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="jQuery\hash.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="jQuery\UI\themes\smoothness\images\animated-overlay.gif" />
-    <EmbeddedResource Include="jQuery\UI\ui.tooltip.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.spinner.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-blind.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-bounce.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-clip.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-drop.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-explode.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-fade.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-fold.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-highlight.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-pulsate.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-scale.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-shake.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-slide.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect-transfer.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.effect.js" />
-    <EmbeddedResource Include="jQuery\UI\ui.menu.js" />
+    <EmbeddedResource Include="jQuery\jquery.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

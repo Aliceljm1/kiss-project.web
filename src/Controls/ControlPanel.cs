@@ -34,11 +34,11 @@ namespace Kiss.Web.Controls
 
             if (renderers.Count == 0) return;
 
-            Include include = new Include();
-            include.Js = "cookie";
-            Controls.Add(include);
+            ClientScriptProxy proxy = ClientScriptProxy.Current;
 
-            ClientScriptProxy.Current.RegisterCssResource(GetType(),
+            proxy.Require(jc.Area, "jquery.js,kiss.js,kiss.css");
+
+            proxy.RegisterCssResource(GetType(),
                                 "Kiss.Web.jQuery.cp.c.css");
         }
 
@@ -55,7 +55,7 @@ namespace Kiss.Web.Controls
 
             writer.Write("</div></div><span class='close' title='关闭控制面板'>«</span><span class='open' title='打开控制面板'>»</span></div></div>");
 
-            ClientScriptProxy.Current.RegisterJsResource(writer, GetType(), "Kiss.Web.jQuery.cp.j.js");
+            ClientScriptProxy.Current.RegisterJsResource(GetType(), "Kiss.Web.jQuery.cp.j.js");
 
             base.Render(writer);
         }
