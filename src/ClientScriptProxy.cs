@@ -81,7 +81,7 @@ namespace Kiss.Web
 
                     if (string.IsNullOrEmpty(resourceUrl))
                     {
-                        if (res == "kiss.js" || res == "kiss.css")
+                        if (res == "kiss.js" || res == "kiss.css" || res == "jqueryui.js" || res == "jqueryui.css")
                         {
                             resourceUrl = Resources.Utility.GetResourceUrl(GetType(), "Kiss.Web.jQuery." + res, true);
                         }

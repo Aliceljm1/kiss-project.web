@@ -314,6 +314,24 @@
   <ItemGroup>
     <EmbeddedResource Include="jQuery\jquery.js" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="jQuery\jqueryui\images\animated-overlay.gif" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_flat_0_eeeeee_40x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_flat_55_ffffff_40x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_highlight-soft_100_f6f6f6_1x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_highlight-soft_25_0073ea_1x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_highlight-soft_50_dddddd_1x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_0073ea_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_454545_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_666666_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_ff0084_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_ffffff_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\css" />
+    <EmbeddedResource Include="jQuery\jqueryui\js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
