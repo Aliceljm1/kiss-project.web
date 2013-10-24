@@ -753,11 +753,20 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
     }();
 };
 /* ajax manager */
-function handleException(result) {
+function handleException(result, callback_on_exception) {
     if (result == null || !result.__AjaxException)
         return result;
 
     var exc = result.__AjaxException;
+
+    if (callback_on_exception && $.isFunction(callback_on_exception)) {
+        result = null;
+
+        callback_on_exception.apply(exc, []);
+
+        return;
+    }
+
     if (exc.action == "JSMethod") {
         result = null;
         eval(exc.parameter + "()");
