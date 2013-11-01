@@ -69,7 +69,7 @@ namespace Kiss.Web.Controls
 
                         string path;
                         if (vp.StartsWith("."))
-                            path = ServerUtil.MapPath(StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot, CurrentSite.Theme, vp.Substring(1)));
+                            path = ServerUtil.MapPath(StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot, MobileDetect.Instance.GetRealThemeName(CurrentSite), vp.Substring(1)));
                         else
                             path = ServerUtil.MapPath(StringUtil.CombinUrl(CurrentSite.VirtualPath, vp));
 
@@ -84,7 +84,11 @@ namespace Kiss.Web.Controls
                             if (vp.StartsWith("~"))
                                 proxy.RegisterJs(StringUtil.CombinUrl(ServerUtil.ResolveUrl(vp), relativePath), NoCombine);
                             else if (vp.StartsWith("."))
-                                proxy.RegisterJs(StringUtil.CombinUrl(JContext.Current.ThemePath, StringUtil.CombinUrl(vp.Substring(1), relativePath)), NoCombine);
+                                proxy.RegisterJs(StringUtil.CombinUrl(CurrentSite.VirtualPath, 
+                                    CurrentSite.ThemeRoot, 
+                                    MobileDetect.Instance.GetRealThemeName(CurrentSite), 
+                                    vp.Substring(1),
+                                    relativePath), NoCombine);
                             else
                                 proxy.RegisterJs(StringUtil.CombinUrl(CurrentSite.VirtualPath, StringUtil.CombinUrl(vp, relativePath)), NoCombine);
                         }
@@ -94,7 +98,7 @@ namespace Kiss.Web.Controls
                         if (js.StartsWith("~"))
                             proxy.RegisterJs(ServerUtil.ResolveUrl(js), NoCombine);
                         else if (js.StartsWith("."))
-                            proxy.RegisterJs(StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot, CurrentSite.Theme, js.Substring(1)), NoCombine);
+                            proxy.RegisterJs(StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot, MobileDetect.Instance.GetRealThemeName(CurrentSite), js.Substring(1)), NoCombine);
                         else
                             proxy.RegisterJs(StringUtil.CombinUrl(CurrentSite.VirtualPath, js), NoCombine);
                     }

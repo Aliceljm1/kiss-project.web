@@ -68,12 +68,12 @@
     width: 18px;
     cursor: pointer;
     display: block;
-    background: transparent url(_res.aspx?r=alF1ZXJ5LmNwLm9wZW4ucG5n&t=&z=image/png&su=1) no-repeat 50% 50%;
+    background: transparent url(/_res.aspx?r=alF1ZXJ5LmNwLm9wZW4ucG5n&t=&z=image/png&su=1) no-repeat 50% 50%;
 }
 
 .sc .close {
     display: none;
-    background-image: url(_res.aspx?r=alF1ZXJ5LmNwLmNsb3NlLnBuZw==&t=&z=image/png&su=1);
+    background-image: url(/_res.aspx?r=alF1ZXJ5LmNwLmNsb3NlLnBuZw==&t=&z=image/png&su=1);
 }
 
 .sc.opened {
