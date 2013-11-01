@@ -69,7 +69,7 @@ namespace Kiss.Web.Controls
 
                         string path;
                         if (vp.StartsWith("."))
-                            path = ServerUtil.MapPath(StringUtil.CombinUrl(JContext.Current.ThemePath, vp.Substring(1)));
+                            path = ServerUtil.MapPath(StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot, CurrentSite.Theme, vp.Substring(1)));
                         else
                             path = ServerUtil.MapPath(StringUtil.CombinUrl(CurrentSite.VirtualPath, vp));
 
@@ -94,7 +94,7 @@ namespace Kiss.Web.Controls
                         if (js.StartsWith("~"))
                             proxy.RegisterJs(ServerUtil.ResolveUrl(js), NoCombine);
                         else if (js.StartsWith("."))
-                            proxy.RegisterJs(StringUtil.CombinUrl(JContext.Current.ThemePath, js.Substring(1)), NoCombine);
+                            proxy.RegisterJs(StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot, CurrentSite.Theme, js.Substring(1)), NoCombine);
                         else
                             proxy.RegisterJs(StringUtil.CombinUrl(CurrentSite.VirtualPath, js), NoCombine);
                     }
