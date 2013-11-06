@@ -186,7 +186,7 @@ namespace Kiss.Web.Controls
                     else
                     {
                         if (dir == "/")
-                            dir = string.Empty;// res.aspx
+                            dir = AreaConfig.Instance.VirtualPath;// res.aspx
 
                         writer.Write(string.Format(styleFormat,
                                                   StringUtil.CombinUrl(s.CssHost, string.Format("{2}_resc.aspx?f={0}&t=text/css&v={1}",
