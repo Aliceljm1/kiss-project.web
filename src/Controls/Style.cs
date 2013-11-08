@@ -15,13 +15,13 @@ namespace Kiss.Web.Controls
         /// <summary>
         /// Property Media (string)
         /// </summary>
-        [DefaultValue("screen")]
+        [DefaultValue("all")]
         public virtual String Media
         {
             get
             {
                 if (string.IsNullOrEmpty(_media))
-                    return "screen";
+                    return "all";
                 return _media;
             }
             set

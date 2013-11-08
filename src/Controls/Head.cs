@@ -181,7 +181,7 @@ namespace Kiss.Web.Controls
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(di[s][path])),
                                                                 AreaConfig.Instance.CssVersion,
                                                                 dir)),
-                                        "screen"));
+                                        "all"));
                     }
                     else
                     {
@@ -193,7 +193,7 @@ namespace Kiss.Web.Controls
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(di[s][path])),
                                                                 AreaConfig.Instance.CssVersion,
                                                                 dir)),
-                                                   "screen"));
+                                                   "all"));
                     }
                 }
             }
@@ -305,7 +305,7 @@ namespace Kiss.Web.Controls
 
         public static void AddStyle(string url)
         {
-            AddStyle(url, "screen", HttpContext.Current, true);
+            AddStyle(url, "all", HttpContext.Current, true);
         }
 
         /// <summary>

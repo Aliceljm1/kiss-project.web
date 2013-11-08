@@ -228,9 +228,9 @@ namespace Kiss.Web
             SetScriptRended(url);
 
             if (string.IsNullOrEmpty(baseUrl))
-                Head.AddStyle(JContext.Current.Area, url, "screen", HttpContext.Current, StyleRelativePosition.First, true);
+                Head.AddStyle(JContext.Current.Area, url, "all", HttpContext.Current, StyleRelativePosition.First, true);
             else
-                Head.AddStyle(JContext.Current.Area, StringUtil.CombinUrl(baseUrl, url), "screen", HttpContext.Current, StyleRelativePosition.First, true);
+                Head.AddStyle(JContext.Current.Area, StringUtil.CombinUrl(baseUrl, url), "all", HttpContext.Current, StyleRelativePosition.First, true);
         }
 
         public void RegisterCssBlock(string css, string key)
