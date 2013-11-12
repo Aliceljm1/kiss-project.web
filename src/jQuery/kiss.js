@@ -3045,9 +3045,16 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
         var redirect = function (len) {
             var form = t.parents('form:first');
             if (form.length == 1) {
+                var cp = $('input[name=page]', form);
+                if (cp.length == 0)
+                    form.append('<input type="hidden" name="page"/>');
+
+                var page = parseInt($.trim($('.pagination .current', form).text()), 10) || 1;
                 if ($('tbody tr', t).length == len) {
-                    $('input[name=page]').val(Math.max(1, parseInt($.trim($('.pagination .current').text()), 10) - 1));
+                    page = Math.max(1, page - 1);
                 }
+
+                $('input[name=page]', form).val(page);
 
                 jQuery.fn.gform.working = false;
                 form.submit();
