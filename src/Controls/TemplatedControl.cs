@@ -73,6 +73,14 @@ namespace Kiss.Web.Controls
             set { skinName = value; }
         }
 
+        public bool IsFile
+        {
+            get
+            {
+                return !(!jc.Items["__viewResult_IsFile__"].ToBoolean(true) && (OverrideSkinName || (UsedInMvc && ActionAsSkinName)));
+            }
+        }
+
         /// <summary>
         /// user action name as skin name
         /// </summary>
@@ -133,6 +141,8 @@ namespace Kiss.Web.Controls
 
         protected override void CreateChildControls()
         {
+            if (!IsFile) return;
+
             Controls.Clear();
 
             bool loaded = false;
@@ -176,7 +186,15 @@ namespace Kiss.Web.Controls
             {
                 writer.Write(Util.Render(delegate(HtmlTextWriter w)
                 {
-                    base.Render(w);
+                    if (!IsFile)
+                    {
+                        w.Write(jc.Items["__viewResult__"]);
+                    }
+                    else
+                    {
+                        base.Render(w);
+                    }
+
                     if (jc.IsAjaxRequest)
                     {
                         w.Write("$!jc.render_lazy_include()");
@@ -184,7 +202,16 @@ namespace Kiss.Web.Controls
                 }));
             }
             else
-                base.Render(writer);
+            {
+                if (!IsFile)
+                {
+                    writer.Write(jc.Items["__viewResult__"]);
+                }
+                else
+                {
+                    base.Render(writer);
+                }
+            }
         }
 
         #endregion

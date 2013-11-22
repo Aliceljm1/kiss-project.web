@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Kiss.Utils;
+using System;
 using System.Web.SessionState;
 using System.Web.UI;
-using Kiss.Utils;
 
 namespace Kiss.Web.Controls
 {
@@ -42,9 +42,13 @@ namespace Kiss.Web.Controls
             ContentType = Context.Items["_ContentType_"] as string ?? ContentType;
 
             if (Templated && hasMasterFile && JContext.Current.RenderContent)
+            {
                 writer.Write(Util.Render(delegate(HtmlTextWriter w) { base.Render(w); }));
+            }
             else
+            {
                 base.Render(writer);
+            }
         }
     }
 }
