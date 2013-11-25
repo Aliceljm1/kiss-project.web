@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Kiss.Query;
+using Kiss.Utils;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Caching;
 using System.Xml;
-using Kiss.Query;
-using Kiss.Utils;
 
 namespace Kiss.Web.Query
 {
@@ -92,6 +93,33 @@ namespace Kiss.Web.Query
                             }
 
                             _logger.Debug("end parse query file: {0}.", item);
+                        }
+                    }
+
+                    // load from database
+                    foreach (var item in (from q in DictSchema.CreateContext(true)
+                                          where q.Type == "dynamic_query" && q.IsValid == true
+                                          select q).ToList())
+                    {
+                        if (string.IsNullOrEmpty(item.Name)) continue;
+
+                        string id = string.Format(FORMAT, 
+                            string.IsNullOrEmpty(item.ParentId) ? "default" : item.ParentId, 
+                            item.Name.ToLowerInvariant());
+
+                        var qc = qc_dict[id] = new Qc()
+                        {
+                            Id = id,
+                            Field = item.Prop1,
+                            AllowedOrderbyColumns = item.Prop2,
+                            Orderby = item.Prop3,
+                            Where = item.Prop4,
+                            PageSize = item.Prop5.ToInt(-1)
+                        };
+
+                        foreach (string key in item.ExtAttrs.Keys)
+                        {
+                            qc[key] = item[key];
                         }
                     }
 

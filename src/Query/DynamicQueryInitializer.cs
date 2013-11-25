@@ -2,7 +2,7 @@
 
 namespace Kiss.Web.Query
 {
-    [AutoInit(Title = "DynamicQuery")]
+    [AutoInit]
     public class DynamicQueryInitializer : IPluginInitializer
     {
         public void Init(ServiceLocator sl, ref PluginSetting setting)
