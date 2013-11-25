@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Kiss.Utils;
+using Kiss.Web.UrlMapping;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Kiss.Utils;
-using Kiss.Web.UrlMapping;
 
 namespace Kiss.Web
 {
@@ -71,6 +71,11 @@ namespace Kiss.Web
                 return null;
             }
         }
+
+        /// <summary>
+        /// 用于设定对应菜单的Id
+        /// </summary>
+        public string MenuName { get; set; }
 
         public List<NavigationItem> Crumbs
         {
