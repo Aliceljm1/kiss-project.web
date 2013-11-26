@@ -190,17 +190,15 @@ namespace Kiss.Web.Mvc
                 Dictionary<string, Type> types = controllerTypes[sitekey];
                 if (types.ContainsKey(key))
                     return types[key];
-                else
-                {
-                    // get controller from root site
-                    Dictionary<string, Type> defaultControllers = null;
-                    if (controllerTypes.ContainsKey(AreaConfig.Instance.AreaKey))
-                        defaultControllers = controllerTypes[AreaConfig.Instance.AreaKey];
-
-                    if (defaultControllers != null && defaultControllers.ContainsKey(key))
-                        return defaultControllers[key];
-                }
             }
+
+            // get controller from root site
+            Dictionary<string, Type> defaultControllers = null;
+            if (controllerTypes.ContainsKey(AreaConfig.Instance.AreaKey))
+                defaultControllers = controllerTypes[AreaConfig.Instance.AreaKey];
+
+            if (defaultControllers != null && defaultControllers.ContainsKey(key))
+                return defaultControllers[key];
 
             ControllerNotFoundEventArgs e = new ControllerNotFoundEventArgs() { ControllerId = key };
             OnControllerNotFound(e);
