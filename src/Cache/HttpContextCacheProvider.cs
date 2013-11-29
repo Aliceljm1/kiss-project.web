@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Kiss.Caching;
+using System;
 using System.Collections.Generic;
 using System.Web;
-using Kiss.Caching;
 
 namespace Kiss.Web
 {
     /// <summary>
     /// use http context items to store datas, datas only survival in current http request
     /// </summary>
+    [CacheProvider(Name = "httpcontextcache")]
     public class HttpContextCacheProvider : ICacheProvider
     {
         /// <summary>
