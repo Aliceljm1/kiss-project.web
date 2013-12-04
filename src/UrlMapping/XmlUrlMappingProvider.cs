@@ -183,40 +183,32 @@ namespace Kiss.Web.UrlMapping
 
             menuItems.Clear();
 
-            for (int i = 0; i < xml.DocumentElement.ChildNodes.Count; i++)
+            int i = -1, j = -1, k = -1;
+            foreach (XmlNode node in xml.DocumentElement.ChildNodes)
             {
-                XmlNode node = xml.DocumentElement.ChildNodes[i];
-
                 if (node.Name == "menu")
                 {
+                    i++;
                     NavigationItem menuItem = getMenuItem(node);
                     menuItem.Children = new Dictionary<int, NavigationItem>();
 
                     menuItems[i] = menuItem;
 
-                    for (int j = 0; j < node.ChildNodes.Count; j++)
+                    foreach (XmlNode subNode in node.ChildNodes)
                     {
-                        XmlNode subNode = node.ChildNodes[j];
-
                         if (subNode.Name == "menu")
                         {
+                            j++;
                             NavigationItem sub_menuItem = getMenuItem(subNode);
                             sub_menuItem.Children = new Dictionary<int, NavigationItem>();
 
                             menuItems[i].Children[j] = sub_menuItem;
 
-                            for (int k = 0; k < subNode.ChildNodes.Count; k++)
+                            foreach (XmlNode subsubNode in subNode.ChildNodes)
                             {
-                                XmlNode subsubNode = subNode.ChildNodes[k];
-
-                                if (subsubNode.Name == "url")
+                                if (subsubNode.Name == "menu")
                                 {
-                                    UrlMappingItem url = getUrlInfo(subsubNode, sub_menuItem, i, j, -1, incomingQueryStringBehavior);
-
-                                    routes.Add(url);
-                                }
-                                else if (subsubNode.Name == "menu")
-                                {
+                                    k++;
                                     NavigationItem subsub_menuItem = getMenuItem(subsubNode);
                                     sub_menuItem.Children[k] = subsub_menuItem;
 
@@ -230,8 +222,13 @@ namespace Kiss.Web.UrlMapping
                                         }
                                     }
                                 }
-                            }
+                                else if (subsubNode.Name == "url")
+                                {
+                                    UrlMappingItem url = getUrlInfo(subsubNode, sub_menuItem, i, j, -1, incomingQueryStringBehavior);
 
+                                    routes.Add(url);
+                                }
+                            }
                         }
                         else if (subNode.Name == "url")
                         {
