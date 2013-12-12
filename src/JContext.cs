@@ -156,6 +156,14 @@ namespace Kiss.Web
             }
         }
 
+        public MobileDetect MobileDetect
+        {
+            get
+            {
+                return MobileDetect.Instance;
+            }
+        }
+
         #endregion
 
         #region Helpers
