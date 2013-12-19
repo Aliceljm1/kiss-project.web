@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Kiss.Web.Controls;
+using Kiss.Web.Utils;
+using System;
 using System.Threading;
 using System.Web;
+using Kiss.Utils;
 
 namespace Kiss.Web.Mvc
 {
@@ -19,7 +22,16 @@ namespace Kiss.Web.Mvc
             {
                 jc.Controller = ControllerResolver.Instance.CreateController(jc.Navigation.Id);
                 if (jc.Controller == null)
+                {
+                    if (jc.IsEmbed)
+                    {
+                        jc.RenderContent = false;
+
+                        ResponseUtil.OutputJson(jc.Context.Response,
+                            new TemplatedControl() { UsedInMvc = jc.Context.Request.Headers["usedinmvc"].ToBoolean(true), OverrideSkinName = true, Templated = true }.Execute());
+                    }
                     return;
+                }
 
                 object[] attrs = jc.Controller.GetType().GetCustomAttributes(typeof(CheckLicenceAttribute), true);
                 if (attrs.Length == 1)
