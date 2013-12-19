@@ -1188,7 +1188,7 @@ var lazy_embed = function (options) {
                     }
 
                     jQuery.ajax({
-                        headers: { 'embed': '1', 'embedUrl': (opts.affect_url || '') },
+                        headers: { 'embed': '1', 'embedUrl': (opts.affect_url || ''), 'usedinmvc': (opts.usedinmvc || '') },
                         dataType: 'json',
                         url: url,
                         success: function (data) {

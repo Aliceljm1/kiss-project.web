@@ -133,7 +133,7 @@ namespace Kiss.Web.Mvc
                 {
                     jc.RenderContent = false;
                     ResponseUtil.OutputJson(jc.Context.Response,
-                        new TemplatedControl() { UsedInMvc = true, OverrideSkinName = true, Templated = true }.Execute());
+                        new TemplatedControl() { UsedInMvc = jc.Context.Request.Headers["usedinmvc"].ToBoolean(true), OverrideSkinName = true, Templated = true }.Execute());
                 }
             }
             catch (ThreadAbortException) { }// ignore this exception
