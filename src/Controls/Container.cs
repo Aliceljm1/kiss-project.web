@@ -29,31 +29,16 @@ namespace Kiss.Web.Controls
         private IArea _site;
         public IArea CurrentSite { get { if (_site == null)_site = JContext.Current.Area; return _site; } set { _site = value; } }
 
+        private IArea container_site = null;
+
         /// <summary>
         /// Folder which contains the master files
         /// </summary>        
         private string themeFolder = null;
-        private IArea container_site = null;
         public string ThemeFolder
         {
             get
             {
-                if (themeFolder == null)
-                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot), ThemeName);
-
-                if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    container_site = AreaConfig.Instance;
-
-                    if (themeFolder != "~")
-                        container_site = JContext.Current.Host.GetByAreaKey(themeFolder.Substring(1));
-
-                    if (container_site == null)
-                        throw new WebException("site:{0} not exist!", themeFolder.Substring(1));
-
-                    return string.Format("{0}/{1}/masters/", StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot), MobileDetect.Instance.GetRealThemeName(container_site.Theme));
-                }
-
                 return themeFolder;
             }
             set
@@ -73,49 +58,169 @@ namespace Kiss.Web.Controls
             }
         }
 
-        protected string ThemePath
-        {
-            get
-            {
-                return ThemeFolder + ThemeMasterFile;
-            }
-        }
-
-        protected string DefaultThemePath
-        {
-            get
-            {
-                string path = themeFolder;
-
-                if (themeFolder == null)
-                {
-                    path = StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot);
-                }
-                else if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    container_site = AreaConfig.Instance;
-
-                    if (themeFolder != "~")
-                        container_site = JContext.Current.Host.GetByAreaKey(themeFolder.Substring(1));
-
-                    if (container_site == null)
-                        throw new WebException("site:{0} not exist!", themeFolder.Substring(1));
-
-                    path = StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot);
-                }
-
-                return string.Format("{0}/default/masters/{1}", path, ThemeMasterFile);
-            }
-        }
+        #region 当前主题模板
 
         private bool ThemeMasterExists
         {
             get
             {
-                string filename = Context.Server.MapPath(ThemePath);
-                return File.Exists(filename);
+                return File.Exists(Context.Server.MapPath(ThemePath));
             }
         }
+
+        private string themepath;
+        protected string ThemePath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(themepath))
+                {
+                    if (themeFolder == null)
+                    {
+                        themepath = string.Format("{0}/{1}/masters/{2}",
+                            StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),
+                            ThemeName,
+                            ThemeMasterFile);
+                    }
+                    else if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        container_site = AreaConfig.Instance;
+
+                        if (themeFolder != "~")
+                            container_site = JContext.Current.Host.GetByAreaKey(themeFolder.Substring(1));
+
+                        if (container_site == null)
+                            throw new WebException("site:{0} not exist!", themeFolder.Substring(1));
+
+                        themepath = string.Format("{0}/{1}/masters/{2}",
+                            StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot),
+                            MobileDetect.Instance.GetRealThemeName(container_site.Theme),
+                            ThemeMasterFile);
+                    }
+                    else
+                    {
+                        themepath = StringUtil.CombinUrl(themeFolder, ThemeMasterFile);
+                    }
+                }
+
+                return themepath;
+            }
+        }
+
+        #endregion
+
+        #region 当前主题对于版式的默认模板
+
+        /// <summary>
+        /// 是否存在当前主题对应版式的默认模板
+        /// </summary>
+        private bool DefaultFormatMasterExists
+        {
+            get
+            {
+                return File.Exists(Context.Server.MapPath(DefaultFormatThemePath));
+            }
+        }
+
+        private string defaultformatthemepath;
+        protected string DefaultFormatThemePath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(defaultformatthemepath))
+                {
+                    if (themeFolder == null)
+                    {
+                        string format = CurrentSite.Theme;
+                        if (format.IndexOf('.') != -1)
+                            format = format.Split('.')[0];
+
+                        defaultformatthemepath = string.Format("{0}/{1}/masters/{2}",
+                            StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),
+                            MobileDetect.Instance.GetRealThemeName(format),
+                            ThemeMasterFile);
+                    }
+                    else if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        container_site = AreaConfig.Instance;
+
+                        if (themeFolder != "~")
+                            container_site = JContext.Current.Host.GetByAreaKey(themeFolder.Substring(1));
+
+                        if (container_site == null)
+                            throw new WebException("site:{0} not exist!", themeFolder.Substring(1));
+
+                        string format = container_site.Theme;
+                        if (format.IndexOf('.') != -1)
+                            format = format.Split('.')[0];
+
+                        defaultformatthemepath = string.Format("{0}/{1}/masters/{2}",
+                              StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot),
+                              MobileDetect.Instance.GetRealThemeName(container_site, format),
+                              ThemeMasterFile);
+                    }
+                    else
+                    {
+                        defaultformatthemepath = StringUtil.CombinUrl(themeFolder, ThemeMasterFile);
+                    }
+                }
+
+                return defaultformatthemepath;
+            }
+        }
+
+        #endregion
+
+        #region 默认主题模板
+
+        private bool DefaultMasterExists
+        {
+            get
+            {
+                return File.Exists(Context.Server.MapPath(DefaultThemePath));
+            }
+        }
+
+        private string defaultthemepath;
+        protected string DefaultThemePath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(defaultthemepath))
+                {
+                    if (themeFolder == null)
+                    {
+                        defaultthemepath = string.Format("{0}/{1}/masters/{2}",
+                            StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),
+                            MobileDetect.Instance.GetRealThemeName("default"),
+                            ThemeMasterFile);
+                    }
+                    else if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        container_site = AreaConfig.Instance;
+
+                        if (themeFolder != "~")
+                            container_site = JContext.Current.Host.GetByAreaKey(themeFolder.Substring(1));
+
+                        if (container_site == null)
+                            throw new WebException("site:{0} not exist!", themeFolder.Substring(1));
+
+                        defaultthemepath = string.Format("{0}/{1}/masters/{2}",
+                            StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot),
+                            MobileDetect.Instance.GetRealThemeName(container_site, "default"),
+                            ThemeMasterFile);
+                    }
+                    else
+                    {
+                        defaultthemepath = StringUtil.CombinUrl(themeFolder, ThemeMasterFile);
+                    }
+                }
+
+                return defaultthemepath;
+            }
+        }
+
+        #endregion
 
         private const string KEY_LastThemeMasterFile = "Kiss.lastThemeMasterFile";
         private string LastThemeMasterFile
@@ -127,14 +232,6 @@ namespace Kiss.Web.Controls
             set
             {
                 Context.Items[KEY_LastThemeMasterFile] = value;
-            }
-        }
-
-        private bool DefaultMasterExists
-        {
-            get
-            {
-                return File.Exists(Context.Server.MapPath(DefaultThemePath));
             }
         }
 
@@ -163,6 +260,8 @@ namespace Kiss.Web.Controls
 
             if (ThemeMasterExists)
                 masterpagefile = ThemePath;
+            else if (DefaultFormatMasterExists)
+                masterpagefile = DefaultFormatThemePath;
             else if (DefaultMasterExists)
                 masterpagefile = DefaultThemePath;
             else
@@ -212,7 +311,7 @@ namespace Kiss.Web.Controls
             {
                 // auto add some controls here
                 lock (masterPage.Controls.SyncRoot)
-                {                    
+                {
                     if (!MobileDetect.Instance.IsMobile)
                         masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new ControlPanel());
 

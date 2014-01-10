@@ -68,7 +68,7 @@ namespace Kiss.Web.Mvc
 
         public static string GetHeaderValue(string fileName)
         {
-            if (HttpContext.Current.Request.Browser.Type.IndexOf("ie", StringComparison.InvariantCultureIgnoreCase) != -1)
+            if (HttpContext.Current.Request.UserAgent.IndexOf("msie", StringComparison.InvariantCultureIgnoreCase) != -1)
                 fileName = HttpUtility.UrlPathEncode(fileName);
 
             return string.Format("attachment; filename=\"{0}\"", fileName);

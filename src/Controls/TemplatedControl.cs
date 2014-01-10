@@ -150,31 +150,45 @@ namespace Kiss.Web.Controls
             string skinFilename = GetSkinFileName(SkinName);
 
             string skinFile = GetSkinFileFullPath(GetSkinFolder(ThemeName), skinFilename);
-
-            // 加载自定义ThemeName,lang的skin
             if (File.Exists(ServerUtil.MapPath(skinFile)))
             {
                 jc.ViewData["_skinfile_"] = skinFile;
                 loaded = LoadSkin(skinFile);
             }
 
-            string defaultlang_skinFile = GetSkinFileFullPath(GetSkinFolder(ThemeName, false), skinFilename);
-
-            if (!loaded && File.Exists(ServerUtil.MapPath(defaultlang_skinFile)))
+            if (!loaded)
             {
-                jc.ViewData["_skinfile_"] = defaultlang_skinFile;
-                loaded = LoadSkin(defaultlang_skinFile);
-            }
+                string format = ThemeName;
 
-            string default_skinFile = GetSkinFileFullPath(GetSkinFolder("default", false), skinFilename);
-            if (!loaded && File.Exists(ServerUtil.MapPath(default_skinFile)))
-            {
-                jc.ViewData["_skinfile_"] = default_skinFile;
-                loaded = LoadSkin(default_skinFile);
-            }
+                if (format.IndexOf('.') != -1)
+                    format = format.Split('.')[0];
 
-            if (!loaded && ThrowExceptionOnSkinFileNotFound)
-                throw new WebException("Skin file not found in " + skinFile + " nor in " + defaultlang_skinFile + " nor in " + default_skinFile);
+                string default_formatskinFile = GetSkinFileFullPath(GetSkinFolder(format), skinFilename);
+                if (File.Exists(ServerUtil.MapPath(default_formatskinFile)))
+                {
+                    jc.ViewData["_skinfile_"] = default_formatskinFile;
+                    loaded = LoadSkin(default_formatskinFile);
+                }
+
+                string default_skinFile = null;
+
+                if (!loaded && !string.Equals(format, "default", System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    default_skinFile = GetSkinFileFullPath(GetSkinFolder("default"), skinFilename);
+                    if (File.Exists(ServerUtil.MapPath(default_skinFile)))
+                    {
+                        jc.ViewData["_skinfile_"] = default_skinFile;
+                        loaded = LoadSkin(default_skinFile);
+                    }
+                }
+
+                if (!loaded && ThrowExceptionOnSkinFileNotFound)
+                    throw new WebException("Skin file not found in {0} nor in {1}{2}",
+                        skinFile,
+                        default_formatskinFile,
+                        string.IsNullOrEmpty(default_skinFile) ? string.Empty : " nor in " + default_skinFile);
+
+            }
 
             if (loaded)
                 AttachChildControls();
@@ -259,16 +273,11 @@ namespace Kiss.Web.Controls
 
         private string GetSkinFolder(string theme)
         {
-            return GetSkinFolder(theme, true);
-        }
-
-        private string GetSkinFolder(string theme, bool lang)
-        {
             CurrentSite = CurrentSite ?? jc.Area;
 
             return string.Format(SkinFolderFormat,
                 StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),
-                !lang || StringUtil.IsNullOrEmpty(jc.Navigation.LanguageCode) ? theme : string.Format("{0}-{1}", theme, jc.Navigation.LanguageCode));
+                theme);
         }
 
         private static string GetSkinFileFullPath(string folder, string skinFile)
