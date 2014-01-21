@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -54,7 +55,7 @@ namespace Kiss.Web.Controls
         {
             get
             {
-                return MobileDetect.Instance.GetRealThemeName(CurrentSite.Theme);
+                return MobileDetect.Instance.GetRealThemeName(CurrentSite);
             }
         }
 
@@ -94,7 +95,7 @@ namespace Kiss.Web.Controls
 
                         themepath = string.Format("{0}/{1}/masters/{2}",
                             StringUtil.CombinUrl(container_site.VirtualPath, container_site.ThemeRoot),
-                            MobileDetect.Instance.GetRealThemeName(container_site.Theme),
+                            MobileDetect.Instance.GetRealThemeName(container_site),
                             ThemeMasterFile);
                     }
                     else
@@ -137,7 +138,7 @@ namespace Kiss.Web.Controls
 
                         defaultformatthemepath = string.Format("{0}/{1}/masters/{2}",
                             StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),
-                            MobileDetect.Instance.GetRealThemeName(format),
+                            MobileDetect.Instance.GetRealThemeName(CurrentSite, format),
                             ThemeMasterFile);
                     }
                     else if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
@@ -192,7 +193,7 @@ namespace Kiss.Web.Controls
                     {
                         defaultthemepath = string.Format("{0}/{1}/masters/{2}",
                             StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),
-                            MobileDetect.Instance.GetRealThemeName("default"),
+                            MobileDetect.Instance.GetRealThemeName(CurrentSite, "default"),
                             ThemeMasterFile);
                     }
                     else if (themeFolder.StartsWith("~", StringComparison.InvariantCultureIgnoreCase))
@@ -312,7 +313,7 @@ namespace Kiss.Web.Controls
                 // auto add some controls here
                 lock (masterPage.Controls.SyncRoot)
                 {
-                    if (!MobileDetect.Instance.IsMobile)
+                    if (!MobileDetect.Instance.IsMobile || HttpContext.Current.Request.QueryString["showcp"] != null)
                         masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new ControlPanel());
 
                     masterPage.Controls.AddAt(masterPage.Controls.Count - 1, new Scripts());

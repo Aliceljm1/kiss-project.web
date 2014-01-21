@@ -67,10 +67,35 @@ namespace Kiss.Web
 
         public string GetRealThemeName(IArea area, string theme)
         {
-            if (IsMobile && Directory.Exists(Path.Combine(ServerUtil.MapPath(area.VirtualPath), "themes", string.Format("{0}_mobile", theme))))
-                return string.Format("{0}_mobile", theme);
+            string dir = Path.Combine(ServerUtil.MapPath(area.VirtualPath), "themes");
 
-            return theme;
+            string format = theme;
+            if (format.IndexOf('.') != -1)
+                format = format.Split('.')[0];
+
+            if (IsMobile)
+            {
+                if (Directory.Exists(Path.Combine(dir, string.Format("{0}_mobile", theme))))
+                    return string.Format("{0}_mobile", theme);
+
+                if (format != theme && Directory.Exists(Path.Combine(dir, string.Format("{0}_mobile", format))))
+                    return string.Format("{0}_mobile", format);
+
+                if (format != "default" && Directory.Exists(Path.Combine(dir, "default_mobile")))
+                    return "default_mobile";
+
+                return "default";
+            }
+            else
+            {
+                if (Directory.Exists(Path.Combine(dir, theme)))
+                    return theme;
+
+                if (format != theme && Directory.Exists(Path.Combine(dir, format)))
+                    return format;
+
+                return "default";
+            }
         }
     }
 }
