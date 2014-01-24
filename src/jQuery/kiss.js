@@ -2973,6 +2973,11 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
                 var myWidth = $this.first().find(' TR TH.resizable').get(columnIndex).offsetWidth;
                 var newWidth = (myWidth + change);
 
+                if (newWidth <= 0) {
+                    resetSliderPositions();
+                    return false;
+                }
+
                 // resize th
                 var th = $this.first().find('thead TR TH.resizable').eq(columnIndex);
                 th.css('width', newWidth);
@@ -2991,12 +2996,14 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
                 $this.first().find('thead TR TH.resizable').each(function (index) {
                     var th = $(this);
                     var newSliderPosition = th.offset().left + th.outerWidth();
-                    $this.first().parent().find('.draghandle:eq(' + index + ')').css({ left: newSliderPosition, height: h });
+                    $('.draghandle:eq(' + index + ')').css({ left: newSliderPosition, height: h, top: th.offset().top });
                 });
             }
 
             for (var i = 0; i < numberOfColumns; i++) {
-                $('<div class="draghandle"></div>').insertBefore($this.first()).data('ix', i).draggable({
+                var html = $('<div class="draghandle"></div>').data('ix', i)
+
+                html.draggable({
                     axis: "x",
                     start: function () {
                         $(this).toggleClass("dragged");
@@ -3005,12 +3012,14 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
                     },
                     stop: function (event, ui) {
                         $(this).toggleClass("dragged");
-                        var oldPos = ($(this).data("draggable").originalPosition.left);
+                        var oldPos = ui.originalPosition.left;
                         var newPos = ui.position.left;
                         var index = $(this).data("ix");
                         resetTableSizes(newPos - oldPos, index);
                     }
                 });
+
+                $('body').append(html);
             };
 
             resetSliderPositions();

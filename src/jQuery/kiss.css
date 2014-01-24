@@ -366,6 +366,22 @@ http://yuilibrary.com/license/
                 background-position: -64px -16px;
             }
 
+    /*leixu 2014-01-24
+                gtable 若采用resize 列 则 自动将超出部分采用...*/
+    .gtable.resizable .autocut {
+        width: inherit;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        -icab-text-overflow: ellipsis;
+        -khtml-text-overflow: ellipsis;
+        -moz-text-overflow: ellipsis;
+        -webkit-text-overflow: ellipsis;
+        word-break: normal;
+        word-wrap: normal;
+    }
+
 /* jQuery TreeTable Core 2.0 stylesheet
  *
  * This file contains styles that are used to display the tree table. Each tree
@@ -387,7 +403,7 @@ http://yuilibrary.com/license/
 }
 
 .draghandle {
-    position: absolute;
+    position: absolute !important;
     z-index: 5;
     width: 5px;
     cursor: e-resize;
