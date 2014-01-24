@@ -2966,9 +2966,9 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
         // column resize
         //get number of columns 
         if (settings.resizable) {
-            var wrap = $('<div style="width: 100%;" ></div>');
+            var wrap = $('<div style="width: auto;" ></div>');
 
-            $this.wrap(wrap);
+            $this.addClass('resizable').wrap(wrap);
 
             $('<div class="autodiv"></div>').insertBefore($this);
 
@@ -2991,7 +2991,7 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
 
                     var ix = $this.first().find('thead TR TH').index(th);
 
-                    $this.find(' TR').each(function () {
+                    $this.css('width', $this.outerWidth() + change).find(' TR').each(function () {
                         $(this).find('TD').eq(ix).css('width', newWidth);
                     });
                     resetSliderPositions();
