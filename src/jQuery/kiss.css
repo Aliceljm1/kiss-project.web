@@ -382,6 +382,16 @@ http://yuilibrary.com/license/
         word-wrap: normal;
     }
 
+.autodiv {
+    width: 100%;
+    height: 26px;
+    position: absolute;
+    z-index: -9;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background: #EFEFEF;
+}
+
 /* jQuery TreeTable Core 2.0 stylesheet
  *
  * This file contains styles that are used to display the tree table. Each tree

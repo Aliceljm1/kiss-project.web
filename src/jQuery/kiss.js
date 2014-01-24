@@ -2964,69 +2964,77 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
         init_sort();
 
         // column resize
-        //get number of columns
-        var numberOfColumns = $this.first().find('thead TR TH.resizable').size();
-        if (numberOfColumns > 0) {
+        //get number of columns 
+        if (settings.resizable) {
+            var wrap = $('<div style="width: 100%;" ></div>');
 
-            var resetTableSizes = function (change, columnIndex) {
-                //calculate new width       
-                var myWidth = $this.first().find(' TR TH.resizable').get(columnIndex).offsetWidth;
-                var newWidth = (myWidth + change);
+            $this.wrap(wrap);
 
-                if (newWidth <= 0) {
+            $('<div class="autodiv"></div>').insertBefore($this);
+
+            var numberOfColumns = $this.first().find('thead TR TH.resizable').size();
+            if (numberOfColumns > 0) {
+
+                var resetTableSizes = function (change, columnIndex) {
+                    //calculate new width       
+                    var myWidth = $this.first().find(' TR TH.resizable').get(columnIndex).offsetWidth;
+                    var newWidth = (myWidth + change);
+
+                    if (newWidth <= 0) {
+                        resetSliderPositions();
+                        return false;
+                    }
+
+                    // resize th
+                    var th = $this.first().find('thead TR TH.resizable').eq(columnIndex);
+                    th.css('width', newWidth);
+
+                    var ix = $this.first().find('thead TR TH').index(th);
+
+                    $this.find(' TR').each(function () {
+                        $(this).find('TD').eq(ix).css('width', newWidth);
+                    });
                     resetSliderPositions();
-                    return false;
+                };
+
+                var resetSliderPositions = function () {
+                    var h = $this.first().height();
+                    //put all sliders on the correct position
+                    $this.first().find('thead TR TH.resizable').each(function (index) {
+                        var th = $(this);
+                        var newSliderPosition = th.offset().left + th.outerWidth();
+                        $('.draghandle:eq(' + index + ')').css({ left: newSliderPosition, height: h, top: th.offset().top });
+                    });
                 }
 
-                // resize th
-                var th = $this.first().find('thead TR TH.resizable').eq(columnIndex);
-                th.css('width', newWidth);
+                for (var i = 0; i < numberOfColumns; i++) {
+                    var html = $('<div class="draghandle"></div>').data('ix', i);
 
-                var ix = $this.first().find('thead TR TH').index(th);
+                    html.draggable({
+                        axis: "x",
+                        start: function () {
+                            $(this).toggleClass("dragged");
+                            //set the height of the draghandle to the current height of the table, to get the vertical ruler
+                            $(this).css({ height: $this.last().height() + 'px' });
+                        },
+                        stop: function (event, ui) {
+                            $(this).toggleClass("dragged");
+                            var oldPos = ui.originalPosition.left;
+                            var newPos = ui.position.left;
+                            var index = $(this).data("ix");
+                            resetTableSizes(newPos - oldPos, index);
+                        }
+                    });
 
-                $this.find(' TR').each(function () {
-                    $(this).find('TD').eq(ix).css('width', newWidth);
-                });
+                    $('body').append(html);
+                };
+
                 resetSliderPositions();
-            };
 
-            var resetSliderPositions = function () {
-                var h = $this.first().height();
-                //put all sliders on the correct position
-                $this.first().find('thead TR TH.resizable').each(function (index) {
-                    var th = $(this);
-                    var newSliderPosition = th.offset().left + th.outerWidth();
-                    $('.draghandle:eq(' + index + ')').css({ left: newSliderPosition, height: h, top: th.offset().top });
+                $(window).bind('resize', function () {
+                    resetSliderPositions();
                 });
             }
-
-            for (var i = 0; i < numberOfColumns; i++) {
-                var html = $('<div class="draghandle"></div>').data('ix', i);
-
-                html.draggable({
-                    axis: "x",
-                    start: function () {
-                        $(this).toggleClass("dragged");
-                        //set the height of the draghandle to the current height of the table, to get the vertical ruler
-                        $(this).css({ height: $this.last().height() + 'px' });
-                    },
-                    stop: function (event, ui) {
-                        $(this).toggleClass("dragged");
-                        var oldPos = ui.originalPosition.left;
-                        var newPos = ui.position.left;
-                        var index = $(this).data("ix");
-                        resetTableSizes(newPos - oldPos, index);
-                    }
-                });
-
-                $('body').append(html);
-            };
-
-            resetSliderPositions();
-
-            $(window).bind('resize', function () {
-                resetSliderPositions();
-            });
         }
         return $this;
     };
@@ -3037,7 +3045,8 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
         unselectTip: '全不选',
         clickToSelect: true,
         sortablecolumns: null,
-        sort: ''
+        sort: '',
+        resizable: false
     };
 
     $.fn.getSelectedRowIds = function () {
