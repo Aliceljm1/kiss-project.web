@@ -3001,7 +3001,7 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
             }
 
             for (var i = 0; i < numberOfColumns; i++) {
-                var html = $('<div class="draghandle"></div>').data('ix', i)
+                var html = $('<div class="draghandle"></div>').data('ix', i);
 
                 html.draggable({
                     axis: "x",
