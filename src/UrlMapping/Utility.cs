@@ -136,7 +136,7 @@ namespace Kiss.Web.UrlMapping
             {
                 if (m.Value.Length == 2)
                 {
-                    s = s.Replace(m.Value, @"(?<_pre_>[/\-~?a-zA-Z0-9_\u00a4-\uffe5+]*)");
+                    s = s.Replace(m.Value, @"(?<_pre_>[/\-~?.a-zA-Z0-9_\u00a4-\uffe5+]*)");
                 }
                 else
                 {
