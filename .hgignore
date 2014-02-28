@@ -1,0 +1,7 @@
+glob:*.cache
+glob:*.suo
+glob:bin
+glob:obj
+glob:*.csproj.user
+syntax: glob
+web.sln.docstates
