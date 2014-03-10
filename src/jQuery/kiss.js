@@ -2429,6 +2429,10 @@ var lazy_embed = function (options) {
                 $this.submit(beforeSubmit);
             }
         });
+         
+        if (opts.cb && $.isFunction(opts.cb)) {
+            opts.cb.apply(this, [$(this)]);
+        }
 
         return $(this);
     };
@@ -2443,7 +2447,8 @@ var lazy_embed = function (options) {
         submitFunc: null,
         autoAddRedStar: true,
         focus_first_input: false,
-        enter_to_submit: false
+        enter_to_submit: false,
+        cb: null
     };
 
     $.fn.gform.updateTips = function (t) {
