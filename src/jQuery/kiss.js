@@ -2429,7 +2429,7 @@ var lazy_embed = function (options) {
                 $this.submit(beforeSubmit);
             }
         });
-         
+
         if (opts.cb && $.isFunction(opts.cb)) {
             opts.cb.apply(this, [$(this)]);
         }
@@ -2980,6 +2980,8 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
             var numberOfColumns = $this.first().find('thead TR TH.resizable').size();
             if (numberOfColumns > 0) {
 
+                $('.draghandle[data-index=' + $this.index() + ']').remove();
+
                 var resetTableSizes = function (change, columnIndex) {
                     //calculate new width       
                     var myWidth = $this.first().find(' TR TH.resizable').get(columnIndex).offsetWidth;
@@ -3013,7 +3015,7 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
                 }
 
                 for (var i = 0; i < numberOfColumns; i++) {
-                    var html = $('<div class="draghandle"></div>').data('ix', i);
+                    var html = $('<div class="draghandle" data-index=' + $this.index() + '></div>').data('ix', i);
 
                     html.draggable({
                         axis: "x",
