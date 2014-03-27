@@ -2884,7 +2884,7 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
                 thIndex = th.index(),
                 inverse = true;
 
-                th.html('<div>' + th.html() + '<span title="排序"></span></div>');
+                th.html('<div title="排序">' + th.html() + '<span title="排序"></span></div>');
 
                 // 修复宽度缩小问题
                 if (th.attr('width'))
@@ -3035,6 +3035,24 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
 
                     $('body').append(html);
                 };
+
+                //add autocut
+                $this.first().find('thead TR TH.resizable').each(function (index) {
+                    var eq = $(this).index();
+
+                    var th_count = $this.first().find('thead TR TH').length
+                    for (var i = 1; i <= $this.first().find('tbody td').length; i++) {
+                        var td = $this.first().find('tbody td:eq(' + ((i - 1) * th_count + eq) + ')');
+
+                        if (td.find('autocut').length > 0) continue;
+
+                        var html = $.trim(td.html()),
+                            text = $.trim(td.text());
+
+                        td.html($('<div class="autocut" title="' + text + '" >' + html + '</div>'));
+                        td.children().addClass('autocut');
+                    }
+                });
 
                 resetSliderPositions();
 
@@ -3259,4 +3277,52 @@ jQuery.fn.sortElements = (function () {
             });
         }
     };
+})(jQuery);
+
+(function ($) {
+    $.extend({
+        autoCut: function (text, cut_length, end) {
+            if (text.length == 0 || cut_length > $.getLength(text)) return $.htmlencode(text);
+
+            var result = '';
+            var j = 0;
+
+            var str_array = text.split('');
+
+            for (var i = 0; i < str_array.length; i++) {
+                var c = str_array[i];
+
+                if (text.charCodeAt(i) >= 255) {
+                    j = j + 2;
+                } else {
+                    j = j + 1;
+                }
+
+                result = result + c;
+
+                if (j >= cut_length) {
+                    if (end) return $.htmlencode(result + end); else return $.htmlencode(result + '...');
+                }
+            }
+        },
+        getLength: function (text) {
+            var length = 0, c = '';
+
+            for (var i = 0; i < text.length; i++) {
+                c = text.charCodeAt(i);
+                if (c >= 255) {
+                    length = length + 2;
+                } else {
+                    length = length + 1;
+                }
+            }
+            return length;
+        },
+        htmlencode: function (text) {
+            return $('<div />').text(text).html();
+        },
+        htmldecode: function (text) {
+            return $('<div />').html(text).text();
+        }
+    });
 })(jQuery);

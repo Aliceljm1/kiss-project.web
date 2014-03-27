@@ -347,6 +347,7 @@ http://yuilibrary.com/license/
 
         .gtable thead tr .sortable div {
             position: relative;
+            width: inherit;
         }
 
         .gtable thead tr .sortable span {
@@ -368,24 +369,27 @@ http://yuilibrary.com/license/
 
     /*leixu 2014-01-24
                 gtable 若采用resize 列 则 自动将超出部分采用...*/
-    .gtable.resizable .autocut {
-        width: inherit;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        -o-text-overflow: ellipsis;
-        -icab-text-overflow: ellipsis;
-        -khtml-text-overflow: ellipsis;
-        -moz-text-overflow: ellipsis;
-        -webkit-text-overflow: ellipsis;
-        word-break: normal;
-        word-wrap: normal;
+    .gtable.resizable {
+        margin-top: -27px;
     }
+
+        .gtable.resizable .autocut {
+            width: inherit;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            -icab-text-overflow: ellipsis;
+            -khtml-text-overflow: ellipsis;
+            -moz-text-overflow: ellipsis;
+            -webkit-text-overflow: ellipsis;
+            word-break: normal;
+            word-wrap: normal;
+        }
 
 .autodiv {
     width: 100%;
     height: 26px;
-    position: absolute;
     z-index: -9;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
