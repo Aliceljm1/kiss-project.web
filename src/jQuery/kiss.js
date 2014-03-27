@@ -3044,7 +3044,7 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
                     for (var i = 1; i <= $this.first().find('tbody td').length; i++) {
                         var td = $this.first().find('tbody td:eq(' + ((i - 1) * th_count + eq) + ')');
 
-                        if (td.find('autocut').length > 0) continue;
+                        if (td.find('.autocut').length > 0) continue;
 
                         var html = $.trim(td.html()),
                             text = $.trim(td.text());
