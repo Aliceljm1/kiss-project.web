@@ -427,6 +427,8 @@ namespace Kiss.Web
                     }
                     else
                     {
+                        _siteId = value;
+
                         SiteConfig = ServiceLocator.Instance.Resolve<IUserService>().GetSiteBySiteId(value);
 
                         if (SiteConfig != null)
@@ -453,8 +455,6 @@ namespace Kiss.Web
                                 Area.Theme = "default";
                         }
                     }
-
-                    _siteId = value;
                 }
             }
         }
