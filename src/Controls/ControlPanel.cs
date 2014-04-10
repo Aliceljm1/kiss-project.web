@@ -21,7 +21,7 @@ namespace Kiss.Web.Controls
             isSiteAdmin = jc.User.HasPermission(string.Format("site.control_panel@{0}",
                 jc.Area["support_multi_site"].ToBoolean() ? jc.SiteId : string.Empty));
 
-            if (!isSiteAdmin) return;
+            jc.Context.Items["_has_controlpanel_permission_"] = isSiteAdmin;
 
             foreach (var cpItem in Plugin.Plugins.GetPlugins<ControlPanelItemAttribute>(JContext.Current.User))
             {
@@ -32,7 +32,7 @@ namespace Kiss.Web.Controls
                 renderers.Add(obj as IControlPanelItemRenderer);
             }
 
-            if (renderers.Count == 0) return;
+            if (renderers.Count == 0 || !isSiteAdmin) return;
 
             ClientScriptProxy proxy = ClientScriptProxy.Current;
 
@@ -44,18 +44,19 @@ namespace Kiss.Web.Controls
 
         protected override void Render(HtmlTextWriter writer)
         {
-            if (!isSiteAdmin || renderers.Count == 0) { base.Render(writer); return; }
-
-            writer.Write("<div id='_g_sc' class='sc opened' path='{0}'><div class='scContent'><div class='controlPanel'><div class='plugins'>", JContext.Current.url("~"));
-
-            foreach (var renderer in renderers)
+            if (isSiteAdmin && renderers.Count > 0)
             {
-                renderer.RenderItem(writer);
-            }
+                writer.Write("<div id='_g_sc' class='sc opened' path='{0}'><div class='scContent'><div class='controlPanel'><div class='plugins'>", JContext.Current.url("~"));
 
-            writer.Write("</div></div><span class='close' title='关闭控制面板'>«</span><span class='open' title='打开控制面板'>»</span></div></div>");
+                foreach (var renderer in renderers)
+                {
+                    renderer.RenderItem(writer);
+                }
 
-            ClientScriptProxy.Current.RegisterJsResource(GetType(), "Kiss.Web.jQuery.cp.j.js");
+                writer.Write("</div></div><span class='close' title='关闭控制面板'>«</span><span class='open' title='打开控制面板'>»</span></div></div>");
+
+                ClientScriptProxy.Current.RegisterJsResource(GetType(), "Kiss.Web.jQuery.cp.j.js");
+            }           
 
             base.Render(writer);
         }

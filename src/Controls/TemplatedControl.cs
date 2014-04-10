@@ -277,6 +277,21 @@ namespace Kiss.Web.Controls
         {
             CurrentSite = CurrentSite ?? jc.Area;
 
+            if (!MobileDetect.Instance.IsMobile && jc.SiteConfig != null && !string.IsNullOrEmpty(CurrentSite.Layout))
+            {
+                string layout_url = string.Format("{0}/{1}/layouts/{2}/",
+                    StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),
+                    theme,
+                    CurrentSite.Layout);
+
+                string layout_path = ServerUtil.MapPath(layout_url);
+
+                if (Directory.Exists(layout_path) && File.Exists(Path.Combine(layout_path, GetSkinFileName(SkinName))))
+                {
+                    return layout_url;
+                }
+            }
+
             return string.Format(SkinFolderFormat,
                 StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot),
                 theme);

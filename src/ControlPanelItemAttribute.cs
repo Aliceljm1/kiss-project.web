@@ -9,9 +9,18 @@ namespace Kiss.Web
     [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
     public class ControlPanelItemAttribute : PluginAttribute
     {
+        /// <summary>
+        /// 标识控件的显示是否依赖于控制面版是否显示
+        /// </summary>
+        public bool Independent { get; set; }
+
         public override bool IsAuthorized(Principal user)
         {
             JContext jc = JContext.Current;
+
+            if (!Independent && !jc.Context.Items["_has_controlpanel_permission_"].ToBoolean())
+                return false;
+
             IArea area = jc.Area;
 
             string per = Permission;

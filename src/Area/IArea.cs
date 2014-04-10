@@ -41,5 +41,10 @@ namespace Kiss.Web
         /// 当前主题
         /// </summary>
         string Theme { get; set; }
+
+        /// <summary>
+        /// 当前布局
+        /// </summary>
+        string Layout { get; set; }
     }
 }

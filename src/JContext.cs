@@ -430,7 +430,28 @@ namespace Kiss.Web
                         SiteConfig = ServiceLocator.Instance.Resolve<IUserService>().GetSiteBySiteId(value);
 
                         if (SiteConfig != null)
-                            Area.Theme = SiteConfig[string.Concat(Area.AreaKey, "_theme")] ?? "default";
+                        {
+                            if (IsDesignMode)
+                            {
+                                if (string.IsNullOrEmpty(SiteConfig[string.Concat(Area.AreaKey, "_theme_design")]))
+                                    Area.Theme = SiteConfig[string.Concat(Area.AreaKey, "_theme")];
+                                else
+                                    Area.Theme = SiteConfig[string.Concat(Area.AreaKey, "_theme_design")];
+
+                                if (string.IsNullOrEmpty(SiteConfig[string.Concat(Area.AreaKey, "_layout_design")]))
+                                    Area.Layout = SiteConfig[string.Concat(Area.AreaKey, "_layout")];
+                                else
+                                    Area.Layout = SiteConfig[string.Concat(Area.AreaKey, "_layout_design")];
+                            }
+                            else
+                            {
+                                Area.Theme = SiteConfig[string.Concat(Area.AreaKey, "_theme")];
+                                Area.Layout = SiteConfig[string.Concat(Area.AreaKey, "_layout")];
+                            }
+
+                            if (string.IsNullOrEmpty(Area.Theme))
+                                Area.Theme = "default";
+                        }
                     }
 
                     _siteId = value;
