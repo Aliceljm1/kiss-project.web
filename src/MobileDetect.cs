@@ -62,11 +62,16 @@ namespace Kiss.Web
 
         public string GetRealThemeName(IArea area)
         {
+            JContext jc = JContext.Current;
+
             return GetRealThemeName(area, area.Theme);
         }
 
         public string GetRealThemeName(IArea area, string theme)
         {
+            if (string.IsNullOrEmpty(theme))
+                theme = "default";
+
             string dir = Path.Combine(ServerUtil.MapPath(area.VirtualPath), "themes");
 
             string format = theme;

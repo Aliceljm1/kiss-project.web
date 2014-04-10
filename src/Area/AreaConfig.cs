@@ -133,5 +133,17 @@ namespace Kiss.Web
                 JContext.Current.Items[AreaKey + "AreaConfig.Theme"] = value;
             }
         }
+
+        public string Layout
+        {
+            get
+            {
+                return JContext.Current.Items[AreaKey + "AreaConfig.Layout"] as string;
+            }
+            set
+            {
+                JContext.Current.Items[AreaKey + "AreaConfig.Layout"] = value;
+            }
+        }
     }
 }
