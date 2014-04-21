@@ -163,9 +163,6 @@ namespace Kiss.Web.Controls
                 if (format.IndexOf('.') != -1)
                     format = format.Split('.')[0];
 
-                if (MobileDetect.Instance.IsMobile)
-                    format = format + "_mobile";
-
                 string default_formatskinFile = GetSkinFileFullPath(GetSkinFolder(format), skinFilename);
                 if (File.Exists(ServerUtil.MapPath(default_formatskinFile)))
                 {
