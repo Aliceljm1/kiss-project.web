@@ -738,6 +738,10 @@ namespace Kiss.Web
 
                 return _area;
             }
+            set
+            {
+                _area = value;
+            }
         }
 
         public IHost Host { get { return ServiceLocator.Instance.Resolve<IHost>(); } }
