@@ -1077,6 +1077,14 @@ var LazyInclude = {
                         this.fn.apply();
                     });
                     script.callbacks.length = 0;
+                }, error: function (xhr, status, errorMsg) {
+                    if (window.console) { 
+                        console.log('lazyIncludeError:' + errorMsg + ',statusCode:' + status);
+                        throw errorMsg;
+                    } else {
+                        alert('lazyIncludeError:' + errorMsg + ',statusCode:' + status);
+                        throw errorMsg;
+                    }
                 }
             });
         }
