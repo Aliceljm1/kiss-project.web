@@ -76,15 +76,31 @@ namespace Kiss.Web.Query
 
                                 _logger.Debug("RESULT: query id:{0}", id);
 
-                                qc_dict[id] = new Qc()
+                                Qc qc = new Qc()
                                 {
                                     Id = id,
                                     Field = XmlUtil.GetStringAttribute(node, "field", string.Empty),
                                     AllowedOrderbyColumns = XmlUtil.GetStringAttribute(node, "allowedOrderbyColumns", string.Empty),
                                     Orderby = XmlUtil.GetStringAttribute(node, "orderby", string.Empty),
-                                    Where = node.InnerText,
+                                    Where = node.InnerText.Trim(),
                                     PageSize = XmlUtil.GetIntAttribute(node, "pageSize", -1)
                                 };
+
+                                if (string.IsNullOrEmpty(qc.Field))
+                                {
+                                    // 如果field是设置在单独的节点
+                                    XmlNode n = node.SelectSingleNode("field");
+                                    if (n != null)
+                                    {
+                                        qc.Field = n.InnerText.Trim();
+
+                                        n = node.SelectSingleNode("where");
+                                        if (n != null)
+                                            qc.Where = n.InnerText.Trim();
+                                    }
+                                }
+
+                                qc_dict[id] = qc;
 
                                 foreach (XmlAttribute attr in node.Attributes)
                                 {
@@ -103,8 +119,8 @@ namespace Kiss.Web.Query
                     {
                         if (string.IsNullOrEmpty(item.Name)) continue;
 
-                        string id = string.Format(FORMAT, 
-                            string.IsNullOrEmpty(item.ParentId) ? "default" : item.ParentId, 
+                        string id = string.Format(FORMAT,
+                            string.IsNullOrEmpty(item.ParentId) ? "default" : item.ParentId,
                             item.Name.ToLowerInvariant());
 
                         var qc = qc_dict[id] = new Qc()
@@ -175,6 +191,8 @@ namespace Kiss.Web.Query
             if (qc.PageSize > -1 && q.PageSize == -1)
                 q.PageSize = qc.PageSize;
 
+            q.Parameters.Clear();
+
             if ((string.IsNullOrEmpty(q.TableField) || q.TableField == "*" || q.EventFiredTimes > 1) && StringUtil.HasText(qc.Field))
             {
                 if (qc.Field.Contains("$"))
@@ -196,6 +214,16 @@ namespace Kiss.Web.Query
                 {
                     q.TableField = qc.Field;
                 }
+            }
+
+            // 解析field里的@参数
+            Match m = Regex.Match(q.TableField, @"@\w+");
+            while (m.Success)
+            {
+                string param_name = m.Value.Substring(1).Trim();
+
+                q.Parameters[param_name] = q[param_name];
+                m = m.NextMatch();
             }
 
             if (StringUtil.HasText(qc.AllowedOrderbyColumns))
@@ -226,9 +254,8 @@ namespace Kiss.Web.Query
 
                 string sql = Regex.Replace(writer.GetStringBuilder().ToString(), @"\s{1,}|\t|\r|\n", " ");
 
-                q.Parameters.Clear();
-
-                Match m = Regex.Match(sql, @"@\w+");
+                // 解析where里的@参数
+                m = Regex.Match(sql, @"@\w+");
                 while (m.Success)
                 {
                     string param_name = m.Value.Substring(1).Trim();
