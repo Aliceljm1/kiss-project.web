@@ -173,6 +173,8 @@ namespace Kiss.Web.Resources
         {
             ContentType = contentType;
 
+            response.ContentEncoding = Encoding.UTF8;
+
             ServerUtil.AddCache(60 * 24 * 90);
 
             response.BinaryWrite(output);

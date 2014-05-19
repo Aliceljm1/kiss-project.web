@@ -172,9 +172,11 @@ namespace Kiss.Web.Controls
 
                 string default_skinFile = null;
 
-                if (!loaded && !string.Equals(format, "default", System.StringComparison.InvariantCultureIgnoreCase))
+                string defaultTheme = MobileDetect.Instance.IsMobile ? "default_mobile" : "default";
+
+                if (!loaded && !string.Equals(format, defaultTheme, System.StringComparison.InvariantCultureIgnoreCase))
                 {
-                    default_skinFile = GetSkinFileFullPath(GetSkinFolder("default"), skinFilename);
+                    default_skinFile = GetSkinFileFullPath(GetSkinFolder(defaultTheme), skinFilename);
                     if (File.Exists(ServerUtil.MapPath(default_skinFile)))
                     {
                         jc.ViewData["_skinfile_"] = default_skinFile;
