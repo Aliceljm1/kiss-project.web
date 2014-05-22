@@ -33,6 +33,8 @@ namespace Kiss.Web.Controls
                 {
                     if (css.StartsWith("~"))
                         proxy.RegisterCss(ServerUtil.ResolveUrl(css));
+                    else if (css.StartsWith("."))
+                        proxy.RegisterCss(StringUtil.CombinUrl(CurrentSite.VirtualPath, CurrentSite.ThemeRoot, MobileDetect.Instance.GetRealThemeName(CurrentSite), css.Substring(1)));
                     else
                         proxy.RegisterCss(StringUtil.CombinUrl(CurrentSite.VirtualPath, css));
                 }
@@ -84,9 +86,9 @@ namespace Kiss.Web.Controls
                             if (vp.StartsWith("~"))
                                 proxy.RegisterJs(StringUtil.CombinUrl(ServerUtil.ResolveUrl(vp), relativePath), NoCombine);
                             else if (vp.StartsWith("."))
-                                proxy.RegisterJs(StringUtil.CombinUrl(CurrentSite.VirtualPath, 
-                                    CurrentSite.ThemeRoot, 
-                                    MobileDetect.Instance.GetRealThemeName(CurrentSite), 
+                                proxy.RegisterJs(StringUtil.CombinUrl(CurrentSite.VirtualPath,
+                                    CurrentSite.ThemeRoot,
+                                    MobileDetect.Instance.GetRealThemeName(CurrentSite),
                                     vp.Substring(1),
                                     relativePath), NoCombine);
                             else
