@@ -222,7 +222,8 @@ namespace Kiss.Web.Query
             {
                 string param_name = m.Value.Substring(1).Trim();
 
-                q.Parameters[param_name] = q[param_name];
+                if (q[param_name] != null)
+                    q.Parameters[param_name] = q[param_name];
                 m = m.NextMatch();
             }
 
@@ -260,7 +261,9 @@ namespace Kiss.Web.Query
                 {
                     string param_name = m.Value.Substring(1).Trim();
 
-                    q.Parameters[param_name] = q[param_name];
+                    if (q[param_name] != null)
+                        q.Parameters[param_name] = q[param_name];
+
                     m = m.NextMatch();
                 }
 
