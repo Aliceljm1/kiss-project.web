@@ -1078,7 +1078,7 @@ var LazyInclude = {
                     });
                     script.callbacks.length = 0;
                 }, error: function (xhr, status, errorMsg) {
-                    if (window.console) { 
+                    if (window.console) {
                         console.log('lazyIncludeError:' + errorMsg + ',statusCode:' + status);
                         throw errorMsg;
                     } else {
@@ -2979,7 +2979,7 @@ jQuery(document).ajaxStart(function () { jQuery('.gloading').show(); $.fn.gform.
         // column resize
         //get number of columns 
         if (settings.resizable) {
-            var wrap = $('<div style="width: auto;" ></div>');
+            var wrap = $('<div style="width: auto;overflow-x:auto;" ></div>');
 
             $this.addClass('resizable').wrap(wrap);
 
