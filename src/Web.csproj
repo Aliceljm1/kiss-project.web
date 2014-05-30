@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6177A44C-1107-43E7-94BA-FC586D477F4E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Kiss.Web</RootNamespace>
+    <AssemblyName>Kiss.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Kiss.Web.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Kiss, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Kiss.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AjaxServerException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ajax\Ajax.cs" />
+    <Compile Include="Ajax\AjaxClass.cs" />
+    <Compile Include="Ajax\AjaxConfig.cs" />
+    <Compile Include="Ajax\AjaxController.cs" />
+    <Compile Include="Ajax\AjaxException.cs" />
+    <Compile Include="Ajax\AjaxInitializer.cs" />
+    <Compile Include="Ajax\AjaxMethod.cs" />
+    <Compile Include="Ajax\AjaxMethodAttribute.cs" />
+    <Compile Include="Ajax\AjaxParam.cs" />
+    <Compile Include="Area\AreaInitializer.cs" />
+    <Compile Include="Area\AreaUrlMappingProvider.cs" />
+    <Compile Include="Area\Host.cs" />
+    <Compile Include="Controls\IContextAwaredControl.cs" />
+    <Compile Include="Controls\Layout.cs" />
+    <Compile Include="ExportHelper.cs" />
+    <Compile Include="ITextProcesser.cs" />
+    <Compile Include="Controls\ControlPanel.cs" />
+    <Compile Include="Controls\Include.cs" />
+    <Compile Include="KissHttpApplication.cs" />
+    <Compile Include="ControlPanelItemAttribute.cs" />
+    <Compile Include="ClientScriptProxy.cs" />
+    <Compile Include="Controls\Container.cs" />
+    <Compile Include="Controls\Content.cs" />
+    <Compile Include="Controls\ContentPlaceHolder.cs" />
+    <Compile Include="Controls\Head.cs" />
+    <Compile Include="Controls\MasterPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Area\IHost.cs" />
+    <Compile Include="Area\IArea.cs" />
+    <Compile Include="MobileDetect.cs" />
+    <Compile Include="Mvc\ViewResult\FileContentResult.cs" />
+    <Compile Include="Mvc\ViewResult\FilePathResult.cs" />
+    <Compile Include="Mvc\ViewResult\FileResult.cs" />
+    <Compile Include="Mvc\ViewResult\FileStreamResult.cs" />
+    <Compile Include="Optimization\compress\CompressingFilter.cs" />
+    <Compile Include="Optimization\compress\DeflateFilter.cs" />
+    <Compile Include="Optimization\compress\Enums.cs" />
+    <Compile Include="Optimization\compress\GZipFilter.cs" />
+    <Compile Include="Optimization\css sprite\ImageOptimizations.cs" />
+    <Compile Include="Optimization\css sprite\ImageSettings.cs" />
+    <Compile Include="Optimization\HttpOutputFilter.cs" />
+    <Compile Include="Optimization\minify\HtmlMinifierStream.cs" />
+    <Compile Include="Optimization\minify\InlineJavascriptMiniferStream.cs" />
+    <Compile Include="Optimization\minify\InlineStyleMiniferStream.cs" />
+    <Compile Include="Optimization\minify\JavascriptMiniferStream.cs" />
+    <Compile Include="Optimization\minify\ReplaceFilterStream.cs" />
+    <Compile Include="Optimization\minify\StyleMiniferStream.cs" />
+    <Compile Include="Optimization\OptimizationInitializer.cs" />
+    <Compile Include="Optimization\OptimizationModule.cs" />
+    <Compile Include="Properties\CommonAssemblyInfo.cs" />
+    <Compile Include="Query\DynamicQueryInitializer.cs" />
+    <Compile Include="Query\DynamicQueryPlugin.cs" />
+    <Compile Include="Mvc\ActionResult.cs" />
+    <Compile Include="Mvc\Controller.cs" />
+    <Compile Include="Mvc\Attribute.cs" />
+    <Compile Include="Mvc\ActionInvoker.cs" />
+    <Compile Include="Mvc\IActionInvoker.cs" />
+    <Compile Include="Mvc\MvcAttribute.cs" />
+    <Compile Include="Mvc\ViewResult\EmptyResult.cs" />
+    <Compile Include="Mvc\ViewResult\HttpUnauthorizedResult.cs" />
+    <Compile Include="Mvc\ViewResult\JavaScriptResult.cs" />
+    <Compile Include="Mvc\MvcException.cs" />
+    <Compile Include="Mvc\ControllerResolver.cs" />
+    <Compile Include="Controls\Menu.cs" />
+    <Compile Include="Controls\Paging.cs" />
+    <Compile Include="Controls\Scripts.cs" />
+    <Compile Include="Controls\Style.cs" />
+    <Compile Include="Controls\TemplatedControl.cs" />
+    <Compile Include="Controls\Util.cs" />
+    <Compile Include="EventBroker.cs" />
+    <Compile Include="Resources\ResourceController.cs" />
+    <Compile Include="ContextData.cs" />
+    <Compile Include="Cache\HttpContextCacheProvider.cs" />
+    <Compile Include="IWebContext.cs" />
+    <Compile Include="HttpContextItem.cs" />
+    <Compile Include="Mvc\MvcInitializer.cs" />
+    <Compile Include="Mvc\MvcModule.cs" />
+    <Compile Include="Mvc\ViewResult\RedirectResult.cs" />
+    <Compile Include="Mvc\ViewResult\ViewResult.cs" />
+    <Compile Include="Controls\MasterFileAwaredControl.cs" />
+    <Compile Include="JContext.cs" />
+    <Compile Include="NavigationInfo.cs" />
+    <Compile Include="NavigationItem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Utility.cs" />
+    <Compile Include="Resources\ResourceInitializer.cs" />
+    <Compile Include="Area\AreaConfig.cs" />
+    <Compile Include="UrlMapping\UrlAttribute.cs" />
+    <Compile Include="UrlMapping\UrlMappingInitializer.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="Utils\ajaxmin\CommonSettings.cs" />
+    <Compile Include="Utils\ajaxmin\Configuration.cs" />
+    <Compile Include="Utils\ajaxmin\ContextError.cs" />
+    <Compile Include="Utils\ajaxmin\CssEncoderFallback.cs" />
+    <Compile Include="Utils\ajaxmin\Css\CssColorName.cs" />
+    <Compile Include="Utils\ajaxmin\Css\CssErrorCode.cs" />
+    <Compile Include="Utils\ajaxmin\Css\CssParser.cs" />
+    <Compile Include="Utils\ajaxmin\Css\CssScanner.cs" />
+    <Compile Include="Utils\ajaxmin\Css\CssSettings.cs" />
+    <Compile Include="Utils\ajaxmin\Css\CssStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CssStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\ajaxmin\Css\CssToken.cs" />
+    <Compile Include="Utils\ajaxmin\Extensions.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\activationobject.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\AnalyzeNodeVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\arrayliteral.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\aspnetblocknode.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ast.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\astlist.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\binaryop.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\block.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\blockscope.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\break.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\call.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\catchscope.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\cccomment.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ccelif.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ccelse.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ccend.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ccif.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ccon.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ccset.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ccstatement.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\codesettings.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\CommaOperator.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\conditional.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\const.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\constantwrapper.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\constantwrapperpp.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\context.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\continue.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\crunchenumerator.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\CustomNode.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\debugger.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\declaration.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\DetachReferences.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\directiveprologue.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\documentcontext.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\dowhile.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\emptystatement.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\EvaluateLiteralVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\expr.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\FinalPassVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\for.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\forin.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\functionobject.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\functionscope.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\gettersetter.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\globalscope.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\grouping.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\if.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\importantcomment.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\INameDeclaration.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\INameReference.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ISourceMap.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\IterationStatement.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\IVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\JScript.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JScript.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\ajaxmin\JavaScript\jscriptexception.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\jserror.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\jskeyword.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\JSONOutputVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\jsparser.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\jsscanner.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\jstoken.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\jsvariablefield.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\labeledstatement.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\LexicalDeclaration.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\LogicalNotVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\lookup.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\MatchPropertiesVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\member.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\missing.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\NewParensVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\objectliteral.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\objectliteralfield.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ObjectLiteralProperty.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\opprec.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\OutputVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\parameterdeclaration.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\regexpliteral.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ReorderScopeVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ResolutionVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\return.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\scannerexception.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\ScriptSharpSourceMap.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\SourceMapFactory.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\switch.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\switchcase.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\thisliteral.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\throw.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\TreeVisitor.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\try.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\unaryop.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\V3SourceMap.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\var.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\variabledeclaration.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\while.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\with.cs" />
+    <Compile Include="Utils\ajaxmin\JavaScript\withscope.cs" />
+    <Compile Include="Utils\ajaxmin\JSEncoderFallback.cs" />
+    <Compile Include="Utils\ajaxmin\Minifier.cs" />
+    <Compile Include="Utils\ajaxmin\ResourceStrings.cs" />
+    <Compile Include="Utils\ajaxmin\SwitchParser.cs" />
+    <Compile Include="Utils\ContentTypeUtil.cs" />
+    <Compile Include="Utils\HttpContextUtil.cs" />
+    <Compile Include="HttpValueCollection.cs" />
+    <Compile Include="Utils\RequestUtil.cs" />
+    <Compile Include="Utils\ResponseUtil.cs" />
+    <Compile Include="WebContext.cs" />
+    <Compile Include="WebExceptioin.cs" />
+    <Compile Include="Query\WebQuery.cs" />
+    <Compile Include="Resources\ResourceCombineController.cs" />
+    <Compile Include="Url.cs" />
+    <Compile Include="UrlMapping\Enums.cs" />
+    <Compile Include="UrlMapping\Utility.cs" />
+    <Compile Include="UrlMapping\IUrlMappingProvider.cs" />
+    <Compile Include="UrlMapping\UrlMappingConfig.cs" />
+    <Compile Include="UrlMapping\UrlMappingException.cs" />
+    <Compile Include="UrlMapping\UrlMappingItem.cs" />
+    <Compile Include="UrlMapping\UrlMappingModule.cs" />
+    <Compile Include="UrlMapping\XmlUrlMappingProvider.cs" />
+    <Compile Include="WebAppTypeFinder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="jQuery\cp\c.css" />
+    <EmbeddedResource Include="jQuery\cp\close.png" />
+    <EmbeddedResource Include="jQuery\cp\j.js" />
+    <EmbeddedResource Include="jQuery\cp\open.png" />
+    <EmbeddedResource Include="jQuery\kiss.css" />
+    <EmbeddedResource Include="jQuery\kiss.js" />
+    <EmbeddedResource Include="Utils\ajaxmin\Css\CssStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CssStrings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Kiss.Web.Utils.ajaxmin</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\ajaxmin\JavaScript\JScript.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>JScript.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Kiss.Web.Utils.ajaxmin</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="jQuery\jquery.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="jQuery\jqueryui\images\animated-overlay.gif" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_flat_0_eeeeee_40x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_flat_55_ffffff_40x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_highlight-soft_100_f6f6f6_1x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_highlight-soft_25_0073ea_1x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-bg_highlight-soft_50_dddddd_1x100.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_0073ea_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_454545_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_666666_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_ff0084_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\images\ui-icons_ffffff_256x240.png" />
+    <EmbeddedResource Include="jQuery\jqueryui\css" />
+    <EmbeddedResource Include="jQuery\jqueryui\js" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
