@@ -79,6 +79,11 @@ namespace Kiss.Web.Resources
 
                 if (path.IndexOf("_res.aspx") == -1)
                 {
+                    // 不是样式也不是脚本文件，返回null
+                    if (!path.EndsWith(".css", StringComparison.InvariantCultureIgnoreCase)
+                        && !path.EndsWith(".js", StringComparison.InvariantCultureIgnoreCase))
+                        return null;
+
                     int index = path.IndexOf(site.VirtualPath);
                     if (index != -1)
                         path = path.Substring(index + site.VirtualPath.Length);
