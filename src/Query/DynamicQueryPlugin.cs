@@ -233,11 +233,22 @@ namespace Kiss.Web.Query
             if (StringUtil.HasText(qc.Orderby))
             {
                 List<string> ls = new List<string>(StringUtil.CommaDelimitedListToStringArray(qc.Orderby));
-                ls.Reverse();
 
-                foreach (string oderby in ls)
+                if (q.IsAddOrderBy2First)
                 {
-                    q.InsertOrderby(0, oderby.TrimStart('-'), !oderby.StartsWith("-"));
+                    ls.Reverse();
+
+                    foreach (string oderby in ls)
+                    {
+                        q.InsertOrderby(0, oderby.TrimStart('-'), !oderby.StartsWith("-"));
+                    }
+                }
+                else
+                {
+                    foreach (string oderby in ls)
+                    {
+                        q.AddOrderby(oderby.TrimStart('-'), !oderby.StartsWith("-"));
+                    }
                 }
             }
 
