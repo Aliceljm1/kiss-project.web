@@ -20,6 +20,8 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,9 +47,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Kiss, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Kiss, Version=4.6.5373.36810, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Kiss.dll</HintPath>
+      <HintPath>..\packages\Kiss.4.6.1129.0\lib\Kiss.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -110,7 +112,6 @@
     <Compile Include="Optimization\minify\StyleMiniferStream.cs" />
     <Compile Include="Optimization\OptimizationInitializer.cs" />
     <Compile Include="Optimization\OptimizationModule.cs" />
-    <Compile Include="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="Query\DynamicQueryInitializer.cs" />
     <Compile Include="Query\DynamicQueryPlugin.cs" />
     <Compile Include="Mvc\ActionResult.cs" />
@@ -331,7 +332,17 @@
     <EmbeddedResource Include="jQuery\jqueryui\css" />
     <EmbeddedResource Include="jQuery\jqueryui\js" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。启用“NuGet 程序包还原”可下载这些程序包。有关详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

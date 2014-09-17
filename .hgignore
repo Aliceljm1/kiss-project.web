@@ -5,3 +5,5 @@ glob:obj
 glob:*.csproj.user
 syntax: glob
 web.sln.docstates
+packages/
+build/

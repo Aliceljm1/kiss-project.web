@@ -1,15 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project version='8' encrypted='1'>
 	<steps type='0'>
-		<step action='Read File'>
-			<FailNoMatch type='11'>-1</FailNoMatch>
-			<FileIn>%PROJDIR%\src\Properties\CommonAssemblyInfo.cs</FileIn>
-			<Find>\d+\.\d+</Find>
-			<Log type='11'>-1</Log>
-			<Macro>VERSION</Macro>
-			<NoModS type='11'>-1</NoModS>
-			<name>Read version</name>
-		</step>
 		<step action='Make VS.NET'>
 			<Attr type='11'>-1</Attr>
 			<Config>Release|Any CPU</Config>
