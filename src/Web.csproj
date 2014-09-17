@@ -110,7 +110,6 @@
     <Compile Include="Optimization\minify\StyleMiniferStream.cs" />
     <Compile Include="Optimization\OptimizationInitializer.cs" />
     <Compile Include="Optimization\OptimizationModule.cs" />
-    <Compile Include="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="Query\DynamicQueryInitializer.cs" />
     <Compile Include="Query\DynamicQueryPlugin.cs" />
     <Compile Include="Mvc\ActionResult.cs" />

@@ -241,6 +241,8 @@ namespace Kiss.Web.Mvc
                             return v;
                         });
 
+                        mis[action] = null;
+
                         foreach (MethodInfo m in methods)
                         {
                             bool hasPostAttr = m.GetCustomAttributes(typeof(HttpPostAttribute), false).Length == 1;
@@ -258,8 +260,6 @@ namespace Kiss.Web.Mvc
                                 mis[action] = m;
                                 break;
                             }
-
-                            mis[action] = null;
                         }
                     }
                 }
