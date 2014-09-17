@@ -1,0 +1,478 @@
+﻿/*
+YUI 3.8.0 (build 5744)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
+*/
+.yui3-g {
+    letter-spacing: -0.31em; /* webkit: collapse white-space between units */
+    *letter-spacing: normal; /* reset IE < 8 */
+    word-spacing: -0.43em; /* IE < 8 && gecko: collapse white-space between units */
+}
+
+.yui3-u {
+    display: inline-block;
+    zoom: 1;
+    *display: inline; /* IE < 8: fake inline-block */
+    letter-spacing: normal;
+    word-spacing: normal;
+    vertical-align: top;
+}
+
+.yui3-u-1,
+.yui3-u-1-2,
+.yui3-u-1-3,
+.yui3-u-2-3,
+.yui3-u-1-4,
+.yui3-u-3-4,
+.yui3-u-1-5,
+.yui3-u-2-5,
+.yui3-u-3-5,
+.yui3-u-4-5,
+.yui3-u-1-6,
+.yui3-u-5-6,
+.yui3-u-1-8,
+.yui3-u-3-8,
+.yui3-u-5-8,
+.yui3-u-7-8,
+.yui3-u-1-12,
+.yui3-u-5-12,
+.yui3-u-7-12,
+.yui3-u-11-12,
+.yui3-u-1-24,
+.yui3-u-5-24,
+.yui3-u-7-24,
+.yui3-u-11-24,
+.yui3-u-13-24,
+.yui3-u-17-24,
+.yui3-u-19-24,
+.yui3-u-23-24 {
+    display: inline-block;
+    zoom: 1;
+    *display: inline; /* IE < 8: fake inline-block */
+    letter-spacing: normal;
+    word-spacing: normal;
+    vertical-align: top;
+}
+
+.yui3-u-1 {
+    display: block;
+}
+
+.yui3-u-1-2 {
+    width: 50%;
+}
+
+.yui3-u-1-3 {
+    width: 33.33333%;
+}
+
+.yui3-u-2-3 {
+    width: 66.66666%;
+}
+
+.yui3-u-1-4 {
+    width: 25%;
+}
+
+.yui3-u-3-4 {
+    width: 75%;
+}
+
+.yui3-u-1-5 {
+    width: 20%;
+}
+
+.yui3-u-2-5 {
+    width: 40%;
+}
+
+.yui3-u-3-5 {
+    width: 60%;
+}
+
+.yui3-u-4-5 {
+    width: 80%;
+}
+
+.yui3-u-1-6 {
+    width: 16.656%;
+}
+
+.yui3-u-5-6 {
+    width: 83.33%;
+}
+
+.yui3-u-1-8 {
+    width: 12.5%;
+}
+
+.yui3-u-3-8 {
+    width: 37.5%;
+}
+
+.yui3-u-5-8 {
+    width: 62.5%;
+}
+
+.yui3-u-7-8 {
+    width: 87.5%;
+}
+
+.yui3-u-1-12 {
+    width: 8.3333%;
+}
+
+.yui3-u-5-12 {
+    width: 41.6666%;
+}
+
+.yui3-u-7-12 {
+    width: 58.3333%;
+}
+
+.yui3-u-11-12 {
+    width: 91.6666%;
+}
+
+.yui3-u-1-24 {
+    width: 4.1666%;
+}
+
+.yui3-u-5-24 {
+    width: 20.8333%;
+}
+
+.yui3-u-7-24 {
+    width: 29.1666%;
+}
+
+.yui3-u-11-24 {
+    width: 45.8333%;
+}
+
+.yui3-u-13-24 {
+    width: 54.1666%;
+}
+
+.yui3-u-17-24 {
+    width: 70.8333%;
+}
+
+.yui3-u-19-24 {
+    width: 79.1666%;
+}
+
+.yui3-u-23-24 {
+    width: 95.8333%;
+}
+
+.clearfix {
+    clear: both;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    height: 0;
+    line-height: 0;
+}
+
+.gform {
+    overflow: hidden !important;
+}
+
+    .gform .gformbox {
+        float: left;
+        width: 350px;
+        margin-bottom: 10px;
+        line-height: 27px;
+        height: 27px;
+    }
+
+    .gform.full .gformbox {
+        width: 100%;
+        height: auto;
+    }
+
+    .gform label, .gform .label {
+        display: block;
+        float: left;
+        margin-left: 10px;
+        font-size: 12px;
+    }
+
+    .gform input, .gform textarea, .gform select {
+        padding: 3px;
+        margin: 0;
+        vertical-align: middle;
+    }
+
+    .gform textarea {
+        font: 12px Verdana, Arial, Helvetica, sans-serif;
+        overflow: auto;
+        height: 40px;
+        line-height: 15px;
+    }
+
+    .gform .gbtn {
+        margin: 0 10px 10px;
+        float: right;
+    }
+
+    .gform .gbtn2 {
+        float: left;
+        margin-left: 73px;
+    }
+
+    .gform .close {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        line-height: 15px;
+        width: 15px;
+        height: 15px;
+        display: block;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: middle;
+        text-decoration: none;
+    }
+
+        .gform .close:hover {
+            text-decoration: none;
+        }
+
+    .gform .g1 {
+        float: left;
+        display: block;
+        width: 60px;
+        text-align: right;
+        margin-right: 3px;
+        line-height: 25px;
+    }
+
+        .gform .g1 em {
+            font-style: normal;
+            color: red;
+        }
+
+    .gform .g2 {
+        margin-left: 10px;
+        line-height: 27px;
+        position: relative;
+        display: block;
+        float: left;
+    }
+
+    .gform .red, .gform .error {
+        color: red;
+        margin: 5px;
+    }
+
+    .gform .tip {
+        margin: 5px;
+    }
+
+.gloading {
+    z-index: 999999;
+    background-color: #FBF2B0;
+    display: inline-block;
+    padding: 6px 18px;
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+* html .gloading {
+    position: absolute;
+    top: expression(eval(document.documentElement.scrollTop));
+}
+
+
+.gtable {
+    font-size: 12px;
+    margin: 0px;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    border-bottom: none;
+    background-color: #FFF;
+}
+
+    .gtable th {
+        white-space: nowrap;
+        font-size: 13px;
+        font-weight: normal;
+        padding: 6px 8px;
+        background: #EFEFEF;
+        border-top: 1px solid #FFF;
+        color: #333;
+        text-align: left;
+    }
+
+    .gtable td {
+        padding: 8px;
+        background: none;
+        border-top: 1px solid #CCC;
+        color: #666;
+        border-bottom: none !important;
+        vertical-align: middle;
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+
+    .gtable tr.odd td {
+        background-color: #E8EDFF;
+    }
+
+    .gtable tr.hover td {
+        background-color: #D0DAFD;
+    }
+
+    .gtable tr.selected td {
+        background-color: #FFF9DE;
+    }
+
+    .gtable tr.footer {
+        background: none !important;
+    }
+
+        .gtable tr.footer:hover td {
+            background: none !important;
+        }
+
+    .gtable thead tr .sortable {
+        cursor: pointer;
+    }
+
+        .gtable thead tr .sortable div {
+            position: relative;
+            width: inherit;
+        }
+
+        .gtable thead tr .sortable span {
+            right: 0;
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-image: url(/_res.aspx?r=alF1ZXJ5LmpxdWVyeXVpLmltYWdlcy51aS1pY29uc180NTQ1NDVfMjU2eDI0MC5wbmc=&t=&z=image/png&su=1);
+            background-position: -128px 0;
+        }
+
+            .gtable thead tr .sortable span.asc {
+                background-position: 0 -16px;
+            }
+
+            .gtable thead tr .sortable span.desc {
+                background-position: -64px -16px;
+            }
+
+    /*leixu 2014-01-24
+                gtable 若采用resize 列 则 自动将超出部分采用...*/
+    .gtable.resizable {
+        margin-top: -27px;
+    }
+
+        .gtable.resizable .autocut {
+            width: inherit;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            -icab-text-overflow: ellipsis;
+            -khtml-text-overflow: ellipsis;
+            -moz-text-overflow: ellipsis;
+            -webkit-text-overflow: ellipsis;
+            word-break: normal;
+            word-wrap: normal;
+        }
+
+.autodiv {
+    width: 100%;
+    height: 26px;
+    z-index: -9;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background: #EFEFEF;
+}
+
+/* jQuery TreeTable Core 2.0 stylesheet
+ *
+ * This file contains styles that are used to display the tree table. Each tree
+ * table is assigned the +treeTable+ class.
+ * ========================================================================= */
+
+/* jquery.treeTable.collapsible
+ * ------------------------------------------------------------------------- */
+.treeTable tr td .expander {
+    background-position: left center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    padding: 0;
+    zoom: 1; /* IE7 Hack */
+}
+
+.draghandle.dragged {
+    border-left: 1px solid #aaa;
+}
+
+.draghandle {
+    position: absolute !important;
+    z-index: 5;
+    width: 5px;
+    cursor: e-resize;
+}
+
+TH.resizable {
+    border-right: 1px solid #ccc;
+}
+
+.pagination {
+    margin: 10px auto;
+    text-align: center;
+    float: none;
+}
+
+    .pagination a {
+        border: 1px solid #AAAAEE;
+        color: #1155BB;
+        text-decoration: none;
+    }
+
+        .pagination a:hover {
+            background-color: transparent;
+            text-decoration: underline;
+        }
+
+    .pagination a, .pagination span {
+        margin-bottom: 5px;
+        margin-right: 5px;
+        padding: 0.3em 0.5em;
+    }
+
+    .pagination .current {
+        background: #2266BB none repeat scroll 0 0;
+        border: 1px solid #AAAAEE;
+        color: #FFFFFF;
+    }
+
+    .pagination span.prev, .pagination span.next {
+        background: #FFFFFF none repeat scroll 0 0;
+        border-color: #999999;
+        color: #999999;
+    }
+
+.relative_box {
+    position: relative;
+}
+
+    .relative_box .inline_edit_link {
+        z-index: 9999;
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #FBF2B0;
+        border: 1px solid #CCCCCC;
+        font-size: 13px;
+        padding: 3px;
+    }
