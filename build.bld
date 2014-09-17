@@ -12,7 +12,7 @@
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
 			<Delay>15</Delay>
-			<DestDir>%PROJDIR%\build\Kiss.Web.dll</DestDir>
+			<DestDir>%PROJDIR%\build\</DestDir>
 			<ExclExt>*.pdb</ExclExt>
 			<Ext>Kiss.Web.dll</Ext>
 			<Incremental type='11'>-1</Incremental>
