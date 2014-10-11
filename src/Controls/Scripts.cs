@@ -70,13 +70,15 @@ namespace Kiss.Web.Controls
             {
                 foreach (string str in combineUrls)
                 {
-                    string url = str.Replace(AreaConfig.Instance.VirtualPath, "/");
+                    string url = str.Replace(AreaConfig.Instance.VirtualPath, "/").TrimStart('/');
+
+                    string path = "/";
 
                     int index = url.IndexOf("/");
-                    if (index == -1)
-                        continue;
 
-                    string path = url.Substring(0, index + 1);
+                    if (index != -1)
+                        path = url.Substring(0, index + 1);
+
                     if (!di.ContainsKey(path))
                         di[path] = new List<string>();
 
