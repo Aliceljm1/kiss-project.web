@@ -63,33 +63,51 @@ namespace Kiss.Web.Controls
                 writer.Write("<script src='{0}' type='text/javascript'></script>", url);
             }
 
+            Dictionary<string, List<string>> di = new Dictionary<string, List<string>>();
+
             // combined 
             if (combineUrls.Count > 0)
             {
-                int ps = StringUtil.ToInt(CurrentSite["combinJs_ps"], 10);
-                if (ps <= 0)
-                    ps = 10;
-
-                for (int i = 0; i < (int)Math.Ceiling(combineUrls.Count * 1.0 / ps); i++)
+                foreach (string str in combineUrls)
                 {
-                    List<string> list = new List<string>();
+                    string url = str.Replace(AreaConfig.Instance.VirtualPath, "/");
 
-                    for (int j = 0; j < ps; j++)
-                    {
-                        int index = i * ps + j;
+                    int index = url.IndexOf("/");
+                    if (index == -1)
+                        continue;
 
-                        list.Add(combineUrls[index]);
+                    string path = url.Substring(0, index + 1);
+                    if (!di.ContainsKey(path))
+                        di[path] = new List<string>();
 
-                        if (index == combineUrls.Count - 1)
-                            break;
-                    }
-
-                    writer.Write(string.Format("<script src='{0}' type='text/javascript'></script>",
-                        Utility.FormatJsUrl(CurrentSite, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
-                                                            ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(list)),
-                                                            AreaConfig.Instance.JsVersion))));
+                    di[path].Add(url);
                 }
 
+                int ps = 6;
+
+                foreach (var item in di)
+                {
+                    for (int i = 0; i < (int)Math.Ceiling(item.Value.Count * 1.0 / ps); i++)
+                    {
+                        List<string> list = new List<string>();
+
+                        for (int j = 0; j < ps; j++)
+                        {
+                            int index = i * ps + j;
+
+                            list.Add(item.Value[index]);
+
+                            if (index == item.Value.Count - 1)
+                                break;
+                        }
+
+                        writer.Write(string.Format("<script src='{0}' type='text/javascript'></script>",
+                            Utility.FormatJsUrl(AreaConfig.Instance, string.Format("{2}_resc.aspx?f={0}&t=text/javascript&v={1}",
+                                                                ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(list)),
+                                                                AreaConfig.Instance.JsVersion,
+                                                                StringUtil.CombinUrl(AreaConfig.Instance.VirtualPath, item.Key)))));
+                    }
+                }
             }
 
             // script blocks
