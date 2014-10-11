@@ -10,8 +10,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Mvc]
 
-
-
 [assembly: AssemblyCompany("TXTEK")]
 [assembly: AssemblyCopyright("© TXTEK.CN - http://kiss.txtek.cn/")]
 [assembly: AssemblyProduct("KISS Project")]
@@ -19,5 +17,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]
 
-[assembly: AssemblyVersion("4.6.*")]
-[assembly: AssemblyFileVersion("4.6.20131129.0")]
+[assembly: AssemblyVersion("4.7.1410.9110")]
+[assembly: AssemblyFileVersion("4.7.1410.9110")]

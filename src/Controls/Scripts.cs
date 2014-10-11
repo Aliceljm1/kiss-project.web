@@ -85,7 +85,7 @@ namespace Kiss.Web.Controls
                     }
 
                     writer.Write(string.Format("<script src='{0}' type='text/javascript'></script>",
-                        Utility.FormatJsUrl(AreaConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
+                        Utility.FormatJsUrl(CurrentSite, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(list)),
                                                             AreaConfig.Instance.JsVersion))));
                 }
