@@ -850,8 +850,11 @@ namespace Kiss.Web
                     }
 
                     string ahref = hrefs[0];
-                    ahref = ahref.Replace(AreaConfig.Instance.VirtualPath, "/");
-                    string path = ahref.Substring(0, ahref.IndexOf("/") + 1);
+                    ahref = ahref.Replace(AreaConfig.Instance.VirtualPath, "/").TrimStart('/');
+
+                    string path = "/";
+                    if (ahref.IndexOf("/") != -1)
+                        path = ahref.Substring(0, ahref.IndexOf("/") + 1);
 
                     // comine url
                     if (is_css && Area.CombineCss)
