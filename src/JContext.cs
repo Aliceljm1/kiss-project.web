@@ -849,15 +849,21 @@ namespace Kiss.Web
                         }
                     }
 
+                    string ahref = hrefs[0];
+                    ahref = ahref.Replace(AreaConfig.Instance.VirtualPath, "/");
+                    string path = ahref.Substring(0, ahref.IndexOf("/") + 1);
+
                     // comine url
                     if (is_css && Area.CombineCss)
-                        url = Utility.FormatCssUrl(Area, string.Format("_resc.aspx?f={0}&t=text/css&v={1}",
+                        url = Utility.FormatCssUrl(Area, string.Format("{2}_resc.aspx?f={0}&t=text/css&v={1}",
                                                                 ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
-                                                                AreaConfig.Instance.CssVersion));
+                                                                AreaConfig.Instance.CssVersion,
+                                                                path));
                     else if (!is_css)
-                        url = Utility.FormatJsUrl(Kiss.Web.AreaConfig.Instance, string.Format("_resc.aspx?f={0}&t=text/javascript&v={1}",
+                        url = Utility.FormatJsUrl(AreaConfig.Instance, string.Format("{2}_resc.aspx?f={0}&t=text/javascript&v={1}",
                                                             ServerUtil.UrlEncode(StringUtil.CollectionToCommaDelimitedString(hrefs)),
-                                                            AreaConfig.Instance.CssVersion));
+                                                            AreaConfig.Instance.CssVersion,
+                                                            path));
                     else
                         continue;
                 }

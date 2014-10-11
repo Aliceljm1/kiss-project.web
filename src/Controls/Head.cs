@@ -133,8 +133,6 @@ namespace Kiss.Web.Controls
 
             Dictionary<IArea, Dictionary<string, List<string>>> di = new Dictionary<IArea, Dictionary<string, List<string>>>();
 
-            List<string> otherurls = new List<string>();
-
             foreach (StyleQueueItem si in queue)
             {
                 if (si.Position != position) continue;
@@ -146,10 +144,7 @@ namespace Kiss.Web.Controls
                     string url = si.Url;
                     int index = url.LastIndexOf("/");
                     if (index == -1)
-                    {
-                        otherurls.Add(url);
                         continue;
-                    }
 
                     if (!di.ContainsKey(si.Site))
                         di[si.Site] = new Dictionary<string, List<string>>();

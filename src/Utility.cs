@@ -22,7 +22,7 @@ namespace Kiss.Web
 
         private static string CombinHost(IArea site, string host, string relativeUrl)
         {
-            return StringUtil.CombinUrl(host, StringUtil.CombinUrl(site.VirtualPath, relativeUrl));
+            return StringUtil.CombinUrl(host, site.VirtualPath, relativeUrl);
         }
     }
 }
