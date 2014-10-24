@@ -35,6 +35,7 @@ namespace Kiss.Web
             param = JContext.Current.Params;
 
             PageIndex = Math.Max(0, param["page"].ToInt(1) - 1);
+            PageSize = Math.Max(-1, param["pageSize"].ToInt(-1));
 
             string orderby = param["sort"];
 

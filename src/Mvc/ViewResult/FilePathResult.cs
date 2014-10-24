@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Web;
 
 namespace Kiss.Web.Mvc
@@ -24,6 +25,7 @@ namespace Kiss.Web.Mvc
 
         protected override void WriteFile(HttpResponse response)
         {
+            response.AddHeader("Content-Length", new FileInfo(FileName).Length.ToString());
             response.TransmitFile(FileName);
         }
 
