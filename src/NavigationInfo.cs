@@ -417,5 +417,29 @@ namespace Kiss.Web
 
             return string.Format("{0}.{1}", id, Action);
         }
+
+        public override string this[string key]
+        {
+            get
+            {
+                string v = base[key];
+
+                if (!string.IsNullOrEmpty(v) && v.Contains("$!"))
+                {
+                    ITemplateEngine te = ServiceLocator.Instance.Resolve<ITemplateEngine>();
+                    using (StringWriter sw = new StringWriter())
+                    {
+                        te.Process(JContext.Current.ViewData, "", sw, v);
+                        v = sw.GetStringBuilder().ToString();
+                    }
+                }
+
+                return v;
+            }
+            set
+            {
+                base[key] = value;
+            }
+        }
     }
 }
