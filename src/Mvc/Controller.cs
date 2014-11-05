@@ -73,13 +73,13 @@ namespace Kiss.Web.Mvc
 
         public event EventHandler<AfterActionExecuteEventArgs> AfterActionExecute;
 
-        public virtual void OnAfterActionExecute(object result)
+        public virtual void OnAfterActionExecute(AfterActionExecuteEventArgs e)
         {
             EventHandler<AfterActionExecuteEventArgs> handler = AfterActionExecute;
 
             if (handler != null)
             {
-                handler(this, new AfterActionExecuteEventArgs() { JContext = jc, Result = result });
+                handler(this, e);
             }
         }
 
