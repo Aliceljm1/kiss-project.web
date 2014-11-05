@@ -53,6 +53,9 @@ namespace Kiss.Web.Mvc
                 // before execute action
                 Controller.BeforeActionExecuteEventArgs e = new Controller.BeforeActionExecuteEventArgs() { JContext = jc };
                 jc.Controller.OnBeforeActionExecute(e);
+
+                Controller.AfterActionExecuteEventArgs e2 = new Controller.AfterActionExecuteEventArgs() { JContext = jc };
+
                 if (e.PreventDefault)
                 {
                     ret = e.ReturnValue;
@@ -78,6 +81,10 @@ namespace Kiss.Web.Mvc
                         ret = execute(jc.Controller, mi, form);
                     }
 
+                    e2.Result = ret;
+                    jc.Controller.OnAfterActionExecute(e2);
+                    ret = e2.Result;
+
                     if (ret != null)
                     {
                         if (ret is ActionResult)
@@ -97,6 +104,10 @@ namespace Kiss.Web.Mvc
                     {
                         ret = execute(jc.Controller, mi, jc.QueryString);
                     }
+
+                    e2.Result = ret;
+                    jc.Controller.OnAfterActionExecute(e2);
+                    ret = e2.Result;
 
                     if (ret != null)
                     {
@@ -125,9 +136,6 @@ namespace Kiss.Web.Mvc
                         support_embed = true;
                     }
                 }
-
-                // after execute action
-                jc.Controller.OnAfterActionExecute(ret);
 
                 if (support_embed && jc.IsEmbed)
                 {
