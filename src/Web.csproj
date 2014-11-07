@@ -76,6 +76,7 @@
     <Compile Include="Area\Host.cs" />
     <Compile Include="Controls\IContextAwaredControl.cs" />
     <Compile Include="Controls\Layout.cs" />
+    <Compile Include="ExceptionHandlerInitializer.cs" />
     <Compile Include="ExportHelper.cs" />
     <Compile Include="ITextProcesser.cs" />
     <Compile Include="Controls\ControlPanel.cs" />
