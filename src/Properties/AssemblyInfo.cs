@@ -1,4 +1,4 @@
-﻿using Kiss.Config;
+using Kiss.Config;
 using Kiss.Web.Mvc;
 using System;
 using System.Reflection;
@@ -17,5 +17,6 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]
 
-[assembly: AssemblyVersion("4.8.1121")]
-[assembly: AssemblyFileVersion("4.8.1121")]
+[assembly: AssemblyVersion("4.8.1124.0")]
+[assembly: AssemblyFileVersion("4.8.1124.0")]
+//TLS Submit Time:2014-10-24 13:10:54
