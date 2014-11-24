@@ -47,9 +47,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Kiss, Version=4.7.1121.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Kiss, Version=4.7.1121.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Kiss.4.7.1121.0\lib\Kiss.dll</HintPath>
+      <HintPath>..\packages\Kiss.4.7.1121.1\lib\Kiss.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
